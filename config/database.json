@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "103Lastmilecare",
+    "database": "http://database-1.c1i0cmiimplb.us-east-1.rds.amazonaws.com/",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
