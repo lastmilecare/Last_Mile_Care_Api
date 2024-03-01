@@ -3,7 +3,7 @@ const {
   Center,
   User,
   Centeruser
-} = require("../../db/models");
+} = require("../../../db/models");
 
 
 async function insertCenter(data) {

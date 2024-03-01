@@ -3,7 +3,7 @@ const {
   Role,
   User,
   Permission
-} = require("../../db/models");
+} = require("../../../db/models");
 
 
 async function adminAuth(email, password) {
