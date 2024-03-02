@@ -1,16 +1,16 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const {port} = require('./config/envConfig');
+const { port } = require('./config/envConfig');
 const indexRoutes = require('./src/route/index-route.js');
 const app = express();
- console.log(port);
+console.log(port);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 indexRoutes(app);
 app.get('/', (req, res) => {
-  res.json({ message: 'Example route' });
+  res.json({ message: 'Updated Code 02-03-2024' });
 });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
