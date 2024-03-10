@@ -22,9 +22,19 @@ async function findAllCenter(req) {
   }
 }
 
-async function assignCenterToUser(data) {
+async function assignCenterToUser(req) {
   try {
-    return await Centeruser.create(data);
+    const { username, name, role_id, phone, email, password, center_id } = req.body;
+    const data = {
+      username, name, role_id, phone, email, password, center_id
+    }
+    const userInsert = await User.create(data)
+
+    await Centeruser.create({
+      user_id: userInsert.id,
+      center_id: center_id
+    })
+    return userInsert;
   } catch (error) {
     throw new Error(error);
   }
@@ -40,6 +50,20 @@ async function centerStatusUpdate(id, status) {
     throw new Error(error);
   }
 }
+async function getCenterUser(req) {
+  try {
+    const centerUsers = await Centeruser.findAll({
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'username', 'name', 'email'] }, // Include associated User details
+        { model: Center, as: 'center' } // Include associated Center details
+      ]
+    });
+
+    return centerUsers;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
 
-module.exports = { centerStatusUpdate, assignCenterToUser, findAllCenter, insertCenter };
+module.exports = { getCenterUser, centerStatusUpdate, assignCenterToUser, findAllCenter, insertCenter };

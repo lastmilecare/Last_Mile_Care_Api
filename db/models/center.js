@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     agency_spoc_email: DataTypes.STRING,
     agency_spoc_contact_number: DataTypes.STRING,
     status: DataTypes.BOOLEAN,
-     
+
   }, {
     sequelize,
     modelName: 'Center',

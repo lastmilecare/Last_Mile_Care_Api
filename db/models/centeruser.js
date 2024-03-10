@@ -4,14 +4,15 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Centeruser extends Model {
-     
+
     static associate(models) {
-      // define association here
+      Centeruser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+      Centeruser.belongsTo(models.Center, { foreignKey: 'center_id', as: 'center' });
     }
   }
   Centeruser.init({
     user_id: DataTypes.STRING,
-    center_id:DataTypes.BIGINT
+    center_id: DataTypes.BIGINT
   }, {
     sequelize,
     modelName: 'Centeruser',

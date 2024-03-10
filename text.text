@@ -1,3 +1,17 @@
-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
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+ 
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
 http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/
+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
+
+
+ npx sequelize-cli db:migrate
+
+ 
+npx sequelize-cli model:generate --name HIV --attributes standard_value_min:string,standard_value_max:string,within_deviation_value_min:string,within_deviation_value_max:string,units:string,out_of_range:string
+
+npx sequelize-cli model:generate --name Hiv --attributes option_one:string,option_two:string 
+
+npx sequelize-cli model:generate --name Centerpackage --attributes package_price:string,package_frequency:string,package_id:string 
+Centerpackage
+ 
+npx sequelize-cli model:generate --name ECG --attributes option_1:string,option_2:string 

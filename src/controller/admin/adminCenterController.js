@@ -62,6 +62,7 @@ exports.createCenter = async (req, res) => {
       agency_spoc_contact_number,
       status
     };
+    console.log(req);
 
     const insert = await centerService.insertCenter(data);
     sendSuccess(res, 201, insert, 'Create Center successfully');
@@ -82,18 +83,22 @@ exports.viewCenter = async (req, res) => {
 
 exports.assignCenter = async (req, res) => {
   try {
-    if (!req.body.user_id) {
-      sendError(res, 400, "bad request", 'user id required');
-    }
+
     if (!req.body.center_id) {
       sendError(res, 400, "bad request", 'center id required');
     }
-    const insertData = {
-      user_id: req.body.user_id,
-      center_id: req.body.center_id
-    }
-    const result = await centerService.assignCenterToUser(insertData);
+
+    const result = await centerService.assignCenterToUser(req);
     sendSuccess(res, 201, result, 'Center assign successfully');
+  } catch (error) {
+    sendError(res, 500, error, 'Invalid input');
+  }
+}
+exports.centerUser = async (req, res) => {
+  try {
+
+    const result = await centerService.getCenterUser(req);
+    sendSuccess(res, 200, result, 'Success');
   } catch (error) {
     sendError(res, 500, error, 'Invalid input');
   }

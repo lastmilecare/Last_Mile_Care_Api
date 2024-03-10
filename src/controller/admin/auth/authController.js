@@ -40,6 +40,7 @@ exports.adminCreate = async (req, res) => {
       username: req.body.username.trim().toLowerCase(),
       role_id: req.body.role_id,
       email: req.body.email,
+      name: req.body.name,
       phone: req.body.phone,
       isAdmin: true,
       password: bcrypt.hashSync(req.body.password, 8),
