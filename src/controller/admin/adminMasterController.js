@@ -1,7 +1,18 @@
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const centerService = require('../../service/globalService/centerService');
 const { updateMasterTempture, updateHaemoglobinServive, updatHivService, updateAlcholtestService, updateCretenineService, updatePulmonaryTest, updateMasterupdateSPO2s, updateRBS, updatePulseService } = require('../../service/masterService/temperatureService');
-
+const {
+    sequelize,
+    Temperature,
+    SPO2,
+    random_blood_sugar,
+    Pulse,
+    Pulmonaryfunctiontest,
+    Haemoglobin,
+    Cretenine,
+    Alcholtest,
+    Hiv
+} = require("../../../db/models");
 
 exports.updateMaster = async (req, res) => {
     try {
@@ -14,6 +25,8 @@ exports.updateMaster = async (req, res) => {
     }
 
 }
+
+
 
 exports.updateTemperature = async (req, res) => {
     try {
@@ -34,6 +47,7 @@ exports.updateTemperature = async (req, res) => {
 
     }
 }
+
 
 exports.updateSPO2s = async (req, res) => {
     try {
@@ -185,5 +199,96 @@ exports.updateHiv = async (req, res) => {
     } catch (error) {
         sendError(res, 500, error, error.message);
 
+    }
+}
+
+////View All Data
+// Function to view Temperature
+exports.viewTemperature = async (req, res) => {
+    try {
+        const data = await Temperature.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view SPO2
+exports.viewSPO2 = async (req, res) => {
+    try {
+        const data = await SPO2.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view random_blood_sugar
+exports.viewRandomBloodSugar = async (req, res) => {
+    try {
+        const data = await random_blood_sugar.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Pulse
+exports.viewPulse = async (req, res) => {
+    try {
+        const data = await Pulse.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Pulmonaryfunctiontest
+exports.viewPulmonaryFunctionTest = async (req, res) => {
+    try {
+        const data = await Pulmonaryfunctiontest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Haemoglobin
+exports.viewHaemoglobin = async (req, res) => {
+    try {
+        const data = await Haemoglobin.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Cretenine
+exports.viewCretenine = async (req, res) => {
+    try {
+        const data = await Cretenine.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Alcholtest
+exports.viewAlcholtest = async (req, res) => {
+    try {
+        const data = await Alcholtest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+// Function to view Hiv
+exports.viewHiv = async (req, res) => {
+    try {
+        const data = await Hiv.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
     }
 }

@@ -185,3 +185,46 @@ exports.bloodPressure = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 };
+
+
+
+//////view
+
+
+
+exports.viewBloodgroup = async (req, res) => {
+    try {
+        const data = await Bloodgroup.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+
+exports.viewHearingtest = async (req, res) => {
+    try {
+        const data = await Hearingtest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+exports.viewECG = async (req, res) => {
+    try {
+        const data = await ECG.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+exports.viewBloodpressure = async (req, res) => {
+    try {
+        const data = await Bloodpressure.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}

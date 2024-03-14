@@ -33,10 +33,25 @@ module.exports = function (app) {
     ]), testMasterController.hearingTest);
     app.post(`${prefixUrl}/update/BloodGroup`, verifyTokenMiddleware, testMasterController.bloodGroup);
     app.post(`${prefixUrl}/update/ecg`, verifyTokenMiddleware, upload.single('file'), testMasterController.ecgUpdate);
-
     app.post(`${prefixUrl}/update/bloodpressure`, verifyTokenMiddleware, testMasterController.bloodPressure);
 
 
+    ///view master routes 
+
+    app.post(`${prefixUrl}/view/temperature`, verifyTokenMiddleware, adminMasterController.viewTemperature);
+    app.post(`${prefixUrl}/view/SPO2`, verifyTokenMiddleware, adminMasterController.viewSPO2);
+    app.post(`${prefixUrl}/view/random_blood_sugar`, verifyTokenMiddleware, adminMasterController.viewRandomBloodSugar);
+    app.post(`${prefixUrl}/view/pulse`, verifyTokenMiddleware, adminMasterController.viewPulse);
+    app.post(`${prefixUrl}/view/pulmonaryfunctiontest`, verifyTokenMiddleware, adminMasterController.viewPulmonaryFunctionTest);
+    app.post(`${prefixUrl}/view/Haemoglobin`, verifyTokenMiddleware, adminMasterController.viewHaemoglobin);
+    app.post(`${prefixUrl}/view/Cretenine`, verifyTokenMiddleware, adminMasterController.viewCretenine);
+    app.post(`${prefixUrl}/view/Alcholtest`, verifyTokenMiddleware, adminMasterController.viewAlcholtest);
+    app.post(`${prefixUrl}/view/Hiv`, verifyTokenMiddleware, adminMasterController.viewHiv);
+
+    app.post(`${prefixUrl}/view/hearingtest`, verifyTokenMiddleware, testMasterController.viewHearingtest);
+    app.post(`${prefixUrl}/view/BloodGroup`, verifyTokenMiddleware, testMasterController.viewBloodgroup);
+    app.post(`${prefixUrl}/view/ecg`, verifyTokenMiddleware, testMasterController.viewECG);
+    app.post(`${prefixUrl}/view/bloodpressure`, verifyTokenMiddleware, testMasterController.viewBloodpressure);
 
     //package 
     app.post(`${prefixUrl}/add/package`, verifyTokenMiddleware, packageController.addPackage);
