@@ -34,6 +34,10 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/update/BloodGroup`, verifyTokenMiddleware, testMasterController.bloodGroup);
     app.post(`${prefixUrl}/update/ecg`, verifyTokenMiddleware, upload.single('file'), testMasterController.ecgUpdate);
     app.post(`${prefixUrl}/update/bloodpressure`, verifyTokenMiddleware, testMasterController.bloodPressure);
+    app.post(`${prefixUrl}/update/bmi`, verifyTokenMiddleware, testMasterController.bmiCheck);
+    app.post(`${prefixUrl}/update/cholesterol`, verifyTokenMiddleware, testMasterController.cholesterolUpdate);
+
+
 
 
     ///view master routes 
@@ -52,12 +56,19 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/BloodGroup`, verifyTokenMiddleware, testMasterController.viewBloodgroup);
     app.post(`${prefixUrl}/view/ecg`, verifyTokenMiddleware, testMasterController.viewECG);
     app.post(`${prefixUrl}/view/bloodpressure`, verifyTokenMiddleware, testMasterController.viewBloodpressure);
+    app.post(`${prefixUrl}/view/bmi`, verifyTokenMiddleware, testMasterController.viewBMI);
+    app.post(`${prefixUrl}/view/cholesterol`, verifyTokenMiddleware, testMasterController.viewCholesterol);
+
+
+
 
     //package 
     app.post(`${prefixUrl}/add/package`, verifyTokenMiddleware, packageController.addPackage);
     app.post(`${prefixUrl}/package/list`, verifyTokenMiddleware, packageController.listPackage);
     app.post(`${prefixUrl}/addpackage/toCenter`, verifyTokenMiddleware, packageController.addPackageTOCenter);
     app.post(`${prefixUrl}/view/center/package`, verifyTokenMiddleware, packageController.viewCenterPackage);
+
+
 
 
 

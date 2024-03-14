@@ -4,7 +4,9 @@ const {
     Bloodgroup,
     Hearingtest,
     ECG,
-    Bloodpressure
+    Bloodpressure,
+    BMI,
+    CHOLESTEROL
 } = require("../../../db/models");
 // 
 exports.hearingTest = async (req, res) => {
@@ -185,8 +187,137 @@ exports.bloodPressure = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 };
+exports.bmiCheck = async (req, res) => {
+    let insert;
+    const {
+        bmi_standard_value_min,
+        bmi_standard_value_max,
+        bmi_within_deviation_value_min,
+        bmi_within_deviation_value_max,
+        bmi_out_of_range,
+        bmi_units,
+        weighti_standard_value_min,
+        weight_standard_value_max,
+        weight_within_deviation_value_min,
+        weight_within_deviation_value_max,
+        weight_out_of_range,
+        weight_units,
+        height_standard_value_min,
+        height_standard_value_max,
+        height_within_deviation_value_min,
+        height_within_deviation_value_max,
+        height_out_of_range,
+        height_units,
+    } = req.body
+    const data = {
+        bmi_standard_value_min,
+        bmi_standard_value_max,
+        bmi_within_deviation_value_min,
+        bmi_within_deviation_value_max,
+        bmi_out_of_range,
+        bmi_units,
+        weighti_standard_value_min,
+        weight_standard_value_max,
+        weight_within_deviation_value_min,
+        weight_within_deviation_value_max,
+        weight_out_of_range,
+        weight_units,
+        height_standard_value_min,
+        height_standard_value_max,
+        height_within_deviation_value_min,
+        height_within_deviation_value_max,
+        height_out_of_range,
+        height_units,
+    }
+
+    try {
+        const count = await BMI.count();
+        if (count > 0) {
+            const existinBMI = await BMI.findOne();
+            if (existinBMI) {
+                insert = await existinBMI.update(data);
+            } else {
+                throw new Error('Unexpected: Record not found when it should exist.');
+            }
+        } else {
+            insert = await BMI.create(data);
+        }
+
+        sendSuccess(res, 201, insert, 'BMI update successfully');
+    } catch (error) {
+        sendError(res, 500, error, 'Invalid input');
+    }
+};
 
 
+
+exports.cholesterolUpdate = async (req, res) => {
+    let insert;
+    const {
+
+        total_cholesterol_standard_value_min,
+        total_cholesterol_standard_value_max,
+        total_cholesterol_within_deviation_value_min,
+        total_cholesterol_within_deviation_value_max,
+        total_cholesterol_out_of_range,
+        total_cholesterol_units,
+
+        ld_cholesterol_standard_value_min,
+        ld_cholesterol_standard_value_max,
+        ld_cholesterol_within_deviation_value_min,
+        ld_cholesterol_within_deviation_value_max,
+        ld_cholesterol_out_of_range,
+        ld_cholesterol_units,
+
+        hd_cholesterol_standard_value_min,
+        hd_cholesterol_standard_value_max,
+        hd_cholesterol_within_deviation_value_min,
+        hd_cholesterol_within_deviation_value_max,
+        hd_cholesterol_out_of_range,
+        hd_cholesterol_units,
+    } = req.body
+    const data = {
+        total_cholesterol_standard_value_min,
+        total_cholesterol_standard_value_max,
+        total_cholesterol_within_deviation_value_min,
+        total_cholesterol_within_deviation_value_max,
+        total_cholesterol_out_of_range,
+        total_cholesterol_units,
+
+        ld_cholesterol_standard_value_min,
+        ld_cholesterol_standard_value_max,
+        ld_cholesterol_within_deviation_value_min,
+        ld_cholesterol_within_deviation_value_max,
+        ld_cholesterol_out_of_range,
+        ld_cholesterol_units,
+
+        hd_cholesterol_standard_value_min,
+        hd_cholesterol_standard_value_max,
+        hd_cholesterol_within_deviation_value_min,
+        hd_cholesterol_within_deviation_value_max,
+        hd_cholesterol_out_of_range,
+        hd_cholesterol_units,
+    }
+
+
+    try {
+        const count = await CHOLESTEROL.count();
+        if (count > 0) {
+            const existiCHOLESTEROL = await CHOLESTEROL.findOne();
+            if (existiCHOLESTEROL) {
+                insert = await existiCHOLESTEROL.update(data);
+            } else {
+                throw new Error('Unexpected: Record not found when it should exist.');
+            }
+        } else {
+            insert = await CHOLESTEROL.create(data);
+        }
+
+        sendSuccess(res, 201, insert, 'CHOLESTEROL update successfully');
+    } catch (error) {
+        sendError(res, 500, error, 'Invalid input');
+    }
+};
 
 //////view
 
@@ -223,6 +354,23 @@ exports.viewECG = async (req, res) => {
 exports.viewBloodpressure = async (req, res) => {
     try {
         const data = await Bloodpressure.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+exports.viewBMI = async (req, res) => {
+    try {
+        const data = await BMI.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, error.message);
+    }
+}
+
+exports.viewCholesterol = async (req, res) => {
+    try {
+        const data = await CHOLESTEROL.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
         sendError(res, 500, error, error.message);
