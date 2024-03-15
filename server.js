@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 indexRoutes(app);
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code 02-03-2024' });
+  res.json({ message: 'Updated Code 15/03' });
 });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
