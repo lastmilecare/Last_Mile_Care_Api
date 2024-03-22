@@ -11,7 +11,7 @@ const HttpStatusCode = {
   EXISTING_USERNAME: { code: 409, defaultMessage: 'Username already exists' },
   INTERNAL_SERVER_ERROR: { code: 500, defaultMessage: 'Internal Server Error' },
   NOUSERFOUND: { code: 404, message: 'No USER FOUND.' },
-  
-  };
-  
-  module.exports = HttpStatusCode;
+
+};
+
+module.exports = HttpStatusCode;

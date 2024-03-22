@@ -207,7 +207,7 @@ exports.centerUpdate = async (req, res) => {
     sendSuccess(res, 200, updatedCenter, ' Update Successfully');
   } catch (error) {
     // Handle errors
-    sendError(res, 500, error, 'Invalid input');
+    sendError(res, 500, "internal server error");
   }
 
 }

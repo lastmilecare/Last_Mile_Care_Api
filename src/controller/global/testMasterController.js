@@ -328,7 +328,7 @@ exports.viewBloodgroup = async (req, res) => {
         const data = await Bloodgroup.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -338,7 +338,7 @@ exports.viewHearingtest = async (req, res) => {
         const data = await Hearingtest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -347,7 +347,7 @@ exports.viewECG = async (req, res) => {
         const data = await ECG.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -356,7 +356,7 @@ exports.viewBloodpressure = async (req, res) => {
         const data = await Bloodpressure.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 exports.viewBMI = async (req, res) => {
@@ -364,7 +364,7 @@ exports.viewBMI = async (req, res) => {
         const data = await BMI.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -373,6 +373,6 @@ exports.viewCholesterol = async (req, res) => {
         const data = await CHOLESTEROL.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }

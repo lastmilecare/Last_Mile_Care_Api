@@ -9,13 +9,16 @@ const {
 async function adminAuth(email, password) {
   try {
     const result = await User.findOne({ where: { email: email }, raw: true, nest: true });
-    const findRole = await Role.findOne({ where: { id: result.role_id }, raw: true, nest: true });
     if (result) {
+      const findRole = await Role.findOne({ where: { id: result.role_id }, raw: true, nest: true });
+
       const mergedData = { ...result, ...findRole };
       return mergedData;
+
     }
+
     else {
-      return { "status": "no_user_found" };
+      return { status: "no_user_found" };
     }
   } catch (error) {
     throw new Error(error);

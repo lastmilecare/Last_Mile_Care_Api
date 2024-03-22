@@ -63,17 +63,18 @@ exports.adminAuth = async (req, res) => {
 
     }
     const result = await authService.adminAuth(req.body.email, req.body.password);
+    console.log(result);
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
     }
     const tokenData = await authHelper.checkUserPass(req.body.password, result, res);
     if (tokenData.status == "invalid_password") {
-      sendError(res, 404, "invalid_password", 'Invalid Password');
+      sendError(res, 404, "no_user_found", 'Invalid Password');
     }
     sendSuccess(res, 200, tokenData, 'Login Successfully');
 
   } catch (error) {
-    sendError(res, 500, error, 'Invalid input');
+    sendError(res, 500, "internal server error", error);
   }
 };
 
@@ -88,7 +89,7 @@ exports.createPermission = async (req, res) => {
     sendSuccess(res, 200, result, 'Permission Create  Successfully');
 
   } catch (error) {
-    sendError(res, 500, error);
+    sendError(res, 500, "internal server error", error);
 
   }
 }
@@ -100,7 +101,7 @@ exports.viewPermission = async (req, res) => {
     sendSuccess(res, 200, result, 'Permission View  Successfully');
 
   } catch (error) {
-    sendError(res, 500, error);
+    sendError(res, 500, "internal server error");
 
   }
 }
@@ -118,7 +119,7 @@ exports.userStatusUpdate = async (req, res) => {
     sendSuccess(res, 200, result, 'Status Update Successfully');
 
   } catch (error) {
-    sendError(res, 500, error);
+    sendError(res, 500, "internal server error");
 
   }
 }

@@ -20,7 +20,7 @@ exports.updateMaster = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Center successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
 
     }
 
@@ -43,7 +43,7 @@ exports.updateTemperature = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Temperature successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
 
     }
 }
@@ -64,7 +64,7 @@ exports.updateSPO2s = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create SPO2s successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
 
     }
 }
@@ -85,7 +85,7 @@ exports.updateRandomBloodSugar = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Random Blood Sugar successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
 
     }
 }
@@ -104,7 +104,7 @@ exports.updatePulse = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Pulse successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
 
     }
 }
@@ -124,8 +124,7 @@ exports.updatePulmonaryfunctiontest = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Pulmonary function test successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
-
+        sendError(res, 500, "internal server error");
     }
 }
 exports.updateHaemoglobin = async (req, res) => {
@@ -143,8 +142,7 @@ exports.updateHaemoglobin = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Haemoglobin test successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
-
+        sendError(res, 500, "internal server error");
     }
 }
 exports.updateCretenine = async (req, res) => {
@@ -162,8 +160,7 @@ exports.updateCretenine = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Cretenine test successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
-
+        sendError(res, 500, "internal server error");
     }
 }
 exports.updateAlcholtest = async (req, res) => {
@@ -181,8 +178,7 @@ exports.updateAlcholtest = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Alcholtest test successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
-
+        sendError(res, 500, "internal server error");
     }
 }
 exports.updateHiv = async (req, res) => {
@@ -197,8 +193,7 @@ exports.updateHiv = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Hiv test successfully');
 
     } catch (error) {
-        sendError(res, 500, error, error.message);
-
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -209,7 +204,7 @@ exports.viewTemperature = async (req, res) => {
         const data = await Temperature.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -219,7 +214,7 @@ exports.viewSPO2 = async (req, res) => {
         const data = await SPO2.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -229,7 +224,7 @@ exports.viewRandomBloodSugar = async (req, res) => {
         const data = await random_blood_sugar.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -239,7 +234,7 @@ exports.viewPulse = async (req, res) => {
         const data = await Pulse.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -249,7 +244,7 @@ exports.viewPulmonaryFunctionTest = async (req, res) => {
         const data = await Pulmonaryfunctiontest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -259,7 +254,7 @@ exports.viewHaemoglobin = async (req, res) => {
         const data = await Haemoglobin.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -269,7 +264,7 @@ exports.viewCretenine = async (req, res) => {
         const data = await Cretenine.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -279,7 +274,7 @@ exports.viewAlcholtest = async (req, res) => {
         const data = await Alcholtest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }
 
@@ -289,6 +284,6 @@ exports.viewHiv = async (req, res) => {
         const data = await Hiv.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, error, error.message);
+        sendError(res, 500, "internal server error");
     }
 }

@@ -14,6 +14,6 @@ exports.userList = async (req, res) => {
         });
         sendSuccess(res, 200, result, 'User List');
     } catch (error) {
-        sendError(res, 500, error, 'Invalid input');
+        sendError(res, 500, "internal server error");
     }
 };
