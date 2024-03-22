@@ -20,7 +20,7 @@ npx sequelize-cli model:generate --name Bloodpressure --attributes  systolic_sta
 
 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
 
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main.
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
 
 
 
