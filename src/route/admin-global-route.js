@@ -14,6 +14,8 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/center`, verifyTokenMiddleware, adminCenterController.viewCenter);
     app.post(`${prefixUrl}/center-user/center`, verifyTokenMiddleware, adminCenterController.assignCenter);
     app.post(`${prefixUrl}/center/user/view`, verifyTokenMiddleware, adminCenterController.centerUser);
+    app.post(`${prefixUrl}/edit/center`, verifyTokenMiddleware, adminCenterController.centerEdit);
+    app.post(`${prefixUrl}/update/center`, verifyTokenMiddleware, upload.single('file'), adminCenterController.centerUpdate);
 
     app.post(`${prefixUrl}/update/center/status`, verifyTokenMiddleware, adminCenterController.updateCenterStatus);
 

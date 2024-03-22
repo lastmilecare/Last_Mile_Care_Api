@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const configJwt = require('../../config/envConfig');
 const configJwttoken = configJwt.JWT_ADMIN;
 const jwt = require('jsonwebtoken');
-
-exports.checkUserPass = async (password, userdata) => {
+const cookie = require('cookie');
+exports.checkUserPass = async (password, userdata, res) => {
   let makeResponseObject = {};
   let passwordIsValid = bcrypt.compareSync(password, userdata.password);
   if (!passwordIsValid) {
@@ -20,9 +20,14 @@ exports.checkUserPass = async (password, userdata) => {
     },
     configJwttoken
   );
-  console.log(userdata);
   makeResponseObject.token = token;
   makeResponseObject.role = userdata.slug;
-  makeResponseObject.username = userdata.username
+  makeResponseObject.username = userdata.username;
+  const cookieOptions = {
+    maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days in milliseconds
+    httpOnly: true,
+    // Add other cookie options as needed
+  };
+  res.setHeader('Set-Cookie', cookie.serialize('token', token, cookieOptions));
   return makeResponseObject;
 };

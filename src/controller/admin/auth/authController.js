@@ -66,7 +66,7 @@ exports.adminAuth = async (req, res) => {
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
     }
-    const tokenData = await authHelper.checkUserPass(req.body.password, result);
+    const tokenData = await authHelper.checkUserPass(req.body.password, result, res);
     if (tokenData.status == "invalid_password") {
       sendError(res, 404, "invalid_password", 'Invalid Password');
     }

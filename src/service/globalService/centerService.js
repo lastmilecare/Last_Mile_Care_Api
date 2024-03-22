@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const {
   sequelize,
   Center,
@@ -9,6 +10,18 @@ const {
 async function insertCenter(data) {
   try {
     return await Center.create(data);
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+async function updateCenter(centerId, data) {
+  try {
+    const center = await Center.findByPk(centerId);
+    if (!center) {
+      throw new Error("Center not found");
+    }
+    await center.update(data);
+    return center;
   } catch (error) {
     throw new Error(error);
   }
@@ -64,6 +77,18 @@ async function getCenterUser(req) {
     throw new Error(error);
   }
 }
+async function findCenter(id) {
+  try {
+    const result = await Center.findOne({
+      where: { id: id }
+    });
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
 
-module.exports = { getCenterUser, centerStatusUpdate, assignCenterToUser, findAllCenter, insertCenter };
+
+module.exports = { updateCenter, findCenter, getCenterUser, centerStatusUpdate, assignCenterToUser, findAllCenter, insertCenter };

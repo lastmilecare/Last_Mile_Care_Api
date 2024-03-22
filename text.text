@@ -1,10 +1,10 @@
  
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
 
 http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/
 
-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
-
+ 
+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
 
  npx sequelize-cli db:migrate
 
@@ -20,4 +20,19 @@ npx sequelize-cli model:generate --name Bloodpressure --attributes  systolic_sta
 
 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
 
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main.
+
+
+
+npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:string
+
+
+
+
+  ssh -i "LMC-DEV.pem" ec2-user@ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com
+  sudo -i
+  cd /usr/lmc/Last_Mile_Care_Api/
+  git stash
+  git pull
+  git stash pop
+  pm2 restart all
