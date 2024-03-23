@@ -1,19 +1,28 @@
 
 const { sendSuccess, sendError } = require('../../../util/responseHandler');
-const { sequelize, User } = require("../../../../db/models");
+const { sequelize, User, Role } = require("../../../../db/models");
 // 
 exports.userList = async (req, res) => {
     try {
         const result = await User.findAll({
-            raw: true, nest: true, attributes: ['username',
+            attributes: [
+                'username',
                 'name',
                 'role_id',
                 'email',
                 'phone',
-                'status']
+                'status'
+            ],
+            include: {
+                model: Role,
+                as: 'role',
+                attributes: ['role_title', 'slug']
+            },
+            raw: true, nest: true,
         });
         sendSuccess(res, 200, result, 'User List');
     } catch (error) {
+        console.log(error);
         sendError(res, 500, "internal server error");
     }
 };
