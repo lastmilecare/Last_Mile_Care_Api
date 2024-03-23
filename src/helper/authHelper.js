@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 exports.checkUserPass = async (password, userdata, res) => {
   let makeResponseObject = {};
+  console.log(userdata.password);
+  console.log(password);
+
   let passwordIsValid = bcrypt.compareSync(password, userdata.password);
   if (!passwordIsValid) {
     return { "status": "invalid_password" };

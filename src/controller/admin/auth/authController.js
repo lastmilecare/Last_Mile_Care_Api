@@ -62,25 +62,28 @@ exports.adminAuth = async (req, res) => {
   try {
     if (!req.body.email) {
       sendError(res, 400, "Email ID Required", 'Email ID Required');
-
+      return;
     }
     if (!req.body.password) {
       sendError(res, 400, "Password ID Required", 'Password ID Required');
-
+      return;
     }
     const result = await authService.adminAuth(req.body.email, req.body.password);
-    console.log(result);
+    console.log("result", result);
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
+
     }
     const tokenData = await authHelper.checkUserPass(req.body.password, result, res);
     if (tokenData.status == "invalid_password") {
-      sendError(res, 404, "no_user_found", 'Invalid Password');
+      sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
+      return;
     }
     sendSuccess(res, 200, tokenData, 'Login Successfully');
-
+    return;
   } catch (error) {
     sendError(res, 500, "internal server error", error);
+    return;
   }
 };
 

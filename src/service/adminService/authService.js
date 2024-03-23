@@ -12,8 +12,8 @@ async function adminAuth(email, password) {
     const result = await User.findOne({ where: { email: email }, raw: true, nest: true });
     if (result) {
       const findRole = await Role.findOne({ where: { id: result.role_id }, raw: true, nest: true });
-
       const mergedData = { ...result, ...findRole };
+      console.log(mergedData);
       return mergedData;
 
     }
