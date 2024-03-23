@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { port } = require('./config/envConfig');
 const indexRoutes = require('./src/route/index-route.js');
 const app = express();
+//
 console.log(port);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
