@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Centeruser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
       Centeruser.belongsTo(models.Center, { foreignKey: 'center_id', as: 'center' });
+
     }
   }
   Centeruser.init({

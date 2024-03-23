@@ -36,3 +36,9 @@ npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:s
   git pull
   git stash pop
   pm2 restart all
+
+
+  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
+
+  
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main

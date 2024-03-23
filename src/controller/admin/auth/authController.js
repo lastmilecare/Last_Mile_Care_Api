@@ -5,6 +5,12 @@ const rolseService = require('../../../service/adminService/rolseService.js');
 const userService = require('../../../service/adminService/userService.js');
 const authService = require('../../../service/adminService/authService.js');
 const authHelper = require('../../../helper/authHelper.js');
+const {
+  sequelize,
+  Role,
+  User,
+  Permission
+} = require("../../../../db/models");
 
 const bcrypt = require("bcryptjs");
 
@@ -79,18 +85,32 @@ exports.adminAuth = async (req, res) => {
 };
 
 exports.createPermission = async (req, res) => {
+  if (!req.body.role_id || !req.body.Permissionmetadata) {
+    sendError(res, 400, "bad request", 'role_id and Permissionmetadata required');
+    return;
+  }
+
   try {
-    const data = {
-      user_id: req.body.id,
-      permission_group: req.body.permission_group,
-      permission_type: req.body.permission_type,
+    const permissionData = {
+      role_id: req.body.role_id,
+      permission_name: req.body.permission_name,
     }
-    const result = await authService.insertPermission(data);
-    sendSuccess(res, 200, result, 'Permission Create  Successfully');
 
+    const permissionMetadata = req.body.Permissionmetadata; // Extract Permissionmetadata array
+
+    // Create the permission record
+    const permission = await authService.insertPermission(permissionData);
+
+    // Iterate over each metadata object and associate it with the permission
+    for (const metadata of permissionMetadata) {
+      metadata.permission_id = permission.id; // Assign the permission id to the metadata object
+      await authService.insertPermissionMetadata(metadata);
+    }
+
+    sendSuccess(res, 200, permission, 'Permission Create Successfully');
   } catch (error) {
+    console.log(error);
     sendError(res, 500, "internal server error", error);
-
   }
 }
 
@@ -101,6 +121,7 @@ exports.viewPermission = async (req, res) => {
     sendSuccess(res, 200, result, 'Permission View  Successfully');
 
   } catch (error) {
+    console.log(error);
     sendError(res, 500, "internal server error");
 
   }
@@ -124,7 +145,53 @@ exports.userStatusUpdate = async (req, res) => {
   }
 }
 
+exports.userDetails = async (req, res) => {
+  try {
+    if (!req.body.id) {
+      sendError(res, 400, " ID Required", ' ID Required');
 
+    }
+    const result = await User.findOne({ where: { id: req.body.id }, attributes: { exclude: ['password'] }, raw: true, nest: true });
+    sendSuccess(res, 200, result, 'User data get Successfully');
+
+  } catch (error) {
+    sendError(res, 500, "internal server error", error);
+
+  }
+}
+
+
+exports.userUpdate = async (req, res) => {
+  try {
+    if (!req.body.id) {
+      sendError(res, 400, "ID Required", 'ID Required');
+      return; // Exit the function early if ID is missing
+    }
+
+    const data = {
+      username: req.body.username.trim().toLowerCase(),
+      role_id: req.body.role_id,
+      email: req.body.email,
+      name: req.body.name,
+      phone: req.body.phone,
+      isAdmin: true, // Not sure where isAdmin is coming from, adjust as needed
+    };
+
+    // Check if the password is provided in the request body
+    if (req.body.password) {
+      // If password is provided, hash it and include it in the update data
+      data.password = bcrypt.hashSync(req.body.password, 8);
+    }
+
+    // Perform the update operation
+    await User.update(data, { where: { id: req.body.id } });
+
+    sendSuccess(res, 200, req.body.username, 'User data updated successfully');
+  } catch (error) {
+    console.log(error);
+    sendError(res, 500, "Internal server error", error);
+  }
+}
 
 function createSlug(inputString) {
   // Using the slugify package

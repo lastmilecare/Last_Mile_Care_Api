@@ -6,7 +6,8 @@ const {
     ECG,
     Bloodpressure,
     BMI,
-    CHOLESTEROL
+    CHOLESTEROL,
+    Eyetest
 } = require("../../../db/models");
 // 
 exports.hearingTest = async (req, res) => {
@@ -322,7 +323,14 @@ exports.cholesterolUpdate = async (req, res) => {
 //////view
 
 
-
+exports.viewEyeTest = async (req, res) => {
+    try {
+        const data = await Eyetest.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+    }
+}
 exports.viewBloodgroup = async (req, res) => {
     try {
         const data = await Bloodgroup.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
@@ -376,3 +384,174 @@ exports.viewCholesterol = async (req, res) => {
         sendError(res, 500, "internal server error");
     }
 }
+
+exports.updateEyeTest = async (req, res) => {
+    try {
+        const {
+            left_eye_far_sight_standard_min_1,
+            left_eye_far_sight_standard_min_2,
+            left_eye_far_sight_standard_min_3,
+            left_eye_far_sight_standard_max_1,
+            left_eye_far_sight_standard_max_2,
+            left_eye_far_sight_standard_max_3,
+            left_eye_far_sight_deviation_min_1,
+            left_eye_far_sight_deviation_min_2,
+            left_eye_far_sight_deviation_min_3,
+            left_eye_far_sight_deviation_max_1,
+            left_eye_far_sight_deviation_max_2,
+            left_eye_far_sight_deviation_max_3,
+            right_eye_far_sight_standard_min_1,
+            right_eye_far_sight_standard_min_2,
+            right_eye_far_sight_standard_min_3,
+            right_eye_far_sight_standard_max_1,
+            right_eye_far_sight_standard_max_2,
+            right_eye_far_sight_standard_max_3,
+            right_eye_far_sight_deviation_min_1,
+            right_eye_far_sight_deviation_min_2,
+            right_eye_far_sight_deviation_min_3,
+            right_eye_far_sight_deviation_max_1,
+            right_eye_far_sight_deviation_max_2,
+            right_eye_far_sight_deviation_max_3,
+            left_eye_near_sight_standard_min_1,
+            left_eye_near_sight_standard_min_2,
+            left_eye_near_sight_standard_min_3,
+            left_eye_near_sight_standard_max_1,
+            left_eye_near_sight_standard_max_2,
+            left_eye_near_sight_standard_max_3,
+            left_eye_near_sight_deviation_min_1,
+            left_eye_near_sight_deviation_min_2,
+            left_eye_near_sight_deviation_min_3,
+            left_eye_near_sight_deviation_max_1,
+            left_eye_near_sight_deviation_max_2,
+            left_eye_near_sight_deviation_max_3,
+            right_eye_near_sight_standard_min_1,
+            right_eye_near_sight_standard_min_2,
+            right_eye_near_sight_standard_min_3,
+            right_eye_near_sight_standard_max_1,
+            right_eye_near_sight_standard_max_2,
+            right_eye_near_sight_standard_max_3,
+            right_eye_near_sight_deviation_min_1,
+            right_eye_near_sight_deviation_min_2,
+            right_eye_near_sight_deviation_min_3,
+            right_eye_near_sight_deviation_max_1,
+            right_eye_near_sight_deviation_max_2,
+            right_eye_near_sight_deviation_max_3,
+            left_eye_vision_far_standard_min,
+            left_eye_vision_far_standard_max,
+            left_eye_vision_far_deviation_min,
+            left_eye_vision_far_deviation_max,
+            right_eye_vision_far_standard_min,
+            right_eye_vision_far_standard_max,
+            right_eye_vision_far_deviation_min,
+            right_eye_vision_far_deviation_max,
+            left_eye_vision_near_standard_min,
+            left_eye_vision_near_standard_max,
+            left_eye_vision_near_deviation_min,
+            left_eye_vision_near_deviation_max,
+            right_eye_vision_near_standard_min,
+            right_eye_vision_near_standard_max,
+            right_eye_vision_near_deviation_min,
+            right_eye_vision_near_deviation_max,
+            color_blindness_option_1,
+            color_blindness_option_2,
+            units_eye_test,
+        } = req.body;
+
+
+
+        const data = {
+            left_eye_far_sight_standard_min_1,
+            left_eye_far_sight_standard_min_2,
+            left_eye_far_sight_standard_min_3,
+            left_eye_far_sight_standard_max_1,
+            left_eye_far_sight_standard_max_2,
+            left_eye_far_sight_standard_max_3,
+            left_eye_far_sight_deviation_min_1,
+            left_eye_far_sight_deviation_min_2,
+            left_eye_far_sight_deviation_min_3,
+            left_eye_far_sight_deviation_max_1,
+            left_eye_far_sight_deviation_max_2,
+            left_eye_far_sight_deviation_max_3,
+            right_eye_far_sight_standard_min_1,
+            right_eye_far_sight_standard_min_2,
+            right_eye_far_sight_standard_min_3,
+            right_eye_far_sight_standard_max_1,
+            right_eye_far_sight_standard_max_2,
+            right_eye_far_sight_standard_max_3,
+            right_eye_far_sight_deviation_min_1,
+            right_eye_far_sight_deviation_min_2,
+            right_eye_far_sight_deviation_min_3,
+            right_eye_far_sight_deviation_max_1,
+            right_eye_far_sight_deviation_max_2,
+            right_eye_far_sight_deviation_max_3,
+            left_eye_near_sight_standard_min_1,
+            left_eye_near_sight_standard_min_2,
+            left_eye_near_sight_standard_min_3,
+            left_eye_near_sight_standard_max_1,
+            left_eye_near_sight_standard_max_2,
+            left_eye_near_sight_standard_max_3,
+            left_eye_near_sight_deviation_min_1,
+            left_eye_near_sight_deviation_min_2,
+            left_eye_near_sight_deviation_min_3,
+            left_eye_near_sight_deviation_max_1,
+            left_eye_near_sight_deviation_max_2,
+            left_eye_near_sight_deviation_max_3,
+            right_eye_near_sight_standard_min_1,
+            right_eye_near_sight_standard_min_2,
+            right_eye_near_sight_standard_min_3,
+            right_eye_near_sight_standard_max_1,
+            right_eye_near_sight_standard_max_2,
+            right_eye_near_sight_standard_max_3,
+            right_eye_near_sight_deviation_min_1,
+            right_eye_near_sight_deviation_min_2,
+            right_eye_near_sight_deviation_min_3,
+            right_eye_near_sight_deviation_max_1,
+            right_eye_near_sight_deviation_max_2,
+            right_eye_near_sight_deviation_max_3,
+            left_eye_vision_far_standard_min,
+            left_eye_vision_far_standard_max,
+            left_eye_vision_far_deviation_min,
+            left_eye_vision_far_deviation_max,
+            right_eye_vision_far_standard_min,
+            right_eye_vision_far_standard_max,
+            right_eye_vision_far_deviation_min,
+            right_eye_vision_far_deviation_max,
+            left_eye_vision_near_standard_min,
+            left_eye_vision_near_standard_max,
+            left_eye_vision_near_deviation_min,
+            left_eye_vision_near_deviation_max,
+            right_eye_vision_near_standard_min,
+            right_eye_vision_near_standard_max,
+            right_eye_vision_near_deviation_min,
+            right_eye_vision_near_deviation_max,
+            color_blindness_option_1,
+            color_blindness_option_2,
+            units_eye_test,
+        };
+
+
+        // Retrieve uploaded files from req.files
+        let insert;
+
+        try {
+            const count = await Eyetest.count();
+            if (count > 0) {
+                const existinEyetest = await Eyetest.findOne();
+                if (existinEyetest) {
+                    insert = await existinEyetest.update(data);
+                } else {
+                    throw new Error('Unexpected: Record not found when it should exist.');
+                }
+            } else {
+                insert = await Eyetest.create(data);
+            }
+
+            sendSuccess(res, 201, insert, 'EyeTest update successfully');
+        } catch (error) {
+            sendError(res, 500, error, 'Invalid input');
+        }
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+    }
+}
+

@@ -2,7 +2,8 @@ const {
   sequelize,
   Role,
   User,
-  Permission
+  Permission,
+  Permissionmetadata
 } = require("../../../db/models");
 
 
@@ -24,18 +25,36 @@ async function adminAuth(email, password) {
     throw new Error(error);
   }
 }
-async function insertPermission(data) {
+
+
+async function insertPermission(permissionData) {
   try {
-    return await Permission.create(data);
+    return await Permission.create(permissionData);
+
   } catch (error) {
     throw new Error(error);
   }
 
 }
+async function insertPermissionMetadata(metadata) {
+  console.log(metadata);
+
+  try {
+    const insert = await Permissionmetadata.create(metadata);
+    return insert
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
 async function findPermission(req) {
   try {
-    return await Permission.findAll();
+    return await Permission.findAll({
+      include: {
+        model: Permissionmetadata,
+        as: 'Permissionmetadata' // Assuming you've defined an alias for the association
+      }
+    });
   } catch (error) {
     throw new Error(error);
   }
@@ -53,4 +72,4 @@ async function changeStatue(id, status) {
   }
 }
 
-module.exports = { changeStatue, findPermission, insertPermission, adminAuth };
+module.exports = { insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };

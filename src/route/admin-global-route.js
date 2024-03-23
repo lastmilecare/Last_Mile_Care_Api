@@ -13,11 +13,15 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/create/center`, verifyTokenMiddleware, upload.single('file'), adminCenterController.createCenter);
     app.post(`${prefixUrl}/view/center`, verifyTokenMiddleware, adminCenterController.viewCenter);
     app.post(`${prefixUrl}/center-user/center`, verifyTokenMiddleware, adminCenterController.assignCenter);
-    app.post(`${prefixUrl}/center/user/view`, verifyTokenMiddleware, adminCenterController.centerUser);
     app.post(`${prefixUrl}/edit/center`, verifyTokenMiddleware, adminCenterController.centerEdit);
     app.post(`${prefixUrl}/update/center`, verifyTokenMiddleware, upload.single('file'), adminCenterController.centerUpdate);
+    app.post(`${prefixUrl}/center/user/view`, verifyTokenMiddleware, adminCenterController.centerUser);
+    app.post(`${prefixUrl}/center/user/details`, verifyTokenMiddleware, adminCenterController.centerUserDetails);
+    app.post(`${prefixUrl}/center/user/update`, verifyTokenMiddleware, adminCenterController.centerUserUpdate);
 
     app.post(`${prefixUrl}/update/center/status`, verifyTokenMiddleware, adminCenterController.updateCenterStatus);
+    app.post(`${prefixUrl}/update/center/user/status`, verifyTokenMiddleware, adminCenterController.updateCenterUserStatus);
+
 
     //testmaster
     app.post(`${prefixUrl}/update/temperature`, verifyTokenMiddleware, adminMasterController.updateTemperature);
@@ -38,6 +42,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/update/bloodpressure`, verifyTokenMiddleware, testMasterController.bloodPressure);
     app.post(`${prefixUrl}/update/bmi`, verifyTokenMiddleware, testMasterController.bmiCheck);
     app.post(`${prefixUrl}/update/cholesterol`, verifyTokenMiddleware, testMasterController.cholesterolUpdate);
+    app.post(`${prefixUrl}/update/EyeTest`, verifyTokenMiddleware, testMasterController.updateEyeTest);
 
 
 
@@ -60,6 +65,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/bloodpressure`, verifyTokenMiddleware, testMasterController.viewBloodpressure);
     app.post(`${prefixUrl}/view/bmi`, verifyTokenMiddleware, testMasterController.viewBMI);
     app.post(`${prefixUrl}/view/cholesterol`, verifyTokenMiddleware, testMasterController.viewCholesterol);
+    app.post(`${prefixUrl}/view/EyeTest`, verifyTokenMiddleware, testMasterController.viewEyeTest);
 
 
 
@@ -69,6 +75,12 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/package/list`, verifyTokenMiddleware, packageController.listPackage);
     app.post(`${prefixUrl}/addpackage/toCenter`, verifyTokenMiddleware, packageController.addPackageTOCenter);
     app.post(`${prefixUrl}/view/center/package`, verifyTokenMiddleware, packageController.viewCenterPackage);
+
+    app.post(`${prefixUrl}/package/details`, verifyTokenMiddleware, packageController.packageDetails);
+    app.post(`${prefixUrl}/package/update`, verifyTokenMiddleware, packageController.packageUpdate);
+
+    app.post(`${prefixUrl}/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageDetails);
+    app.post(`${prefixUrl}/update/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageUpdate);
 
 
 

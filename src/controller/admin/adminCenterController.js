@@ -1,5 +1,12 @@
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const centerService = require('../../service/globalService/centerService');
+const {
+  sequelize,
+  Center,
+  User,
+  Centeruser,
+
+} = require("../../../db/models");
 
 // 
 exports.createCenter = async (req, res) => {
@@ -211,3 +218,96 @@ exports.centerUpdate = async (req, res) => {
   }
 
 }
+
+exports.centerUserDetails = async (req, res) => {
+  if (!req.body.id) {
+    sendError(res, 400, "id  required", 'id  required');
+    return;
+  }
+
+  try {
+    const userId = req.body.id; // Assuming userId is sent in the request params
+    const userDetails = await User.findByPk(userId, {
+      include: [
+        { model: Centeruser, as: 'centerusers' },
+        { model: Center, through: { attributes: [] }, as: 'centers' }
+      ]
+    });
+
+    if (!userDetails) {
+      sendError(res, 404, 'User not found', 'User not found');
+      return;
+    }
+
+    sendSuccess(res, 200, userDetails, 'User details retrieved successfully');
+  } catch (error) {
+    console.log(error);
+    sendError(res, 500, error, 'Invalid input');
+  }
+}
+
+
+exports.centerUserUpdate = async (req, res) => {
+  try {
+    // Destructure request body
+    const { id, username, name, role_id, phone, email, password, center_id } = req.body;
+
+    // Find the user record to update
+    let user = await User.findByPk(id);
+    if (!user) {
+      return sendError(res, 404, 'User not found', 'User not found');
+    }
+
+    // Update user data with new values
+    user.username = username;
+    user.name = name;
+    user.role_id = role_id;
+    user.phone = phone;
+    user.email = email;
+    user.password = password; // You might want to handle password hashing here
+    await user.save();
+
+    // If center_id is provided, update associated center
+    if (center_id) {
+      let centeruser = await Centeruser.findOne({ where: { user_id: id } });
+      if (!centeruser) {
+        // Create new centeruser if not exists
+        centeruser = await Centeruser.create({ user_id: id, center_id: center_id });
+      } else {
+        // Update existing centeruser
+        centeruser.center_id = center_id;
+        await centeruser.save();
+      }
+    }
+
+    // Send success response with updated user data
+    sendSuccess(res, 200, user, 'User data updated successfully');
+  } catch (error) {
+    // Handle errors
+    sendError(res, 500, error.message, 'Invalid input');
+  }
+}
+
+
+exports.updateCenterUserStatus = async (req, res) => {
+  try {
+    if (!req.body.id) {
+      sendError(res, 400, "bad request", 'id required');
+    }
+
+    if (!req.body.status) {
+      sendError(res, 400, "bad request", 'status required');
+    }
+    const result = await User.update({ status: req.body.status }, {
+      where: {
+        id: req.body.id,
+      },
+    })
+    sendSuccess(res, 200, result, 'Status Update Successfully');
+
+  } catch (error) {
+    sendError(res, 500, "internal server error");
+
+  }
+}
+

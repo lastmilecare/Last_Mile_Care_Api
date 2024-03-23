@@ -1,21 +1,22 @@
 const jwt = require('jsonwebtoken');
 const configJwt = require('../../config/envConfig');
 const configJwttoken = configJwt.JWT_ADMIN;
+const { sendSuccess, sendError } = require('../../src/util/responseHandler');
 
 
 const verifyTokenMiddleware = (req, res, next) => {
     const token = req.cookies.token; // Get the token from cookies
 
     if (!token) {
-        return res.status(401).json({ error: true, message: 'Token is missing in cookies' });
+        sendError(res, 400, "Token ID Required", 'Token ID Required');
     }
 
     jwt.verify(token, configJwttoken, (err, decoded) => {
         if (err) {
             if (err.name === 'JsonWebTokenError') {
-                return res.status(401).json({ error: true, message: 'Invalid token provided' });
+                sendError(res, 401, "JsonWebTokenError", 'JsonWebTokenError');
             }
-            return res.status(500).json({ error: true, message: 'Failed to authenticate token' });
+            sendError(res, 500, "JsonWebTokenError", 'Failed to authenticate token');
         }
         req.userId = decoded.data.id;
         next();

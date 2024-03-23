@@ -15,5 +15,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/create/user-permission`, verifyTokenMiddleware, adminAuthController.createPermission);
     app.post(`${prefixUrl}/view-permission`, verifyTokenMiddleware, adminAuthController.viewPermission);
     app.post(`${prefixUrl}/user/status/update`, verifyTokenMiddleware, adminAuthController.userStatusUpdate);
+    app.post(`${prefixUrl}/user/details`, verifyTokenMiddleware, adminAuthController.userDetails);
+    app.post(`${prefixUrl}/user/update`, verifyTokenMiddleware, adminAuthController.userUpdate);
+
+
 
 };

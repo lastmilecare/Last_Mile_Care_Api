@@ -2,20 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Permissions', {
+    await queryInterface.createTable('Permissionmetadata', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      role_id: {
+      permission_id: {
         type: Sequelize.STRING
       },
-      permission_name: {
-        type: Sequelize.STRING
+      page_name: Sequelize.STRING,
+      permission_type: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
       },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -27,6 +27,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Permissions');
+    await queryInterface.dropTable('Permissionmetadata');
   }
 };
