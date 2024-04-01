@@ -18,7 +18,7 @@ app.use(cookieParser()); // Add cookie-parser middleware
 app.use(cors());
 indexRoutes(app);
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code 23/03' });
+  res.json({ message: 'Updated Code 01/04' });
 });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
