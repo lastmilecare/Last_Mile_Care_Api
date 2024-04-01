@@ -4,11 +4,10 @@ const path = require('path');
 function getUploadFolder(fieldName) {
     // Map field names to destination folders
     const folderMap = {
-        doc1: './public/uploads',
-        doc2: './public/uploads',
-        doc3: './public/uploads',
-        doc4: './public/uploads',
-        doc5: './public/uploads',
+        attachPanCopy: './public/uploads',
+        attachGstin: './public/uploads',
+        attachCancelledChequeOrPassbook: './public/uploads',
+        attachCertificateOfIncorporation: './public/uploads',
     };
 
     // Return the corresponding destination folder for the given field name
@@ -26,7 +25,6 @@ const storage = multer.diskStorage({
         // Generate a unique filename for the uploaded file
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const filename = file.fieldname + '_' + uniqueSuffix + path.extname(file.originalname);
-        console.log(`Filename for ${file.fieldname}: ${filename}`); // Log the filename
         cb(null, filename);
     },
 });
@@ -35,8 +33,8 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        // Allow only three specific fields
-        if (file.fieldname === 'doc1' || file.fieldname === 'doc3' || file.fieldname === 'doc2' || file.fieldname === 'doc4' || file.fieldname === 'doc5') {
+
+        if (file.fieldname === 'attachCertificateOfIncorporation' || file.fieldname === 'attachCancelledChequeOrPassbook' || file.fieldname === 'attachPanCopy' || file.fieldname === 'attachGstin') {
             cb(null, true);
         } else {
             cb(new Error('Invalid fieldname'));

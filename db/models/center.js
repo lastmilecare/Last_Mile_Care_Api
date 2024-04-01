@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     agency_spoc_email: DataTypes.STRING,
     agency_spoc_contact_number: DataTypes.STRING,
     status: DataTypes.BOOLEAN,
+    project_end_date: DataTypes.STRING,
+    agency_spoc_alternate_name: DataTypes.STRING,
+    agency_spoc_alternate_contact_number: DataTypes.STRING,
+    project_signed_agreement_file: DataTypes.STRING,
 
   }, {
     sequelize,

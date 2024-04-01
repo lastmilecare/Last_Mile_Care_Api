@@ -10,6 +10,9 @@ const {
 
 // 
 exports.createCenter = async (req, res) => {
+
+
+
   const {
     project_start_date,
     project_name,
@@ -23,8 +26,14 @@ exports.createCenter = async (req, res) => {
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
-    status
+    status,
+    project_end_date,
+    agency_spoc_alternate_name,
+    agency_spoc_alternate_contact_number
   } = req.body;
+
+
+
 
   const requiredFields = [
     'project_start_date',
@@ -67,7 +76,11 @@ exports.createCenter = async (req, res) => {
       agency_spoc_name,
       agency_spoc_email,
       agency_spoc_contact_number,
-      status
+      status,
+      project_end_date,
+      agency_spoc_alternate_name,
+      agency_spoc_alternate_contact_number,
+      project_signed_agreement_file: req.filePath
     };
     console.log(req);
 
@@ -114,16 +127,21 @@ exports.centerUser = async (req, res) => {
 exports.updateCenterStatus = async (req, res) => {
   try {
     if (!req.body.id) {
-      sendError(res, 400, "bad request", 'id required');
+      sendError(res, 400, "bad request , id required", 'id required');
+      return
     }
 
-    if (!req.body.status) {
-      sendError(res, 400, "bad request", 'status required');
+    if (typeof req.body.status !== 'boolean') {
+      sendError(res, 400, "bad request , status required", 'status required');
+      return
     }
+
     const result = await centerService.centerStatusUpdate(req.body.id, req.body.status);
     sendSuccess(res, 200, result, 'Status Update Successfully');
+    return
   } catch (error) {
     sendError(res, 500, error, 'Invalid input');
+    return
   }
 }
 
@@ -158,6 +176,9 @@ exports.centerUpdate = async (req, res) => {
     agency_spoc_email,
     agency_spoc_contact_number,
     status,
+    project_end_date,
+    agency_spoc_alternate_name,
+    agency_spoc_alternate_contact_number,
     id
   } = req.body;
 
@@ -203,7 +224,11 @@ exports.centerUpdate = async (req, res) => {
       agency_spoc_name,
       agency_spoc_email,
       agency_spoc_contact_number,
-      status
+      status,
+      project_end_date,
+      agency_spoc_alternate_name,
+      agency_spoc_alternate_contact_number,
+      project_signed_agreement_file: req.filePath
     };
 
     // Assuming you have a function to update the center
@@ -290,6 +315,7 @@ exports.centerUserUpdate = async (req, res) => {
 
 
 exports.updateCenterUserStatus = async (req, res) => {
+  console.log("ddddddddddd")
   try {
     if (!req.body.id) {
       sendError(res, 400, "bad request", 'id required');

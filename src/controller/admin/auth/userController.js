@@ -11,12 +11,13 @@ exports.userList = async (req, res) => {
                 'role_id',
                 'email',
                 'phone',
-                'status'
+                'status',
+                'id'
             ],
             include: {
                 model: Role,
                 as: 'role',
-                attributes: ['role_title', 'slug']
+                attributes: ['id', 'role_title', 'slug']
             },
             raw: true, nest: true,
         });

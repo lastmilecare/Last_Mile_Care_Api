@@ -12,7 +12,19 @@ async function adminAuth(email, password) {
     const result = await User.findOne({ where: { email: email }, raw: true, nest: true });
 
     if (result) {
-      const findRole = await Role.findOne({ where: { id: result.role_id }, raw: true, nest: true });
+      const findRole = await Role.findOne({
+        where: { id: result.role_id },
+        include: [
+          {
+            model: Permission,
+            as: 'permissions',
+            include: [
+              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true }
+            ]
+          }
+        ],
+
+      });
       const mergedData = { ...result, ...findRole };
       return mergedData;
     }
@@ -22,6 +34,7 @@ async function adminAuth(email, password) {
     }
 
   } catch (error) {
+    console.log(error);
     throw new Error(error);
   }
 }

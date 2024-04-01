@@ -26,8 +26,6 @@ exports.updateMaster = async (req, res) => {
 
 }
 
-
-
 exports.updateTemperature = async (req, res) => {
     try {
         const data = {

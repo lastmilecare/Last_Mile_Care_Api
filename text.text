@@ -42,3 +42,19 @@ npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:s
 
   
 git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+
+
+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
+
+
+ ssh -i "LMC-DEV.pem" ec2-user@ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com
+ sudo -i
+ cd /usr/lmc/Last_Mile_Care_Api/
+ git stash
+ git pull
+ git stash pop
+ pm2 restart all
+ chmod 400 LMC-DEV.pem
+
+
+ npx sequelize-cli model:generate --name CENTER --attributes name:string 

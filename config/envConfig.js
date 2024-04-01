@@ -3,6 +3,8 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 const API_PREFIX_ADMIN = process.env.API_PREFIX_ADMIN || '/api/v1/admin';
+const API_PREFIX_CENTER = process.env.API_PREFIX_CENTER || '/api/v1/center';
+
 
 // Database
 const databaseName = process.env.DATABASE_NAME || 'lastmileDb';
@@ -18,7 +20,8 @@ const emailFrom = process.env.EMAIL_FROM || 'default_email@example.com';
 const secretKey = process.env.SECRET_KEY || 'default_secret_key';
 const anotherKey = process.env.ANOTHER_KEY || 'default_another_key';
 const prefix = {
-  admin: API_PREFIX_ADMIN
+  admin: API_PREFIX_ADMIN,
+  center: API_PREFIX_CENTER
 };
 
 
