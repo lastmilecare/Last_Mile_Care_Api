@@ -17,6 +17,7 @@ app.use(cookieParser()); // Add cookie-parser middleware
 
 app.use(cors());
 indexRoutes(app);
+
 app.get('/', (req, res) => {
   res.json({ message: 'Updated Code 07-04-2024' });
 });
