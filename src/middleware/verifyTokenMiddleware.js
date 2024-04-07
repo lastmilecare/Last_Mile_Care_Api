@@ -18,7 +18,15 @@ const verifyTokenMiddleware = (req, res, next) => {
                 return sendError(res, 401, "JsonWebTokenError", 'JsonWebTokenError');
 
             }
+            if (err.name === 'TokenExpiredError') {
+                return sendError(res, 401, "Token has expired", 'Token has expired');
+
+            }
+
             return sendError(res, 500, "JsonWebTokenError", 'Failed to authenticate token');
+        }
+        if (decoded.exp <= Date.now() / 1000) {
+            return sendError(res, 401, "Token Expired", 'Token has expired');
         }
         req.userId = decoded.data.id;
         next();

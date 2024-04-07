@@ -10,22 +10,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       units: {
         type: Sequelize.STRING
       },
       out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

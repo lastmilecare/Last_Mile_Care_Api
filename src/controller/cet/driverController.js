@@ -90,6 +90,61 @@ exports.createDriver = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+exports.getDriverList = async (req, res) => {
+    try {
+        const drivers = await DRIVERMASTER.findAll();
+        sendSuccess(res, 200, drivers, 'List of drivers');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+// Details API
+exports.getDriverDetails = async (req, res) => {
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+    const { id } = req.body;
+    console.log(id)
+    try {
+        const driver = await DRIVERMASTER.findOne({ where: { id: id } });
+
+        sendSuccess(res, 200, driver, 'Driver details');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+// Update API
+exports.updateDriver = async (req, res) => {
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+
+    try {
+        const [updatedRowCount] = await DRIVERMASTER.update(req.body, {
+            where: { id: req.body.id },
+        });
+
+        if (updatedRowCount === 0) {
+            sendError(res, 404, "Driver not found or not updated", 'Driver not found or not updated');
+            return;
+        }
+
+        const updatedDriver = await DRIVERMASTER.findByPk(req.body.id);
+        sendSuccess(res, 200, updatedDriver, 'Driver updated successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+
+////////////// Personal data
 
 exports.createDriverPersonalData = async (req, res) => {
     const {
@@ -192,6 +247,144 @@ exports.createDriverPersonalData = async (req, res) => {
     }
 }
 
+
+exports.driverPersonalDataVIew = async (req, res) => {
+    try {
+        const drivers = await DRIVERMASTERPERSONAL.findAll();
+        sendSuccess(res, 200, drivers, 'List of drivers');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.driverPersonalDetails = async (req, res) => {
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+    try {
+        const drivers = await DRIVERMASTERPERSONAL.findOne({ where: { id: req.body.id } });
+        sendSuccess(res, 200, drivers, 'Driver Data');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.driverPersonalUpdate = async (req, res) => {
+    const {
+        driver_phone,
+        driver_id,
+        blood_group,
+        diabetes,
+        hypertension,
+        hypotension,
+        epilepsy,
+        physical_disability,
+        physical_disability_details,
+        mental_disability,
+        mental_disability_details,
+        vision_issues,
+        vision_issues_details,
+        hearing_issues,
+        hearing_issues_details,
+        major_accident,
+        allergies,
+        other_medical_info,
+        alcohol_consumption,
+        smoking,
+        tobacco_consumption,
+        birthmark_identification,
+
+    } = req.body;
+
+    const id = req.body.id;
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+
+    const requiredFields = [
+        'driver_phone',
+        'blood_group',
+        'diabetes',
+        'hypertension',
+        'hypotension',
+        'epilepsy',
+        'physical_disability',
+        'physical_disability_details',
+        'mental_disability',
+        'mental_disability_details',
+        'vision_issues',
+        'vision_issues_details',
+        'hearing_issues',
+        'hearing_issues_details',
+        'major_accident',
+        'allergies',
+        'other_medical_info',
+        'alcohol_consumption',
+        'smoking',
+        'tobacco_consumption',
+        'birthmark_identification',
+    ];
+
+    const missingFields = requiredFields.filter(field => {
+        return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
+    });
+
+    console.log("Missing Fields:", missingFields); // Log missing fields
+
+    if (missingFields.length > 0) {
+        const msg = missingFields.join(', ');
+        return res.status(400).json({ error: msg + " is required" });
+    }
+
+    const data = {
+        driver_phone,
+        driver_id: parseInt(driver_id), // Convert to integer if needed
+        blood_group,
+        diabetes: diabetes === 'true', // Convert string to boolean
+        hypertension: hypertension === 'true',
+        hypotension: hypotension === 'true',
+        epilepsy: epilepsy === 'true',
+        physical_disability: physical_disability === 'true',
+        physical_disability_details,
+        mental_disability: mental_disability === 'true',
+        mental_disability_details,
+        vision_issues: vision_issues === 'true',
+        vision_issues_details,
+        hearing_issues: hearing_issues === 'true',
+        hearing_issues_details: hearing_issues_details === 'null' ? null : hearing_issues_details, // Set null if 'null' string
+        major_accident,
+        allergies,
+        other_medical_info,
+        alcohol_consumption: alcohol_consumption === 'true',
+        smoking: smoking === 'true',
+        tobacco_consumption: tobacco_consumption === 'true',
+        birthmark_identification,
+    };
+
+    try {
+        console.log(data);
+
+        const updatedRecord = await DRIVERMASTERPERSONAL.update(data, { where: { id: id } });
+        if (updatedRecord[0] === 0) {
+            return res.status(404).json({ error: 'Driver not found or not updated' });
+        }
+
+        const updatedDriver = await DRIVERMASTERPERSONAL.findByPk(id);
+        sendSuccess(res, 200, updatedDriver, 'Driver personal data updated successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+
+
+////Family datta
+
 exports.createDriverFamilyData = async (req, res) => {
     const {
         driver_phone,
@@ -241,6 +434,100 @@ exports.createDriverFamilyData = async (req, res) => {
             other_genetic_disease,
         });
         sendSuccess(res, 201, insert, 'DRIVERFAMILYHISTORY Center successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.driverFamilyList = async (req, res) => {
+
+    try {
+        const insert = await DRIVERFAMILYHISTORY.findAll();
+        sendSuccess(res, 200, insert, 'DRIVERFAMILYHISTORY Fetch successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.driverFamilyDetails = async (req, res) => {
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+    try {
+        const insert = await DRIVERFAMILYHISTORY.findOne({ where: { id: req.body.id } });
+        sendSuccess(res, 200, insert, 'DRIVERFAMILYHISTORY Fetch successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+exports.driverFamilyUpdate = async (req, res) => {
+    if (!req.body.id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+    try {
+        const {
+            id,
+            driver_phone,
+            driver_id,
+            family_member_1,
+            family_member_2,
+            parent_diabetic,
+            parent_hypertension,
+            parent_hypotension,
+            other_genetic_disease,
+        } = req.body;
+
+        // Ensure required fields are present and of correct type
+        const requiredFields = [
+            'driver_phone',
+            'driver_id',
+            'family_member_1',
+            'family_member_2',
+            'parent_diabetic',
+            'parent_hypertension',
+            'parent_hypotension',
+            'other_genetic_disease',
+        ];
+
+        const missingFields = requiredFields.filter(field => {
+            return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
+        });
+
+        console.log("Missing Fields:", missingFields); // Log missing fields
+
+        if (missingFields.length > 0) {
+            const msg = missingFields.join(', ');
+            return res.status(400).json({ error: msg + " is required" });
+        }
+
+        // Check if the family member record exists
+        const existingRecord = await DRIVERFAMILYHISTORY.findByPk(id);
+        if (!existingRecord) {
+            return res.status(404).json({ error: 'Family member record not found' });
+        }
+
+        // Update the family member record
+        await DRIVERFAMILYHISTORY.update({
+            driver_phone,
+            driver_id,
+            family_member_1,
+            family_member_2,
+            parent_diabetic,
+            parent_hypertension,
+            parent_hypotension,
+            other_genetic_disease,
+        }, {
+            where: { id: id }
+        });
+
+        // Fetch and return the updated family member record
+        const updatedRecord = await DRIVERFAMILYHISTORY.findByPk(id);
+        sendSuccess(res, 200, updatedRecord, 'DRIVERFAMILYHISTORY updated successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');

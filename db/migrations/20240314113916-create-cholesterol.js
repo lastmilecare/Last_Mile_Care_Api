@@ -10,55 +10,55 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       total_cholesterol_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       total_cholesterol_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       total_cholesterol_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       total_cholesterol_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       total_cholesterol_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       total_cholesterol_units: {
         type: Sequelize.STRING
       },
       ld_cholesterol_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       ld_cholesterol_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       ld_cholesterol_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       ld_cholesterol_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       ld_cholesterol_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       ld_cholesterol_units: {
         type: Sequelize.STRING
       },
       hd_cholesterol_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       hd_cholesterol_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       hd_cholesterol_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       hd_cholesterol_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       hd_cholesterol_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       hd_cholesterol_units: {
         type: Sequelize.STRING

@@ -10,38 +10,38 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       bmi_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       bmi_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       bmi_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       bmi_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       bmi_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       bmi_units: {
         type: Sequelize.STRING
       },
 
       weighti_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       weight_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       weight_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       weight_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       weight_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       weight_units: {
         type: Sequelize.STRING
@@ -49,19 +49,19 @@ module.exports = {
 
 
       height_standard_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       height_standard_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       height_within_deviation_value_min: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       height_within_deviation_value_max: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       height_out_of_range: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       height_units: {
         type: Sequelize.STRING

@@ -11,8 +11,44 @@ const {
   User,
   Permission
 } = require("../../../../db/models");
-
 const bcrypt = require("bcryptjs");
+
+
+
+exports.roleDetails = async (req, res) => {
+  if (!req.body.id) {
+    sendError(res, 400, "Role ID Required", 'Role ID Required');
+    return;
+  }
+  try {
+    const insert = await rolseService.getRoleData(req.body.id);
+    sendSuccess(res, 200, insert, 'Role Fetch successfully');
+  } catch (error) {
+    sendError(res, 500, error, 'Invalid input');
+  }
+};
+
+exports.updateRole = async (req, res) => {
+  if (!req.body.id) {
+    sendError(res, 400, "Role ID Required", 'Role ID Required');
+    return;
+  }
+  if (!req.body.role_title) {
+    sendError(res, 400, "Role Title Required", 'Role Title Required');
+    return;
+  }
+  try {
+    const data = {
+      role_title: req.body.role_title,
+      slug: createSlug(req.body.role_title)
+    };
+    const insert = await rolseService.updateRole(data, req.body.id);
+    sendSuccess(res, 200, insert, 'Update Role successfully');
+  } catch (error) {
+    console.log(error);
+    sendError(res, 500, error, 'Invalid input');
+  }
+};
 
 exports.createRole = async (req, res) => {
   console.log(req.body);
@@ -129,6 +165,60 @@ exports.viewPermission = async (req, res) => {
 
   }
 }
+exports.permissionDetails = async (req, res) => {
+  if (!req.body.id) {
+    sendError(res, 400, "ID Required", 'ID Required');
+    return;
+  }
+  try {
+
+    const result = await authService.findPermissionData(req.body.id);
+    console.log(result);
+    sendSuccess(res, 200, result, 'Permission View  Successfully');
+
+  } catch (error) {
+    console.log(error);
+    sendError(res, 500, "internal server error");
+
+  }
+}
+
+exports.permissionUpdate = async (req, res) => {
+  if (!req.body.permission_id || !req.body.Permissionmetadata) {
+    sendError(res, 400, "Bad request", 'permission_id and Permissionmetadata are required');
+    return;
+  }
+
+  try {
+    const permissionId = req.body.permission_id;
+    const permissionMetadata = req.body.Permissionmetadata;
+
+    // Update permission data if necessary
+    const updatedPermission = await authService.updatePermission(permissionId, req.body);
+
+    // Iterate over each metadata object and update or insert as necessary
+    for (const metadata of permissionMetadata) {
+      if (metadata.id) {
+        // If metadata id exists, update the existing metadata
+        await authService.updatePermissionMetadata(metadata.id, metadata);
+      } else {
+        // If metadata id doesn't exist, create a new metadata record
+        metadata.permission_id = permissionId;
+        await authService.insertPermissionMetadata(metadata);
+      }
+    }
+
+    sendSuccess(res, 200, updatedPermission, 'Permission updated successfully');
+  } catch (error) {
+    console.log(error);
+    sendError(res, 500, "Internal server error", error);
+  }
+}
+
+
+
+
+//////
 
 exports.userStatusUpdate = async (req, res) => {
   try {

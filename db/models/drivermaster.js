@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     driverId: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     abhaNumber: {
       type: DataTypes.STRING

@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Alcholtest.init({
-    standard_value_min: DataTypes.STRING,
-    standard_value_max: DataTypes.STRING,
-    within_deviation_value_min: DataTypes.STRING,
-    within_deviation_value_max: DataTypes.STRING,
+    standard_value_min: DataTypes.INTEGER,
+    standard_value_max: DataTypes.INTEGER,
+    within_deviation_value_min: DataTypes.INTEGER,
+    within_deviation_value_max: DataTypes.INTEGER,
     units: DataTypes.STRING,
-    out_of_range: DataTypes.STRING
+    out_of_range: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Alcholtest',

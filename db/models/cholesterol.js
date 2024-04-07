@@ -15,55 +15,55 @@ module.exports = (sequelize, DataTypes) => {
   }
   CHOLESTEROL.init({
     total_cholesterol_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     total_cholesterol_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     total_cholesterol_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     total_cholesterol_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     total_cholesterol_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     total_cholesterol_units: {
       type: DataTypes.STRING
     },
     ld_cholesterol_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     ld_cholesterol_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     ld_cholesterol_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     ld_cholesterol_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     ld_cholesterol_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     ld_cholesterol_units: {
       type: DataTypes.STRING
     },
     hd_cholesterol_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     hd_cholesterol_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     hd_cholesterol_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     hd_cholesterol_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     hd_cholesterol_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     hd_cholesterol_units: {
       type: DataTypes.STRING

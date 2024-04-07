@@ -15,38 +15,38 @@ module.exports = (sequelize, DataTypes) => {
   }
   BMI.init({
     bmi_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     bmi_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     bmi_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     bmi_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     bmi_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     bmi_units: {
       type: DataTypes.STRING
     },
 
     weighti_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     weight_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     weight_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     weight_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     weight_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     weight_units: {
       type: DataTypes.STRING
@@ -54,19 +54,19 @@ module.exports = (sequelize, DataTypes) => {
 
 
     height_standard_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     height_standard_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     height_within_deviation_value_min: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     height_within_deviation_value_max: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     height_out_of_range: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     height_units: {
       type: DataTypes.STRING

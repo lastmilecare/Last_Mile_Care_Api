@@ -20,5 +20,19 @@ async function rolefindAll() {
     throw new Error(error);
   }
 }
+async function getRoleData(id) {
+  try {
+    return await Role.findOne({ where: { id: id }, raw: true, nest: true });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+async function updateRole(data, id) {
+  try {
+    return await Role.update(data, { where: { id: id } });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
-module.exports = { roleInsert, rolefindAll };
+module.exports = { updateRole, getRoleData, roleInsert, rolefindAll };

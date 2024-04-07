@@ -14,19 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Bloodpressure.init({
-    systolic_standard_value_min: DataTypes.STRING,
-    systolic_standard_value_max: DataTypes.STRING,
-    systolic_within_deviation_value_min: DataTypes.STRING,
-    systolic_within_deviation_value_max: DataTypes.STRING,
+    systolic_standard_value_min: DataTypes.INTEGER,
+    systolic_standard_value_max: DataTypes.INTEGER,
+    systolic_within_deviation_value_min: DataTypes.INTEGER,
+    systolic_within_deviation_value_max: DataTypes.INTEGER,
     systolic_units: DataTypes.STRING,
-    systolic_out_of_range: DataTypes.STRING,
+    systolic_out_of_range: DataTypes.INTEGER,
 
-    diastolic_standard_value_min: DataTypes.STRING,
-    diastolic_standard_value_max: DataTypes.STRING,
-    diastolic_within_deviation_value_min: DataTypes.STRING,
-    diastolic_within_deviation_value_max: DataTypes.STRING,
+    diastolic_standard_value_min: DataTypes.INTEGER,
+    diastolic_standard_value_max: DataTypes.INTEGER,
+    diastolic_within_deviation_value_min: DataTypes.INTEGER,
+    diastolic_within_deviation_value_max: DataTypes.INTEGER,
     diastolic_units: DataTypes.STRING,
-    diastolic_out_of_range: DataTypes.STRING,
+    diastolic_out_of_range: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Bloodpressure',

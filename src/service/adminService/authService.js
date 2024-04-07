@@ -63,10 +63,17 @@ async function insertPermissionMetadata(metadata) {
 async function findPermission(req) {
   try {
     return await Permission.findAll({
-      include: {
-        model: Permissionmetadata,
-        as: 'Permissionmetadata' // Assuming you've defined an alias for the association
-      }
+      include: [
+        {
+          model: Permissionmetadata,
+          as: 'Permissionmetadata' // Assuming you've defined an alias for the association
+        },
+        {
+          model: Role, // Include the Role model
+          as: 'Role' // Assuming you've defined an alias for the association
+        }
+      ]
+
     });
   } catch (error) {
     throw new Error(error);
@@ -84,5 +91,46 @@ async function changeStatue(id, status) {
     throw new Error(error);
   }
 }
+async function findPermissionData(id) {
+  console.log("---------------", id);
+  try {
 
-module.exports = { insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
+    return await Permission.findOne({
+      where: {
+        id: id,
+      },
+
+      include: {
+        model: Permissionmetadata,
+        as: 'Permissionmetadata' // Assuming you've defined an alias for the association
+      }
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+async function updatePermission(permissionId, newData) {
+  try {
+    // Update the permission record
+    await Permission.update(newData, { where: { id: permissionId } });
+    // Fetch and return the updated permission record
+    return await Permission.findByPk(permissionId);
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async function updatePermissionMetadata(metadataId, newData) {
+  try {
+    // Update the permission metadata record
+    await Permissionmetadata.update(newData, { where: { id: metadataId } });
+    // Fetch and return the updated permission metadata record
+    return await Permissionmetadata.findByPk(metadataId);
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+module.exports = { updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
+
+
