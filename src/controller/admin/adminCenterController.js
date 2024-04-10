@@ -319,10 +319,18 @@ exports.updateCenterUserStatus = async (req, res) => {
   try {
     if (!req.body.id) {
       sendError(res, 400, "bad request", 'id required');
+      return
     }
 
-    if (!req.body.status) {
-      sendError(res, 400, "bad request", 'status required');
+    if (typeof req.body.status !== 'boolean') {
+      sendError(res, 400, "bad request , status required", 'status required');
+      return
+    }
+    const user = await User.findOne({ where: { id: req.body.id } });
+
+    if (!user) {
+      sendError(res, 404, "User id not found", 'User id not found');
+      return
     }
     const result = await User.update({ status: req.body.status }, {
       where: {

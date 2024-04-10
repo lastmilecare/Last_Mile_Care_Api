@@ -4,8 +4,11 @@ const fs = require('fs');
 
 // Middleware to handle single file uploads
 const centerFileUpload = (req, res, next) => {
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).json({ error: 'No files were uploaded' });
+    if (!req.file) {
+
+        req.filePath = null;
+        next();
+        return;
     }
 
     const file = req.files.agreement_file;
