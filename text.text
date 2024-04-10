@@ -52,7 +52,9 @@ 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
  cd /usr/lmc/Last_Mile_Care_Api/
  git stash
  git pull
- git stash pop
+ git stash pop or 
+ git reset --hard HEAD
+
  pm2 restart all
  chmod 400 LMC-DEV.pem
 

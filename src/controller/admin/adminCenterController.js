@@ -50,8 +50,8 @@ exports.createCenter = async (req, res) => {
     'agency_state',
     'agency_spoc_name',
     'agency_spoc_email',
-    'agency_spoc_contact_number',
-    'status'
+
+
   ];
 
   try {
@@ -63,7 +63,8 @@ exports.createCenter = async (req, res) => {
 
     if (missingFields.length > 0) {
       const msg = missingFields.join(', ');
-      return res.status(400).json({ error: msg + " is required" });
+      return sendError(res, 400, msg + " is required", 'Invalid input');
+
     }
 
     const data = {
