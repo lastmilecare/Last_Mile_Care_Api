@@ -1,5 +1,8 @@
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const centerService = require('../../service/globalService/centerService');
+const userService = require('../../service/adminService/userService.js');
+const bcrypt = require("bcryptjs");
+
 const {
   sequelize,
   Center,
@@ -106,11 +109,23 @@ exports.assignCenter = async (req, res) => {
 
     if (!req.body.center_id) {
       sendError(res, 400, "bad request", 'center id required');
+      return
     }
-
-    const result = await centerService.assignCenterToUser(req);
+    if (!req.body.permission_id) {
+      sendError(res, 404, "permission id required", 'permission id required');
+      return
+    }
+    //permission_id
+    const getData = await userService.checkRole(req.body.permission_id);
+    if (!getData) {
+      sendError(res, 404, "Invalid permission id", 'Invalid permission id');
+      return
+    }
+    console.log("fffffffffff")
+    const result = await centerService.assignCenterToUser(req, getData);
     sendSuccess(res, 201, result, 'Center assign successfully');
   } catch (error) {
+    console.log("error", error)
     sendError(res, 500, error, 'Invalid input');
   }
 }
@@ -256,15 +271,17 @@ exports.centerUserDetails = async (req, res) => {
       include: [
         { model: Centeruser, as: 'centerusers' },
         { model: Center, through: { attributes: [] }, as: 'centers' }
-      ]
+      ],
+      exclude: ['password']
     });
 
     if (!userDetails) {
       sendError(res, 404, 'User not found', 'User not found');
       return;
     }
+    const { password, ...userDetailsWithoutPassword } = userDetails.toJSON();
 
-    sendSuccess(res, 200, userDetails, 'User details retrieved successfully');
+    sendSuccess(res, 200, userDetailsWithoutPassword, 'User details retrieved successfully');
   } catch (error) {
     console.log(error);
     sendError(res, 500, error, 'Invalid input');
@@ -275,18 +292,25 @@ exports.centerUserDetails = async (req, res) => {
 exports.centerUserUpdate = async (req, res) => {
   try {
     // Destructure request body
-    const { id, username, name, role_id, phone, email, password, center_id } = req.body;
+    const { id, username, name, permission_id, phone, email, password, center_id } = req.body;
 
     // Find the user record to update
     let user = await User.findByPk(id);
     if (!user) {
       return sendError(res, 404, 'User not found', 'User not found');
     }
+    const getData = await userService.checkRole(permission_id);
+
+    if (!getData) {
+      sendError(res, 404, "Invalid permission id", 'Invalid permission id');
+      return
+    }
 
     // Update user data with new values
     user.username = username;
     user.name = name;
-    user.role_id = role_id;
+    user.role_id = getData.role_id;
+    user.permission_id = permission_id;
     user.phone = phone;
     user.email = email;
     user.password = password; // You might want to handle password hashing here
@@ -309,7 +333,7 @@ exports.centerUserUpdate = async (req, res) => {
     sendSuccess(res, 200, user, 'User data updated successfully');
   } catch (error) {
     // Handle errors
-    sendError(res, 500, error.message, 'Invalid input');
+    return sendError(res, 500, error.message, 'Invalid input');
   }
 }
 

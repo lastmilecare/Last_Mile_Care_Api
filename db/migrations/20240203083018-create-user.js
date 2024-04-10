@@ -19,6 +19,13 @@ module.exports = {
           key: 'id',
         },
       },
+      permission_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Permissions', // replace with your actual table name
+          key: 'id',
+        },
+      },
       email: {
         type: Sequelize.STRING
       },

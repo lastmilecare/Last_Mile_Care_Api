@@ -1,10 +1,23 @@
 const {
   sequelize,
   Role,
-  User
+  User,
+  Permission
 } = require("../../../db/models");
 
 
+async function checkRole(permission_id) {
+  try {
+    console.log("ffffffffffffffff")
+    return await Permission.findOne({
+      where: { id: permission_id },
+      raw: true,
+      nest: true
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 async function createUser(data) {
   try {
     return await User.create(data);
@@ -12,4 +25,4 @@ async function createUser(data) {
     throw new Error(error);
   }
 }
-module.exports = { createUser };
+module.exports = { checkRole, createUser };

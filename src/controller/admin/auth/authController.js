@@ -78,11 +78,23 @@ exports.viewRole = async (req, res) => {
 
 exports.adminCreate = async (req, res) => {
   try {
+    if (!req.body.permission_id) {
+      sendError(res, 404, "permission id required", 'permission id required');
+
+    }
+    //permission_id
+    const getData = await userService.checkRole(req.body.permission_id);
+
+    if (!getData) {
+      sendError(res, 404, "Invalid permission id", 'Invalid permission id');
+
+    }
     const data = {
       username: req.body.username.trim().toLowerCase(),
-      role_id: req.body.role_id,
+      role_id: getData.role_id,
       email: req.body.email,
       name: req.body.name,
+      permission_id: req.body.permission_id,
       phone: req.body.phone,
       isAdmin: true,
       password: bcrypt.hashSync(req.body.password, 8),
@@ -260,10 +272,21 @@ exports.userUpdate = async (req, res) => {
       sendError(res, 400, "ID Required", 'ID Required');
       return; // Exit the function early if ID is missing
     }
+    if (!req.body.permission_id) {
+      sendError(res, 404, "permission id required", 'permission id required');
+      return
+    }
+    //permission_id
+    const getData = await userService.checkRole(req.body.permission_id);
 
+    if (!getData) {
+      sendError(res, 404, "Invalid permission id", 'Invalid permission id');
+      return
+    }
     const data = {
       username: req.body.username.trim().toLowerCase(),
-      role_id: req.body.role_id,
+      role_id: getData.role_id,
+      permission_id: req.body.permission_id,
       email: req.body.email,
       name: req.body.name,
       phone: req.body.phone,
@@ -283,6 +306,7 @@ exports.userUpdate = async (req, res) => {
   } catch (error) {
     console.log(error);
     sendError(res, 500, "Internal server error", error);
+    return
   }
 }
 

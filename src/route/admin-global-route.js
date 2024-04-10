@@ -13,13 +13,12 @@ module.exports = function (app) {
     //center
     app.post(`${prefixUrl}/create/center`, verifyTokenMiddleware, centerFileUpload, adminCenterController.createCenter);
     app.post(`${prefixUrl}/view/center`, verifyTokenMiddleware, adminCenterController.viewCenter);
-    app.post(`${prefixUrl}/center-user/center`, verifyTokenMiddleware, adminCenterController.assignCenter);
+    app.post(`${prefixUrl}/create-center-user`, verifyTokenMiddleware, adminCenterController.assignCenter);
     app.post(`${prefixUrl}/edit/center`, verifyTokenMiddleware, adminCenterController.centerEdit);
     app.post(`${prefixUrl}/update/center`, verifyTokenMiddleware, centerFileUpload, adminCenterController.centerUpdate);
     app.post(`${prefixUrl}/center/user/view`, verifyTokenMiddleware, adminCenterController.centerUser);
     app.post(`${prefixUrl}/center/user/details`, verifyTokenMiddleware, adminCenterController.centerUserDetails);
     app.post(`${prefixUrl}/center/user/update`, verifyTokenMiddleware, adminCenterController.centerUserUpdate);
-
     app.post(`${prefixUrl}/update/center/status`, verifyTokenMiddleware, adminCenterController.updateCenterStatus);
     app.post(`${prefixUrl}/update/center/user/status`, verifyTokenMiddleware, adminCenterController.updateCenterUserStatus);
 

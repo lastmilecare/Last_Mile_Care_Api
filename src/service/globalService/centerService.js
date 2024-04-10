@@ -3,8 +3,9 @@ const {
   sequelize,
   Center,
   User,
-  Centeruser
+  Centeruser, Permission
 } = require("../../../db/models");
+const bcrypt = require("bcryptjs");
 
 
 async function insertCenter(data) {
@@ -35,14 +36,14 @@ async function findAllCenter(req) {
   }
 }
 
-async function assignCenterToUser(req) {
+async function assignCenterToUser(req, getData) {
   try {
-    const { username, name, role_id, phone, email, password, center_id } = req.body;
+    const { username, name, phone, email, password, center_id } = req.body;
     const data = {
-      username, name, role_id, phone, email, password: bcrypt.hashSync(password, 8), center_id
+      username, name, phone, email, role_id: getData.role_id, permission_id: getData.id, password: bcrypt.hashSync(password, 8), center_id
     }
-    const userInsert = await User.create(data)
 
+    const userInsert = await User.create(data)
     await Centeruser.create({
       user_id: userInsert.id,
       center_id: center_id

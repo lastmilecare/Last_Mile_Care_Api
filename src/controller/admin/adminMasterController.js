@@ -20,7 +20,7 @@ exports.updateMaster = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create Center successfully');
 
     } catch (error) {
-        sendError(res, 500, "internal server error");
+        return sendError(res, 500, "internal server error");
 
     }
 
