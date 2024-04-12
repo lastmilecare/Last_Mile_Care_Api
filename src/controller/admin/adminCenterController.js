@@ -164,7 +164,7 @@ exports.updateCenterStatus = async (req, res) => {
 exports.centerEdit = async (req, res) => {
   try {
     if (!req.body.id) {
-      sendError(res, 400, "bad request", 'id required');
+      sendError(res, 400, "bad request , id required", 'id required');
     }
 
 

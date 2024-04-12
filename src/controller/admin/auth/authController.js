@@ -235,11 +235,12 @@ exports.permissionUpdate = async (req, res) => {
 exports.userStatusUpdate = async (req, res) => {
   try {
     if (!req.body.id) {
-      sendError(res, 400, "bad request", 'id required');
+      sendError(res, 400, "bad request , id required ", 'id required');
     }
 
-    if (!req.body.status) {
-      sendError(res, 400, "bad request", 'status required');
+    if (typeof req.body.status !== 'boolean') {
+      sendError(res, 400, "bad request , status required", 'status required');
+      return
     }
     const result = await authService.changeStatue(req.body.id, req.body.status);
     sendSuccess(res, 200, result, 'Status Update Successfully');
