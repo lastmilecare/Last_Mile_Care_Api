@@ -18,6 +18,9 @@ module.exports = {
       package_list: {
         type: Sequelize.JSON
       },
+      status: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

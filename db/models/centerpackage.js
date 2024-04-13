@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     package_frequency: DataTypes.STRING,
     package_id: DataTypes.BIGINT,
     center_id: DataTypes.BIGINT,
+    status: DataTypes.BOOLEAN,
 
   }, {
     sequelize,

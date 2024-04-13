@@ -63,3 +63,29 @@ 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
 
 
 npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:string
+
+
+
+   https://last-mile-care.vercel.app/center-user
+Status not update lob done
+
+https://last-mile-care.vercel.app/package-management
+Status not update lob done
+
+https://last-mile-care.vercel.app/role-permission/update-permission-19
+When edit (Page Name not update) lob
+
+https://last-mile-care.vercel.app/center-management/update-center-9
+Agency Address (Missing) {also when add} Lob
+
+When create any kind data
+Default Status true       lob
+
+https://last-mile-care.vercel.app/center-management/update-center-9
+Wrong Error msg (other place also)  lob
+Not edit lob
+[8:57 PM, 4/13/2024] Soumen Da Project: "Create Temperature successfully"  -> "Temperature successfully updated"  (all other) lob
+
+addPackage successfully -> "Add Package successfully"   lob
+[9:01 PM, 4/13/2024] Soumen Da Project: https://last-mile-care.vercel.app/center-wise-package
+Status not update lob

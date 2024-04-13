@@ -23,6 +23,7 @@ module.exports = {
       agency_spoc_email: Sequelize.STRING,
       agency_spoc_contact_number: Sequelize.STRING,
       status: Sequelize.BOOLEAN,
+      agency_address: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

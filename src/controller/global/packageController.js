@@ -22,6 +22,7 @@ exports.addPackage = async (req, res) => {
         sendSuccess(res, 201, insert, 'addPackage successfully');
     } catch (error) {
         sendError(res, 500, error, 'Invalid input');
+        return
     }
 };
 exports.listPackage = async (req, res) => {
@@ -29,13 +30,43 @@ exports.listPackage = async (req, res) => {
     try {
 
         const reqData = await Packagemanagment.findAll({ raw: true, nest: true });
-
         sendSuccess(res, 200, reqData, 'Success');
     } catch (error) {
         sendError(res, 500, error, 'Invalid input');
+        return
     }
 };
 
+exports.updatePackageStatus = async (req, res) => {
+
+    try {
+        if (!req.body.id) {
+            sendError(res, 400, "bad request", 'id required');
+            return
+        }
+
+        if (typeof req.body.status !== 'boolean') {
+            sendError(res, 400, "bad request , status required", 'status required');
+            return
+        }
+        const user = await Packagemanagment.findOne({ where: { id: req.body.id } });
+
+        if (!user) {
+            sendError(res, 404, "User id not found", 'User id not found');
+            return
+        }
+        const result = await Packagemanagment.update({ status: req.body.status }, {
+            where: {
+                id: req.body.id,
+            },
+        })
+        sendSuccess(res, 200, result, 'Status Update Successfully');
+
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+
+    }
+};
 exports.addPackageTOCenter = async (req, res) => {
     const { package_price,
         package_frequency,
@@ -47,13 +78,14 @@ exports.addPackageTOCenter = async (req, res) => {
             package_frequency,
             package_id,
             center_id,
+            status: true
         };
 
         const reqData = await Centerpackage.create(data);
 
         sendSuccess(res, 201, reqData, 'Centerpackage created Successfully');
     } catch (error) {
-        sendError(res, 500, error, 'Invalid input');
+        return sendError(res, 500, error, 'Invalid input');
     }
 };
 
@@ -71,7 +103,7 @@ exports.viewCenterPackage = async (req, res) => {
         sendSuccess(res, 200, reqData, 'Centerpackage created Successfully');
     } catch (error) {
         console.log(error);
-        sendError(res, 500, error, 'Invalid input');
+        return sendError(res, 500, error, 'Invalid input');
     }
 };
 
@@ -93,7 +125,7 @@ exports.packageDetails = async (req, res) => {
 
         sendSuccess(res, 200, reqData, 'Package details retrieved successfully');
     } catch (error) {
-        sendError(res, 500, error, 'Error retrieving package details');
+        return sendError(res, 500, error, 'Error retrieving package details');
     }
 };
 
@@ -181,3 +213,36 @@ exports.centerPackageUpdate = async (req, res) => {
         sendError(res, 500, error, 'Failed to update center package');
     }
 };
+
+exports.updateCenterPackageStatus = async (req, res) => {
+
+    try {
+        if (!req.body.id) {
+            sendError(res, 400, "bad request", 'id required');
+            return
+        }
+
+        if (typeof req.body.status !== 'boolean') {
+            sendError(res, 400, "bad request , status required", 'status required');
+            return
+        }
+        const user = await Centerpackage.findOne({ where: { id: req.body.id } });
+
+        if (!user) {
+            sendError(res, 404, "User id not found", 'User id not found');
+            return
+        }
+        const result = await Centerpackage.update({ status: req.body.status }, {
+            where: {
+                id: req.body.id,
+            },
+        })
+        sendSuccess(res, 200, result, 'Status Update Successfully');
+
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+
+    }
+};
+
+

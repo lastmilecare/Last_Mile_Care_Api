@@ -68,7 +68,7 @@ async function getCenterUser(req) {
   try {
     const centerUsers = await Centeruser.findAll({
       include: [
-        { model: User, as: 'user', attributes: ['id', 'username', 'name', 'email'] }, // Include associated User details
+        { model: User, as: 'user', attributes: ['id', 'username', 'name', 'status', 'email'] }, // Include associated User details
         { model: Center, as: 'center' } // Include associated Center details
       ]
     });

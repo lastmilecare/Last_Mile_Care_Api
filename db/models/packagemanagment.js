@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     package_list: {
       type: DataTypes.JSON
     },
-    status: BOOLEAN
+    status: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Packagemanagment',

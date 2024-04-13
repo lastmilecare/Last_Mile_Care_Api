@@ -24,6 +24,7 @@ exports.createCenter = async (req, res) => {
     agency_name,
     agency_district,
     agency_state,
+    agency_address,
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
@@ -46,7 +47,7 @@ exports.createCenter = async (req, res) => {
     'agency_state',
     'agency_spoc_name',
     'agency_spoc_email',
-
+    'agency_address'
 
   ];
 
@@ -78,6 +79,7 @@ exports.createCenter = async (req, res) => {
       agency_spoc_contact_number,
       status: true,
       project_end_date,
+      agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
       project_signed_agreement_file: req.filePath
@@ -187,7 +189,7 @@ exports.centerUpdate = async (req, res) => {
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
-
+    agency_address,
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number,
@@ -207,7 +209,8 @@ exports.centerUpdate = async (req, res) => {
     'agency_spoc_name',
     'agency_spoc_email',
     'agency_spoc_contact_number',
-    'id'
+    'id',
+    'agency_address'
   ];
 
   try {
@@ -236,7 +239,8 @@ exports.centerUpdate = async (req, res) => {
       agency_spoc_name,
       agency_spoc_email,
       agency_spoc_contact_number,
-      status,
+
+      agency_address,
       project_end_date,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,

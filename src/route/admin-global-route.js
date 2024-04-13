@@ -73,8 +73,14 @@ module.exports = function (app) {
     //package 
     app.post(`${prefixUrl}/add/package`, verifyTokenMiddleware, packageController.addPackage);
     app.post(`${prefixUrl}/package/list`, verifyTokenMiddleware, packageController.listPackage);
+    app.post(`${prefixUrl}/package/status/update`, verifyTokenMiddleware, packageController.updatePackageStatus);
+
     app.post(`${prefixUrl}/addpackage/toCenter`, verifyTokenMiddleware, packageController.addPackageTOCenter);
     app.post(`${prefixUrl}/view/center/package`, verifyTokenMiddleware, packageController.viewCenterPackage);
+    app.post(`${prefixUrl}/update/center/package/status`, verifyTokenMiddleware, packageController.updateCenterPackageStatus);
+
+
+
 
     app.post(`${prefixUrl}/package/details`, verifyTokenMiddleware, packageController.packageDetails);
     app.post(`${prefixUrl}/package/update`, verifyTokenMiddleware, packageController.packageUpdate);
