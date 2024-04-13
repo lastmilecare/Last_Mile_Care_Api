@@ -204,20 +204,23 @@ exports.permissionUpdate = async (req, res) => {
   try {
     const permissionId = req.body.permission_id;
     const permissionMetadata = req.body.Permissionmetadata;
-
+    const pData = {
+      permission_name: req.body.permission_name,
+      role_id: req.body.role_id,
+    }
     // Update permission data if necessary
-    const updatedPermission = await authService.updatePermission(permissionId, req.body);
+    const updatedPermission = await authService.updatePermission(permissionId, pData);
 
     // Iterate over each metadata object and update or insert as necessary
     for (const metadata of permissionMetadata) {
-      if (metadata.id) {
-        // If metadata id exists, update the existing metadata
-        await authService.updatePermissionMetadata(metadata.id, metadata);
-      } else {
-        // If metadata id doesn't exist, create a new metadata record
-        metadata.permission_id = permissionId;
-        await authService.insertPermissionMetadata(metadata);
-      }
+      console.log(metadata, permissionId)
+      const mergedObject = {
+        ...metadata,
+        permission_id: permissionId
+      };
+      await authService.permmissionUpdateAndDelete(permissionId, mergedObject);
+
+
     }
 
     sendSuccess(res, 200, updatedPermission, 'Permission updated successfully');
