@@ -29,7 +29,7 @@ exports.createCenter = async (req, res) => {
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
-    status,
+
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number
@@ -80,7 +80,7 @@ exports.createCenter = async (req, res) => {
       agency_spoc_name,
       agency_spoc_email,
       agency_spoc_contact_number,
-      status,
+      status: true,
       project_end_date,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
@@ -191,7 +191,7 @@ exports.centerUpdate = async (req, res) => {
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
-    status,
+
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number,
@@ -211,7 +211,6 @@ exports.centerUpdate = async (req, res) => {
     'agency_spoc_name',
     'agency_spoc_email',
     'agency_spoc_contact_number',
-    'status',
     'id'
   ];
 
@@ -255,7 +254,7 @@ exports.centerUpdate = async (req, res) => {
     sendSuccess(res, 200, updatedCenter, ' Update Successfully');
   } catch (error) {
     // Handle errors
-    sendError(res, 500, "internal server error");
+    sendError(res, 500, error);
   }
 
 }
