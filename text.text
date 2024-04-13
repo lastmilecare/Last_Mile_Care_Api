@@ -60,3 +60,6 @@ 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
 
 
  npx sequelize-cli model:generate --name CENTER --attributes name:string 
+
+
+npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:string

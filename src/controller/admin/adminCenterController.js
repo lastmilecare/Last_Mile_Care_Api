@@ -14,8 +14,6 @@ const {
 // 
 exports.createCenter = async (req, res) => {
 
-
-
   const {
     project_start_date,
     project_name,
@@ -34,8 +32,6 @@ exports.createCenter = async (req, res) => {
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number
   } = req.body;
-
-
 
 
   const requiredFields = [
@@ -223,7 +219,8 @@ exports.centerUpdate = async (req, res) => {
 
     if (missingFields.length > 0) {
       const msg = missingFields.join(', ');
-      return res.status(400).json({ error: msg + " is required" });
+      sendSuccess(res, 400, msg + " is required", msg + ' is required');
+      return
     }
 
     const data = {

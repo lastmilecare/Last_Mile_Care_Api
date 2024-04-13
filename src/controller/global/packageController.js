@@ -14,7 +14,8 @@ exports.addPackage = async (req, res) => {
         const data = {
             package_name,
             package_id,
-            package_list
+            package_list,
+            status: true
         }
         const insert = await Packagemanagment.create(data);
 

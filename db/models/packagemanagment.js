@@ -1,6 +1,7 @@
 'use strict';
 const {
-  Model
+  Model,
+  BOOLEAN
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Packagemanagment extends Model {
@@ -19,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     package_list: {
       type: DataTypes.JSON
     },
+    status: BOOLEAN
   }, {
     sequelize,
     modelName: 'Packagemanagment',
