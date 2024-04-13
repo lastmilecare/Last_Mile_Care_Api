@@ -2,7 +2,9 @@ const { sendSuccess, sendError } = require('../../util/responseHandler');
 const {
     sequelize,
     Packagemanagment,
-    Centerpackage
+    Centerpackage,
+    Package,
+    Center
 } = require("../../../db/models");
 // 
 exports.addPackage = async (req, res) => {
@@ -53,22 +55,25 @@ exports.addPackageTOCenter = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 };
-exports.viewCenterPackage = async (req, res) => {
 
+
+
+exports.viewCenterPackage = async (req, res) => {
     try {
-        const reqData = await Centerpackage.findALl({
+        const reqData = await Centerpackage.findAll({
             include: [
-                { model: Package, as: 'package' }, // Include associated Package details
+                { model: Packagemanagment, as: 'package' }, // Include associated Package details
                 { model: Center, as: 'center' } // Include associated Center details
             ],
             raw: true, nest: true
         });
-
         sendSuccess(res, 200, reqData, 'Centerpackage created Successfully');
     } catch (error) {
+        console.log(error);
         sendError(res, 500, error, 'Invalid input');
     }
 };
+
 
 exports.packageDetails = async (req, res) => {
 

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
 
-      Centerpackage.belongsTo(models.Center, { foreignKey: 'package_id', as: 'package' });
+      Centerpackage.belongsTo(models.Packagemanagment, { foreignKey: 'package_id', as: 'package' });
       Centerpackage.belongsTo(models.Center, { foreignKey: 'center_id', as: 'center' });
 
     }
