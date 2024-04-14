@@ -18,11 +18,21 @@ function getUploadFolder(fieldName) {
 // Define the storage engine for Multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        // Determine if a file is included in the request
+        if (!file) {
+            // If no file is included, move to the next middleware
+            return cb(null, './public/uploads'); // Default destination folder
+        }
         // Determine the destination folder based on the field name
         const uploadFolder = getUploadFolder(file.fieldname);
         cb(null, uploadFolder);
     },
     filename: (req, file, cb) => {
+        // Determine if a file is included in the request
+        if (!file) {
+            // If no file is included, move to the next middleware
+            return cb(new Error('No file included'));
+        }
         // Generate a unique filename for the uploaded file
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const filename = file.fieldname + '_' + uniqueSuffix + path.extname(file.originalname);
