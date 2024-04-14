@@ -26,7 +26,7 @@ exports.hearingTest = async (req, res) => {
         right_ear_units
     } = req.body;
 
-    const { doc1, doc2 } = req.files;
+    const { doc1, doc2 } = req.files ?? {};
 
     const data = {
         left_ear_standard_value_max,
