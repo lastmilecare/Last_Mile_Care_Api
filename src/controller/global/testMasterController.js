@@ -27,7 +27,8 @@ exports.hearingTest = async (req, res) => {
     } = req.body;
 
     const { doc1, doc2 } = req.files ?? {};
-
+    const leftEarAttachment = doc1 ? doc1.filename : null;
+    const rightEarAttachment = doc2 ? doc2.filename : null;
     const data = {
         left_ear_standard_value_max,
         left_ear_standard_value_min,
@@ -41,8 +42,8 @@ exports.hearingTest = async (req, res) => {
         right_ear_within_deviation_value_max,
         right_ear_out_of_range,
         right_ear_units,
-        left_ear_attach_certificate_of_incorporation: doc1.filename,
-        right_ear_attach_certificate_of_incorporation: doc2.filename
+        left_ear_attach_certificate_of_incorporation: leftEarAttachment,
+        right_ear_attach_certificate_of_incorporation: rightEarAttachment
     };
 
 
