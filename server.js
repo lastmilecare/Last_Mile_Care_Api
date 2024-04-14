@@ -18,7 +18,7 @@ app.use(cors());
 indexRoutes(app);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code 10-04-2024' });
+  res.json({ message: 'Updated Code 14-04-2024' });
 });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
