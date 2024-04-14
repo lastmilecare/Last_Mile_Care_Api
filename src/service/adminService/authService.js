@@ -112,9 +112,8 @@ async function findPermissionData(id) {
 async function updatePermission(permissionId, newData) {
   try {
 
-    await Permission.update(newData, { where: { id: permissionId } });
+    return await Permission.update(newData, { where: { id: permissionId } });
     // Fetch and return the updated permission record
-    return await Permission.findByPk(permissionId);
   } catch (error) {
     throw new Error(error);
   }
@@ -130,26 +129,29 @@ async function updatePermissionMetadata(metadataId, newData) {
     throw new Error(error);
   }
 }
-async function permmissionUpdateAndDelete(permissionId, metadata) {
-  try {
-    // console.log(permissionId, metadata);
 
-    console.log(permissionId, metadata);
+async function permmissionDelete(permissionId) {
+  try {
 
     await Permissionmetadata.destroy({
       where: {
-        permission_id: permissionId // Specify the condition for deletion (e.g., by ID)
+        permission_id: permissionId
       }
     });
-
-    return await Permissionmetadata.create(metadata);
-
 
   } catch (error) {
     throw new Error(error);
   }
 }
+async function permmissiondUpdate(mergedObject) {
+  try {
 
-module.exports = { permmissionUpdateAndDelete, updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
+    return await Permissionmetadata.create(mergedObject);
+
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+module.exports = { permmissiondUpdate, permmissionDelete, updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
 
 

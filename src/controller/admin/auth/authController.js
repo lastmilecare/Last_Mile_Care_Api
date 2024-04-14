@@ -208,22 +208,19 @@ exports.permissionUpdate = async (req, res) => {
       permission_name: req.body.permission_name,
       role_id: req.body.role_id,
     }
-    // Update permission data if necessary
-    const updatedPermission = await authService.updatePermission(permissionId, pData);
+    await authService.updatePermission(permissionId, pData);
+    await authService.permmissionDelete(permissionId);
 
-    // Iterate over each metadata object and update or insert as necessary
     for (const metadata of permissionMetadata) {
-      console.log(metadata, permissionId)
       const mergedObject = {
         ...metadata,
         permission_id: permissionId
       };
-      await authService.permmissionUpdateAndDelete(permissionId, mergedObject);
-
+      await authService.permmissiondUpdate(mergedObject);
 
     }
 
-    sendSuccess(res, 200, updatedPermission, 'Permission updated successfully');
+    sendSuccess(res, 200, pData, 'Permission updated successfully');
   } catch (error) {
     console.log(error);
     sendError(res, 500, "Internal server error", error);

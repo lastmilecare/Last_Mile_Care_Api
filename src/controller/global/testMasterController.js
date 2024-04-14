@@ -118,7 +118,7 @@ exports.ecgUpdate = async (req, res) => {
         option_1,
         option_2,
         option_3,
-        doc: req.file.filename
+        // doc: req.file.filename
     }
 
     try {

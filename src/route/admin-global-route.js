@@ -3,9 +3,9 @@ const adminCenterController = require('../controller/admin/adminCenterController
 const adminMasterController = require('../controller/admin/adminMasterController.js');
 const packageController = require('../controller/global/packageController.js');
 const testMasterController = require('../controller/global/testMasterController.js');
-const uploadMiddleware = require('../middleware/fileUploadMiddleware.js');
-
 const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
+
+const uploadMiddleware = require('../middleware/fileUploadMiddleware.js');
 const upload = require('../middleware/multer.js');
 const centerFileUpload = require('../middleware/centerFile.js');
 const prefixUrl = prefix.admin;
@@ -35,7 +35,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/update/hiv`, verifyTokenMiddleware, adminMasterController.updateHiv);
 
     app.post(`${prefixUrl}/update/blood-group`, verifyTokenMiddleware, testMasterController.bloodGroup);
-    app.post(`${prefixUrl}/update/ecg`, verifyTokenMiddleware, upload.single('file'), testMasterController.ecgUpdate);
+    app.post(`${prefixUrl}/update/ecg`, verifyTokenMiddleware, upload, testMasterController.ecgUpdate);
     app.post(`${prefixUrl}/update/blood-pressure`, verifyTokenMiddleware, testMasterController.bloodPressure);
     app.post(`${prefixUrl}/update/bmi`, verifyTokenMiddleware, testMasterController.bmiCheck);
     app.post(`${prefixUrl}/update/cholesterol`, verifyTokenMiddleware, testMasterController.cholesterolUpdate);

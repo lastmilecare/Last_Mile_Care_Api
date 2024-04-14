@@ -41,27 +41,31 @@ async function updateMasterTempture(req, data) {
 async function updateMasterupdateSPO2s(req, data) {
 
     try {
-        const count = await SPO2.findOne({ raw: true, nest: true });
+        // Check if any record exists in the table
+        const count = await SPO2.count();
 
-        if (count) {
-            const SPO2 = await SPO2.findOne({ where: { id: count.id } });
+        if (count > 0) {
+            // If records exist, find and update the first one
+            const existingRBS = await SPO2.findOne();
 
-            if (SPO2) {
+            if (existingRBS) {
                 // If the record exists, update it
-                await SPO2.update(data);
-                return SPO2;
+                await existingRBS.update(data);
+                return existingRBS;
             } else {
-                // If the record doesn't exist, create a new one
-                return await SPO2.create(data);
+                // This should ideally not happen, but handle it just in case
+                throw new Error('Unexpected: Record not found when it should exist.');
             }
         } else {
+            // If no records exist, create a new one
             return await SPO2.create(data);
-
-
         }
     } catch (error) {
         throw new Error(error);
     }
+
+
+
 }
 async function updateRBS(req, data) {
     try {

@@ -62,8 +62,9 @@ exports.updateSPO2s = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create SPO2s successfully');
 
     } catch (error) {
+        console.log(error);
         sendError(res, 500, "internal server error");
-
+        return
     }
 }
 
@@ -212,6 +213,7 @@ exports.viewSPO2 = async (req, res) => {
         const data = await SPO2.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
+        console.log(error);
         sendError(res, 500, "internal server error");
     }
 }

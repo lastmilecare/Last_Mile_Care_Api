@@ -17,4 +17,23 @@ const storage = multer.diskStorage({
 // Create a Multer instance with the storage engine
 const upload = multer({ storage: storage });
 
-module.exports = upload;
+// Middleware to handle file uploads conditionally
+const uploadMiddleware = (req, res, next) => {
+  // Check if a file is included in the request
+  if (!req.file) {
+    // If no file is included, move to the next middleware
+    return next();
+  }
+
+  // If a file is included, use Multer to process it
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      // If an error occurs during file upload, pass it to the error handling middleware
+      return next(err);
+    }
+    // Move to the next middleware
+    next();
+  });
+};
+
+module.exports = uploadMiddleware;
