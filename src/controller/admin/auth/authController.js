@@ -96,6 +96,7 @@ exports.adminCreate = async (req, res) => {
       name: req.body.name,
       permission_id: req.body.permission_id,
       phone: req.body.phone,
+      status: true,
       isAdmin: true,
       password: bcrypt.hashSync(req.body.password, 8),
     }
@@ -120,8 +121,13 @@ exports.adminAuth = async (req, res) => {
     console.log("result", result);
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
-
+      return
     }
+    if (result.dataValues.slug != "admin") {
+      sendError(res, 401, "Invalid_role", 'Invalid ROle');
+      return
+    }
+
     const tokenData = await authHelper.checkUserPass(req.body.password, result, res);
     if (tokenData.status == "invalid_password") {
       sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
