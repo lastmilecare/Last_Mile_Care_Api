@@ -92,7 +92,7 @@ exports.adminCreate = async (req, res) => {
     const data = {
       username: req.body.username.trim().toLowerCase(),
       role_id: getData.role_id,
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       name: req.body.name,
       permission_id: req.body.permission_id,
       phone: req.body.phone,

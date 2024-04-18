@@ -1,6 +1,6 @@
 
 const { prefix } = require('../../config/envConfig');
-const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
+const centerAuthMiddleware = require('../middleware/centerAuthMiddleware.js');
 const centerLoginController = require('../controller/center/auth/centerLoginController.js');
 
 const prefixUrlCenter = prefix.center;
