@@ -16,7 +16,7 @@ const emailFrom = process.env.EMAIL_FROM || 'default_email@example.com';
 //s3
 const S3AccessId = process.env.S3AccessId || 'AKIATCKAOV7SCLHQ2ZXK';
 const SecretId = process.env.SecretId || '7ZSjAw1I97WWI77STQIj0yrx+ABfWnAlzgvvi7s2';
-
+const BUCKET_NAME = process.env.BUCKET_NAME || 'BUCKET_NAME';
 // Other Keys
 const secretKey = process.env.SECRET_KEY || 'default_secret_key';
 const anotherKey = process.env.ANOTHER_KEY || 'default_another_key';
@@ -47,6 +47,7 @@ module.exports = {
   },
   s3: {
     S3AccessId,
-    SecretId
+    SecretId,
+    BUCKET_NAME
   }
 };

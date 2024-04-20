@@ -1,52 +1,52 @@
 const multer = require('multer');
 const path = require('path');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
+const { s3 } = require("../../config/envConfig");
+// Configure AWS
+AWS.config.update({
+    accessKeyId: s3.S3AccessId,
+    secretAccessKey: s3.SecretId
+});
+const s3Config = new AWS.S3();
 
 function getUploadFolder(fieldName) {
     // Map field names to destination folders
     const folderMap = {
-        doc1: './public/uploads',
-        doc2: './public/uploads',
-        doc3: './public/uploads',
-        doc4: './public/uploads',
-        doc5: './public/uploads',
+        doc1: 'doc1',
+        doc2: 'doc2',
+        doc3: 'doc3',
+        doc4: 'doc4',
+        doc5: 'doc5',
     };
 
     // Return the corresponding destination folder for the given field name
-    return folderMap[fieldName] || './public/uploads'; // Default to a common folder if field name is not recognized
+    return folderMap[fieldName] || 'uploads'; // Default to a common folder if field name is not recognized
 }
 
 // Define the storage engine for Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Determine if a file is included in the request
-        if (!file) {
-            // If no file is included, move to the next middleware
-            return cb(null, './public/uploads'); // Default destination folder
-        }
-        // Determine the destination folder based on the field name
-        const uploadFolder = getUploadFolder(file.fieldname);
-        cb(null, uploadFolder);
+const storage = multerS3({
+    s3: s3Config,
+    bucket: s3.BUCKET_NAME,
+    acl: 'public-read',
+    // contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: function (req, file, cb) {
+        cb(null, { fieldName: file.fieldname });
     },
-    filename: (req, file, cb) => {
-        // Determine if a file is included in the request
-        if (!file) {
-            // If no file is included, move to the next middleware
-            return cb(new Error('No file included'));
-        }
+    key: function (req, file, cb) {
         // Generate a unique filename for the uploaded file
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const filename = file.fieldname + '_' + uniqueSuffix + path.extname(file.originalname);
-        console.log(`Filename for ${file.fieldname}: ${filename}`); // Log the filename
+        const filename = getUploadFolder(file.fieldname) + '/' + file.fieldname + '_' + uniqueSuffix + path.extname(file.originalname);
         cb(null, filename);
-    },
+    }
 });
 
 // Create a Multer instance with the storage engine
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        // Allow only three specific fields
-        if (file.fieldname === 'doc1' || file.fieldname === 'doc3' || file.fieldname === 'doc2' || file.fieldname === 'doc4' || file.fieldname === 'doc5') {
+        // Allow only specific fields
+        if (file.fieldname === 'doc1' || file.fieldname === 'doc2' || file.fieldname === 'doc3' || file.fieldname === 'doc4' || file.fieldname === 'doc5') {
             cb(null, true);
         } else {
             cb(new Error('Invalid fieldname'));

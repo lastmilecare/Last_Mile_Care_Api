@@ -1,48 +1,163 @@
 const multer = require('multer');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
+const { s3 } = require("../../config/envConfig");
+const { sendSuccess, sendError } = require('../../src/util/responseHandler');
+
+const fs = require('fs');
 const path = require('path');
-
-function getUploadFolder(fieldName) {
-    // Map field names to destination folders
-    const folderMap = {
-        attachPanCopy: './public/uploads',
-        attachGstin: './public/uploads',
-        attachCancelledChequeOrPassbook: './public/uploads',
-        attachCertificateOfIncorporation: './public/uploads',
-    };
-
-    // Return the corresponding destination folder for the given field name
-    return folderMap[fieldName] || './public/uploads'; // Default to a common folder if field name is not recognized
-}
-
-// Define the storage engine for Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Determine the destination folder based on the field name
-        const uploadFolder = getUploadFolder(file.fieldname);
-        cb(null, uploadFolder);
-    },
-    filename: (req, file, cb) => {
-        // Generate a unique filename for the uploaded file
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const filename = file.fieldname + '_' + uniqueSuffix + path.extname(file.originalname);
-        cb(null, filename);
-    },
+const s3Data = new AWS.S3({
+    accessKeyId: s3.S3AccessId,
+    secretAccessKey: s3.SecretId
 });
 
-// Create a Multer instance with the storage engine
-const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
 
-        if (file.fieldname === 'attachCertificateOfIncorporation' || file.fieldname === 'attachCancelledChequeOrPassbook' || file.fieldname === 'attachPanCopy' || file.fieldname === 'attachGstin') {
-            cb(null, true);
-        } else {
-            cb(new Error('Invalid fieldname'));
-        }
-    },
-    limits: {
-        fileSize: 10 * 1024 * 1024, // 10 MB file size limit
-    },
-});
+// const uploadToS3Middleware = (req, res, next) => {
 
-module.exports = upload;
+//     let cetUrl = {};
+//     if (!req.files) {
+//         return sendError(res, 400, "No files were uploaded.", 'No files were uploaded.');
+
+//     }
+//     if (req.files.panDoc) {
+//         const file = req.files.panDoc;
+//         console.log('panDoc', file)
+//         const fileContent = file.data;
+//         const params = {
+//             Bucket: s3.BUCKET_NAME,
+//             Key: file.name,
+//             Body: fileContent,
+//         };
+//         s3Data.upload(params, (err, data) => {
+//             if (err) {
+//                 console.error('Error uploading file to S3:', err);
+//                 cetUrl = { error: "data.Location" };
+
+//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
+//             }
+//             cetUrl = { panDoc: data.Location };
+
+//         });
+
+//     }
+//     if (req.files.gstDoc) {
+//         const file = req.files.gstDoc;
+//         const fileContent = file.data;
+//         const params = {
+//             Bucket: s3.BUCKET_NAME,
+//             Key: file.name,
+//             Body: fileContent,
+//         };
+//         s3Data.upload(params, (err, data) => {
+//             if (err) {
+//                 console.error('Error uploading file to S3:', err);
+//                 cetUrl = { error: "data.Location" };
+
+//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
+//             }
+//             cetUrl = { gstDoc: data.Location };
+
+//         });
+
+//     }
+//     if (req.files.chequeDoc) {
+//         const file = req.files.chequeDoc;
+//         const fileContent = file.data;
+//         const params = {
+//             Bucket: s3.BUCKET_NAME,
+//             Key: file.name,
+//             Body: fileContent,
+//         };
+//         s3Data.upload(params, (err, data) => {
+//             if (err) {
+//                 console.error('Error uploading file to S3:', err);
+//                 cetUrl = { error: "data.Location" };
+
+//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
+//             }
+//             cetUrl = { chequeDoc: data.Location };
+
+//         });
+
+//     }
+//     if (req.files.incorporationDoc) {
+//         const file = req.files.incorporationDoc;
+//         const fileContent = file.data;
+//         const params = {
+//             Bucket: s3.BUCKET_NAME,
+//             Key: file.name,
+//             Body: fileContent,
+//         };
+//         s3Data.upload(params, (err, data) => {
+//             if (err) {
+//                 console.error('Error uploading file to S3:', err);
+//                 cetUrl = { error: "data.Location" };
+
+//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
+//             }
+//             cetUrl = { incorporationDoc: data.Location };
+
+//         });
+
+//     }
+//     console.log("---------------------", cetUrl);
+//     req.fileUrl = cetUrl;
+//     next();
+
+// };
+const uploadToS3Middleware = (req, res, next) => {
+    next();
+    // let cetUrl = {}; // Initialize an empty object to store file URLs
+
+    // // Function to upload a file to S3
+    // const uploadFileToS3 = (file, key) => {
+    //     const fileContent = file.data;
+    //     const params = {
+    //         Bucket: s3.BUCKET_NAME,
+    //         Key: file.name,
+    //         Body: fileContent,
+    //     };
+    //     s3Data.upload(params, (err, data) => {
+    //         console.log("key", key);
+    //         if (err) {
+    //             cetUrl[key] = { error: err.message };
+    //             console.log(cetUrl);
+    //             req.fileUrl = cetUrl
+    //             next();
+    //         } else {
+    //             cetUrl[key] = data.Location;
+    //         }
+    //         checkAllUploadsComplete();
+    //     });
+    // };
+
+    // // Function to check if all uploads are complete and call next
+    // const checkAllUploadsComplete = () => {
+    //     // Check if all expected files are uploaded
+    //     const allFilesUploaded = (
+    //         req.files.panDoc &&
+    //         req.files.gstDoc &&
+    //         req.files.chequeDoc &&
+    //         req.files.incorporationDoc
+    //     );
+    //     if (allFilesUploaded) {
+    //         req.fileUrl = cetUrl; // Store the file URLs in the request object
+    //         next(); // Call next() after handling the uploads
+    //     }
+    // };
+
+    // // Upload each file to S3
+    // if (req.files.panDoc) {
+    //     uploadFileToS3(req.files.panDoc, 'panDoc');
+    // }
+    // if (req.files.gstDoc) {
+    //     uploadFileToS3(req.files.gstDoc, 'gstDoc');
+    // }
+    // if (req.files.chequeDoc) {
+    //     uploadFileToS3(req.files.chequeDoc, 'chequeDoc');
+    // }
+    // if (req.files.incorporationDoc) {
+    //     uploadFileToS3(req.files.incorporationDoc, 'incorporationDoc');
+    // }
+};
+module.exports = uploadToS3Middleware;

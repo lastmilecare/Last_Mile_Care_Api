@@ -1,6 +1,6 @@
 const { prefix } = require('../../config/envConfig.js');
 const verifyTokenMiddleware = require('../middleware/centerAuthMiddleware.js');
-const upload = require('../middleware/cetUpload.js');
+const uploadImagesToS3 = require('../middleware/cetUpload.js');
 const cetMangmentController = require('../controller/cet/cetMangmentController.js');
 const fileUploadMiddleware = require('../middleware/fileUploadMiddleware.js')
 const driverController = require('../controller/cet/driverController.js');
@@ -9,22 +9,12 @@ const prefixUrl = prefix.center;
 //
 module.exports = function (app) {
     //center CET
-    app.post(`${prefixUrl}/create/CET`, verifyTokenMiddleware, upload.fields([
-        { name: 'attachPanCopy', maxCount: 1 },
-        { name: 'attachGstin', maxCount: 1 },
-        { name: 'attachCancelledChequeOrPassbook', maxCount: 1 },
-        { name: 'attachCertificateOfIncorporation', maxCount: 1 },
-    ]), cetMangmentController.createCET);
+    app.post(`${prefixUrl}/create/CET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.createCET);
 
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, cetMangmentController.viewCET);
     app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, cetMangmentController.viewCETDetails);
 
-    app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, upload.fields([
-        { name: 'attachPanCopy', maxCount: 1 },
-        { name: 'attachGstin', maxCount: 1 },
-        { name: 'attachCancelledChequeOrPassbook', maxCount: 1 },
-        { name: 'attachCertificateOfIncorporation', maxCount: 1 },
-    ]), cetMangmentController.updateCET);
+    app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.updateCET);
 
     ////Driver
     app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, fileUploadMiddleware.fields([

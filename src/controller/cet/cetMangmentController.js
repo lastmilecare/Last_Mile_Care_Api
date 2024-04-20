@@ -27,12 +27,7 @@ exports.createCET = async (req, res) => {
         status
     } = req.body;
 
-    const {
-        attachPanCopy,
-        attachGstin,
-        attachCancelledChequeOrPassbook,
-        attachCertificateOfIncorporation
-    } = req.files || {};
+
     const requiredFields = [
         'name',
         'uniqueId',
@@ -82,7 +77,7 @@ exports.createCET = async (req, res) => {
             accountNumber,
             ifscCode,
             bankName,
-            status
+            status: "In_Progress"
         };
 
 

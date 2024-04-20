@@ -82,7 +82,7 @@ exports.createCenter = async (req, res) => {
       agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: req.filePath
+      project_signed_agreement_file: req.s3Url
     };
     console.log(req);
 

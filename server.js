@@ -1,6 +1,8 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const bodyParser = require("body-parser")
+
 const cookieParser = require('cookie-parser');
 const { port } = require('./config/envConfig');
 const indexRoutes = require('./src/route/index-route.js');
@@ -11,6 +13,8 @@ const fileUpload = require('express-fileupload');
 console.log(port);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }))
+
 app.use(fileUpload());
 app.use(cookieParser()); // Add cookie-parser middleware
 
