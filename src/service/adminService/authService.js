@@ -19,7 +19,39 @@ async function adminAuth(email, password) {
             model: Permission,
             as: 'permissions',
             include: [
-              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true }
+              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true, }
+            ]
+          }
+        ],
+
+      });
+      const mergedData = { ...result, ...findRole };
+      return mergedData;
+    }
+
+    else {
+      return { status: "no_user_found" };
+    }
+
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
+
+async function centerAuth(email, password) {
+  try {
+    const result = await User.findOne({ where: { email: email, isAdmin: false }, raw: true, nest: true });
+
+    if (result) {
+      const findRole = await Role.findOne({
+        where: { id: result.role_id },
+        include: [
+          {
+            model: Permission,
+            as: 'permissions',
+            include: [
+              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true, }
             ]
           }
         ],
@@ -152,6 +184,6 @@ async function permmissiondUpdate(mergedObject) {
     throw new Error(error);
   }
 }
-module.exports = { permmissiondUpdate, permmissionDelete, updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
+module.exports = { centerAuth, permmissiondUpdate, permmissionDelete, updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
 
 

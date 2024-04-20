@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
             sendError(res, 400, "Password ID Required", 'Password ID Required');
             return;
         }
-        const result = await authService.adminAuth(req.body.email, req.body.password);
+        const result = await authService.centerAuth(req.body.email, req.body.password);
         if (result.status == "no_user_found") {
             sendError(res, 404, "no_user_found", 'No User Found!');
             return

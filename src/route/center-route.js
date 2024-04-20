@@ -1,5 +1,5 @@
 const { prefix } = require('../../config/envConfig.js');
-const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
+const verifyTokenMiddleware = require('../middleware/centerAuthMiddleware.js');
 const upload = require('../middleware/cetUpload.js');
 const cetMangmentController = require('../controller/cet/cetMangmentController.js');
 const fileUploadMiddleware = require('../middleware/fileUploadMiddleware.js')

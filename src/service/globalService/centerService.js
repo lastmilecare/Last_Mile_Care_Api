@@ -40,7 +40,16 @@ async function assignCenterToUser(req, getData) {
   try {
     const { username, name, phone, email, password, center_id } = req.body;
     const data = {
-      username, name, phone, email, role_id: getData.role_id, permission_id: getData.id, status: true, password: bcrypt.hashSync(password, 8), center_id
+      username,
+      name,
+      phone,
+      email,
+      role_id: getData.role_id,
+      permission_id: getData.id,
+      status: true,
+      isAdmin: false,
+      password: bcrypt.hashSync(password, 8),
+      center_id
     }
 
     const userInsert = await User.create(data)

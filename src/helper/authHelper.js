@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const configJwt = require('../../config/envConfig');
 const configJwttoken = configJwt.JWT_ADMIN;
+const configJwttokenCenter = configJwt.JWT_CENTER;
+
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 
@@ -20,17 +22,18 @@ exports.checkUserPass = async (password, userdata, res) => {
       configJwttoken,
       { expiresIn: '10d' } // Token expires after 10 days
     );
-
     let makeResponseObject = {
       token,
-      role: userdata.slug,
-      username: userdata.username
+      role: userdata.dataValues.slug,
+      username: userdata.username,
+      isAdmin: userdata.isAdmin,
+      permission: userdata.dataValues.permissions
     };
 
     const cookieOptions = {
-      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days in milliseconds
+      maxAge: 10 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      // Add other cookie options as needed
+
     };
     res.setHeader('Set-Cookie', cookie.serialize('token', token, cookieOptions));
 
@@ -55,14 +58,16 @@ exports.checkUserPassCenter = async (password, userdata, res) => {
           id: userdata.id,
         },
       },
-      configJwttoken,
+      configJwttokenCenter,
       { expiresIn: '10d' } // Token expires after 10 days
     );
 
     let makeResponseObject = {
       token,
       role: userdata.slug,
-      username: userdata.username
+      username: userdata.username,
+      isAdmin: userdata.isAdmin,
+      permission: userdata.dataValues.permissions
     };
 
     const cookieOptions = {

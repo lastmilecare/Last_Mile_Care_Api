@@ -12,9 +12,11 @@ exports.userList = async (req, res) => {
                 'email',
                 'phone',
                 'status',
+                'isAdmin',
                 'permission_id',
                 'id'
             ],
+            where: { isAdmin: true },
             include: {
                 model: Role,
                 as: 'role',

@@ -118,7 +118,6 @@ exports.adminAuth = async (req, res) => {
       return;
     }
     const result = await authService.adminAuth(req.body.email, req.body.password);
-    console.log("result", result);
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
       return
@@ -127,7 +126,6 @@ exports.adminAuth = async (req, res) => {
       sendError(res, 401, "Invalid_role", 'Invalid ROle');
       return
     }
-
     const tokenData = await authHelper.checkUserPass(req.body.password, result, res);
     if (tokenData.status == "invalid_password") {
       sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
