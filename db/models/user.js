@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Centeruser, { foreignKey: 'user_id', as: 'centerusers' });
       User.belongsToMany(models.Center, { through: models.Centeruser, foreignKey: 'user_id', as: 'centers' });
       User.belongsTo(models.Role, { foreignKey: 'role_id', as: 'role' });
+      User.belongsTo(models.Permission, { foreignKey: 'permission_id', as: 'permission' });
 
     }
   }

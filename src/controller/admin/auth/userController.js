@@ -1,6 +1,6 @@
 
 const { sendSuccess, sendError } = require('../../../util/responseHandler');
-const { sequelize, User, Role } = require("../../../../db/models");
+const { sequelize, User, Role, Permission } = require("../../../../db/models");
 // 
 exports.userList = async (req, res) => {
     try {
@@ -17,11 +17,18 @@ exports.userList = async (req, res) => {
                 'id'
             ],
             where: { isAdmin: true },
-            include: {
-                model: Role,
-                as: 'role',
-                attributes: ['id', 'role_title', 'slug']
-            },
+            include: [
+                {
+                    model: Role,
+                    as: 'role',
+                    attributes: ['id', 'role_title', 'slug']
+                },
+                {
+                    model: Permission,
+                    as: 'permission',
+                    attributes: ['id', 'permission_name']
+                }
+            ],
             raw: true, nest: true,
         });
         sendSuccess(res, 200, result, 'User List');
