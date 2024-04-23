@@ -26,8 +26,7 @@ exports.login = async (req, res) => {
             sendError(res, 404, "no_user_found", 'No User Found!');
             return
         }
-        console.log(result.dataValues.slug);
-        if (result.dataValues.slug != "center") {
+        if (result.slug != "center") {
             sendError(res, 401, "Invalid_role", 'Invalid ROle');
             return
         }

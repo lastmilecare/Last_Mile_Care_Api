@@ -22,19 +22,16 @@ async function adminAuth(email, password) {
         }
       ],
 
-      raw: true,
-      nest: true
+
     });
 
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
 
-
       });
-
-      const mergedData = { ...result, ...findRole };
-      console.log(mergedData);
+      const mergedData = { ...result.toJSON(), ...findRole.toJSON() };
+      console.log("mergedData", mergedData);
       return mergedData;
     }
 
@@ -51,7 +48,8 @@ async function adminAuth(email, password) {
 async function centerAuth(email, password) {
   try {
     const result = await User.findOne({
-      where: { email: email, isAdmin: false },
+      where: { email: email },
+      isAdmin: false,
       include: [
         {
           model: Permission,
@@ -61,15 +59,17 @@ async function centerAuth(email, password) {
           ]
         }
       ],
-      raw: true,
-      nest: true
+
+
     });
+
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
-      });
 
-      const mergedData = { ...result, ...findRole };
+      });
+      const mergedData = { ...result.toJSON(), ...findRole.toJSON() };
+      console.log("mergedData", mergedData);
       return mergedData;
     }
 

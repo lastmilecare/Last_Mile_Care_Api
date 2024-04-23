@@ -8,6 +8,10 @@ const cookie = require('cookie');
 
 exports.checkUserPass = async (password, userdata, res) => {
   try {
+    console.log("userdata----", userdata);
+
+
+
     let passwordIsValid = bcrypt.compareSync(password, userdata.password);
     if (!passwordIsValid) {
       return { "status": "invalid_password" };
@@ -24,10 +28,10 @@ exports.checkUserPass = async (password, userdata, res) => {
     );
     let makeResponseObject = {
       token,
-      role: userdata.dataValues.slug,
+      role: userdata.slug,
       username: userdata.username,
       isAdmin: userdata.isAdmin,
-      permission: userdata.dataValues.permissions
+      permission: userdata.permission || null
     };
 
     const cookieOptions = {
@@ -68,7 +72,7 @@ exports.checkUserPassCenter = async (password, userdata, res) => {
       role: userdata.slug,
       username: userdata.username,
       isAdmin: userdata.isAdmin,
-      permission: userdata.dataValues.permissions
+      permission: userdata.permission || null
     };
 
     const cookieOptions = {

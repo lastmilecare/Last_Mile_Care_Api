@@ -122,7 +122,7 @@ exports.adminAuth = async (req, res) => {
       sendError(res, 404, "no_user_found", 'No User Found!');
       return
     }
-    if (result.dataValues.slug != "admin") {
+    if (result.slug != "admin") {
       sendError(res, 401, "Invalid_role", 'Invalid ROle');
       return
     }
@@ -131,6 +131,7 @@ exports.adminAuth = async (req, res) => {
       sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
       return;
     }
+    const mergedData = { ...tokenData, ...result };
     sendSuccess(res, 200, tokenData, 'Login Successfully');
     return;
   } catch (error) {
