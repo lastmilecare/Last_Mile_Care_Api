@@ -21,10 +21,12 @@ exports.login = async (req, res) => {
             return;
         }
         const result = await authService.centerAuth(req.body.email, req.body.password);
+        console.log(result.status);
         if (result.status == "no_user_found") {
             sendError(res, 404, "no_user_found", 'No User Found!');
             return
         }
+        console.log(result.dataValues.slug);
         if (result.dataValues.slug != "center") {
             sendError(res, 401, "Invalid_role", 'Invalid ROle');
             return

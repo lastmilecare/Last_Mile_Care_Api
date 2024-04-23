@@ -9,23 +9,32 @@ const {
 
 async function adminAuth(email, password) {
   try {
-    const result = await User.findOne({ where: { email: email }, raw: true, nest: true });
+    const result = await User.findOne({
+      where: { email: email },
+      isAdmin: true,
+      include: [
+        {
+          model: Permission,
+          as: 'permission',
+          include: [
+            { model: Permissionmetadata, as: 'Permissionmetadata', }
+          ]
+        }
+      ],
+
+      raw: true,
+      nest: true
+    });
 
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
-        include: [
-          {
-            model: Permission,
-            as: 'permissions',
-            include: [
-              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true, }
-            ]
-          }
-        ],
+
 
       });
+
       const mergedData = { ...result, ...findRole };
+      console.log(mergedData);
       return mergedData;
     }
 
@@ -41,22 +50,25 @@ async function adminAuth(email, password) {
 
 async function centerAuth(email, password) {
   try {
-    const result = await User.findOne({ where: { email: email, isAdmin: false }, raw: true, nest: true });
-
+    const result = await User.findOne({
+      where: { email: email, isAdmin: false },
+      include: [
+        {
+          model: Permission,
+          as: 'permission',
+          include: [
+            { model: Permissionmetadata, as: 'Permissionmetadata', }
+          ]
+        }
+      ],
+      raw: true,
+      nest: true
+    });
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
-        include: [
-          {
-            model: Permission,
-            as: 'permissions',
-            include: [
-              { model: Permissionmetadata, as: 'Permissionmetadata', raw: true, nest: true, }
-            ]
-          }
-        ],
-
       });
+
       const mergedData = { ...result, ...findRole };
       return mergedData;
     }

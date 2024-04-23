@@ -48,6 +48,7 @@ exports.checkUserPass = async (password, userdata, res) => {
 exports.checkUserPassCenter = async (password, userdata, res) => {
   try {
     let passwordIsValid = bcrypt.compareSync(password, userdata.password);
+
     if (!passwordIsValid) {
       return { "status": "invalid_password" };
     }
