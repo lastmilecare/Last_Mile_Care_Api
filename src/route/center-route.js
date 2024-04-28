@@ -4,6 +4,7 @@ const uploadImagesToS3 = require('../middleware/cetUpload.js');
 const cetMangmentController = require('../controller/cet/cetMangmentController.js');
 const fileUploadMiddleware = require('../middleware/fileUploadMiddleware.js')
 const driverController = require('../controller/cet/driverController.js');
+const healthCheckupController = require('../controller/cet/healthCheckupController.js');
 
 const prefixUrl = prefix.center;
 //
@@ -45,6 +46,13 @@ module.exports = function (app) {
 
     //app.post(`${prefixUrl}/driver/list`, verifyTokenMiddleware, driverController.driverList);
 
+    //helth checkup
+    app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumber);
+    app.post(`${prefixUrl}/driver/send/otp`, verifyTokenMiddleware, driverController.sendOtp);
+    app.post(`${prefixUrl}/driver/verify/otp`, verifyTokenMiddleware, driverController.verifyOtp);
+    app.post(`${prefixUrl}/driver/package/list`, verifyTokenMiddleware, driverController.packageList);
+    app.post(`${prefixUrl}/driver/create/health-checkup`, verifyTokenMiddleware, healthCheckupController.createHealthData);
+    app.post(`${prefixUrl}/driver/view/health-checkup`, verifyTokenMiddleware, healthCheckupController.viewHealthData);
 
 
 

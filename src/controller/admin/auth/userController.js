@@ -30,6 +30,7 @@ exports.userList = async (req, res) => {
                 }
             ],
             raw: true, nest: true,
+            order: [['id', 'DESC']]
         });
         sendSuccess(res, 200, result, 'User List');
     } catch (error) {

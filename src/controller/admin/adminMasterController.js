@@ -200,7 +200,7 @@ exports.updateHiv = async (req, res) => {
 // Function to view Temperature
 exports.viewTemperature = async (req, res) => {
     try {
-        const data = await Temperature.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        const data = await Temperature.findOne({ order: [['id', 'DESC']], raw: true, nest: true, order: [['id', 'DESC']] });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
         sendError(res, 500, "internal server error");

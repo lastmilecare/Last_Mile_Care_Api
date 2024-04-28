@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const configJwt = require('../../config/envConfig');
 const configJwttoken = configJwt.JWT_ADMIN;
 const configJwttokenCenter = configJwt.JWT_CENTER;
-
+const { sequelize, User, } = require("../../db/models");
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 
@@ -89,3 +89,32 @@ exports.checkUserPassCenter = async (password, userdata, res) => {
     throw error;
   }
 };
+
+exports.checkEmailExist = async (email) => {
+  try {
+    const checkEmail = await User.findOne({ where: { email: email } });
+    return !!checkEmail
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+exports.checkUserNameExist = async (username) => {
+  try {
+    const checkUserName = await User.findOne({ where: { username: username } });
+    return !!checkUserName
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+exports.checkPhoneExist = async (phone) => {
+  try {
+    const checkphone = await User.findOne({ where: { phone: phone } });
+    return !!checkphone
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+

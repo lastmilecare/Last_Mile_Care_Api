@@ -15,7 +15,7 @@ async function roleInsert(data) {
 
 async function rolefindAll() {
   try {
-    return await Role.findAll();
+    return await Role.findAll({ order: [['id', 'DESC']] });
   } catch (error) {
     throw new Error(error);
   }

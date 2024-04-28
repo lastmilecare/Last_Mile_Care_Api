@@ -3,9 +3,13 @@ const {
     User,
     DRIVERMASTER,
     DRIVERMASTERPERSONAL,
-    DRIVERFAMILYHISTORY
+    DRIVERFAMILYHISTORY,
+    otp,
+    Packagemanagment
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
+const { Op } = require('sequelize');
+const { sendOTP } = require('../../helper/sendOtp');
 
 exports.createDriver = async (req, res) => {
 
@@ -92,7 +96,7 @@ exports.createDriver = async (req, res) => {
 }
 exports.getDriverList = async (req, res) => {
     try {
-        const drivers = await DRIVERMASTER.findAll();
+        const drivers = await DRIVERMASTER.findAll({ order: [['id', 'DESC']] });
         sendSuccess(res, 200, drivers, 'List of drivers');
     } catch (error) {
         console.log(error);
@@ -250,7 +254,7 @@ exports.createDriverPersonalData = async (req, res) => {
 
 exports.driverPersonalDataVIew = async (req, res) => {
     try {
-        const drivers = await DRIVERMASTERPERSONAL.findAll();
+        const drivers = await DRIVERMASTERPERSONAL.findAll({ order: [['id', 'DESC']] });
         sendSuccess(res, 200, drivers, 'List of drivers');
     } catch (error) {
         console.log(error);
@@ -370,7 +374,8 @@ exports.driverPersonalUpdate = async (req, res) => {
 
         const updatedRecord = await DRIVERMASTERPERSONAL.update(data, { where: { id: id } });
         if (updatedRecord[0] === 0) {
-            return res.status(404).json({ error: 'Driver not found or not updated' });
+            sendError(res, 404, 'Driver not found or not updated', 'Driver personal data updated successfully');
+            return
         }
 
         const updatedDriver = await DRIVERMASTERPERSONAL.findByPk(id);
@@ -443,7 +448,7 @@ exports.createDriverFamilyData = async (req, res) => {
 exports.driverFamilyList = async (req, res) => {
 
     try {
-        const insert = await DRIVERFAMILYHISTORY.findAll();
+        const insert = await DRIVERFAMILYHISTORY.findAll({ order: [['id', 'DESC']] });
         sendSuccess(res, 200, insert, 'DRIVERFAMILYHISTORY Fetch successfully');
     } catch (error) {
         console.log(error);
@@ -508,7 +513,8 @@ exports.driverFamilyUpdate = async (req, res) => {
         // Check if the family member record exists
         const existingRecord = await DRIVERFAMILYHISTORY.findByPk(id);
         if (!existingRecord) {
-            return res.status(404).json({ error: 'Family member record not found' });
+            sendError(res, 404, 'Family member record not found', 'Family member record not found');
+            return
         }
 
         // Update the family member record
@@ -528,6 +534,103 @@ exports.driverFamilyUpdate = async (req, res) => {
         // Fetch and return the updated family member record
         const updatedRecord = await DRIVERFAMILYHISTORY.findByPk(id);
         sendSuccess(res, 200, updatedRecord, 'DRIVERFAMILYHISTORY updated successfully');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+//driver helth
+exports.searchDriverByNumber = async (req, res) => {
+    const searchData = req.body.searchData;
+    console.log(searchData);
+    try {
+        //driverId
+        const searchQuery = await DRIVERMASTER.findOne({
+            where: {
+                [Op.or]: [
+                    { contactNumber: searchData },
+                    { driverId: searchData }
+                ]
+            }
+        });
+
+        if (searchQuery) {
+            sendSuccess(res, 200, searchQuery, 'Success');
+
+        } else {
+            sendError(res, 404, 'Driver not found', 'Driver not found');
+            return
+        }
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.sendOtp = async (req, res) => {
+    if (!req.body.phoneNumber) {
+        sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
+        return;
+    }
+    const phoneNumber = req.body.phoneNumber;
+
+    try {
+        const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: req.body.phoneNumber }, raw: true, nest: true });
+
+        if (checkNumber) {
+            const getOtp = await sendOTP(phoneNumber);
+            await otp.create({
+                user_id: checkNumber.id,
+                phone: phoneNumber,
+                otp: getOtp
+            })
+            sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
+
+        } else {
+            sendError(res, 400, 'Wrong Phone Number', 'Wrong Phone Number');
+            return
+        }
+
+
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+exports.verifyOtp = async (req, res) => {
+    if (!req.body.phoneNumber) {
+        sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
+        return;
+    }
+    if (!req.body.otp) {
+        sendError(res, 400, "Otp is required!", 'Otp is required!');
+        return;
+    }
+    try {
+        const checkNumber = await otp.findOne({ where: { phone: req.body.phoneNumber, otp: req.body.otp } });
+
+        if (checkNumber) {
+            await checkNumber.destroy();
+            sendSuccess(res, 200, "the OTP verification was successful", 'the OTP verification was successful');
+
+        } else {
+            sendError(res, 400, 'Wrong Otp', 'Wrong Otp');
+            return
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+exports.packageList = async (req, res) => {
+
+    try {
+        const reqData = await Packagemanagment.findAll({ where: { status: true }, raw: true, nest: true, order: [['id', 'DESC']] });
+        sendSuccess(res, 200, reqData, 'Success');
+
+
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');

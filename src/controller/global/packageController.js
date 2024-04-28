@@ -29,7 +29,7 @@ exports.listPackage = async (req, res) => {
 
     try {
 
-        const reqData = await Packagemanagment.findAll({ raw: true, nest: true });
+        const reqData = await Packagemanagment.findAll({ raw: true, nest: true, order: [['id', 'DESC']] });
         sendSuccess(res, 200, reqData, 'Success');
     } catch (error) {
         sendError(res, 500, error, 'Invalid input');
@@ -98,7 +98,8 @@ exports.viewCenterPackage = async (req, res) => {
                 { model: Packagemanagment, as: 'package' }, // Include associated Package details
                 { model: Center, as: 'center' } // Include associated Center details
             ],
-            raw: true, nest: true
+            raw: true, nest: true,
+            order: [['id', 'DESC']]
         });
         sendSuccess(res, 200, reqData, 'Centerpackage created Successfully');
     } catch (error) {

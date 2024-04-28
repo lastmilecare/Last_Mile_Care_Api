@@ -114,7 +114,8 @@ exports.assignCenter = async (req, res) => {
       sendError(res, 404, "permission id required", 'permission id required');
       return
     }
-    //permission_id
+
+
     const getData = await userService.checkRole(req.body.permission_id);
     if (!getData) {
       sendError(res, 404, "Invalid permission id", 'Invalid permission id');

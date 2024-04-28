@@ -12,6 +12,7 @@ async function adminAuth(email, password) {
     const result = await User.findOne({
       where: { email: email },
       isAdmin: true,
+      status: true,
       include: [
         {
           model: Permission,
@@ -28,6 +29,7 @@ async function adminAuth(email, password) {
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
+        attributes: ['slug', 'role_title'],
 
       });
       const mergedData = { ...result.toJSON(), ...findRole.toJSON() };
@@ -50,6 +52,7 @@ async function centerAuth(email, password) {
     const result = await User.findOne({
       where: { email: email },
       isAdmin: false,
+      status: true,
       include: [
         {
           model: Permission,
@@ -62,10 +65,12 @@ async function centerAuth(email, password) {
 
 
     });
+    console.log("result", result.toJSON());
 
     if (result) {
       const findRole = await Role.findOne({
         where: { id: result.role_id },
+        attributes: ['slug', 'role_title'],
 
       });
       const mergedData = { ...result.toJSON(), ...findRole.toJSON() };
@@ -76,7 +81,6 @@ async function centerAuth(email, password) {
     else {
       return { status: "no_user_found" };
     }
-
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -116,8 +120,8 @@ async function findPermission(req) {
           model: Role, // Include the Role model
           as: 'Role' // Assuming you've defined an alias for the association
         }
-      ]
-
+      ],
+      order: [['id', 'DESC']]
     });
   } catch (error) {
     throw new Error(error);

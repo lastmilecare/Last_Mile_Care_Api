@@ -12,7 +12,7 @@ const {
   Permission
 } = require("../../../../db/models");
 const bcrypt = require("bcryptjs");
-
+const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../../helper/authHelper.js");
 
 
 exports.roleDetails = async (req, res) => {
@@ -82,13 +82,27 @@ exports.adminCreate = async (req, res) => {
       sendError(res, 404, "permission id required", 'permission id required');
 
     }
-    //permission_id
+
     const getData = await userService.checkRole(req.body.permission_id);
 
     if (!getData) {
       sendError(res, 404, "Invalid permission id", 'Invalid permission id');
-
     }
+
+
+    if (await checkUserNameExist(req.body.username.trim().toLowerCase())) {
+      sendError(res, 400, "Username Already Exists", 'Username Already Exists');
+      return
+    }
+    if (await checkEmailExist(req.body.email.toLowerCase())) {
+      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+      return
+    }
+    if (await checkPhoneExist(req.body.phone)) {
+      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+      return
+    }
+
     const data = {
       username: req.body.username.trim().toLowerCase(),
       role_id: getData.role_id,
