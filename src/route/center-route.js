@@ -54,6 +54,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/create/health-checkup`, verifyTokenMiddleware, healthCheckupController.createHealthData);
     app.post(`${prefixUrl}/driver/view/health-checkup`, verifyTokenMiddleware, healthCheckupController.viewHealthData);
 
+    app.post(`${prefixUrl}/driver/health-checkup/details`, verifyTokenMiddleware, healthCheckupController.detailsHealthData);
 
 
 };

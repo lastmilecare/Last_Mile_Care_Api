@@ -104,8 +104,8 @@ exports.viewCETDetails = async (req, res) => {
         return;
     }
     try {
-        const result = await CETMANAGEMENT.findAll({ where: { id: req.body.id }, raw: true, nest: true, });
-        sendSuccess(res, 200, result, 'CET List Fetch Successful');
+        const result = await CETMANAGEMENT.findOne({ where: { id: req.body.id }, raw: true, nest: true, });
+        sendSuccess(res, 200, result, 'CET Details Fetch Successful');
     } catch (error) {
         console.log(error);
         sendError(res, 500, "internal server error");
