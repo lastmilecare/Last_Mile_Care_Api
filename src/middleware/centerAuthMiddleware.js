@@ -8,7 +8,8 @@ const verifyTokenMiddleware = async (req, res, next) => { // Add async keyword h
     const token = req.cookies.center_token; // Get the token from cookies
 
     if (!token) {
-        return sendError(res, 400, "Token Required", 'Token Required');
+        sendError(res, 400, "Token Required", 'Token Required');
+        return
     }
 
     try {

@@ -23,9 +23,9 @@ module.exports = function (app) {
         { name: 'doc2', maxCount: 1 },
 
     ]), driverController.createDriver);
-    app.post(`${prefixUrl}/driver/list`, driverController.getDriverList);
-    app.post(`${prefixUrl}/driver/details`, driverController.getDriverDetails);
-    app.post(`${prefixUrl}/driver/update`, driverController.updateDriver);
+    app.post(`${prefixUrl}/driver/list`, verifyTokenMiddleware, driverController.getDriverList);
+    app.post(`${prefixUrl}/driver/details`, verifyTokenMiddleware, driverController.getDriverDetails);
+    app.post(`${prefixUrl}/driver/update`, verifyTokenMiddleware, driverController.updateDriver);
 
 
     app.post(`${prefixUrl}/driver/personal/history/create`, verifyTokenMiddleware, driverController.createDriverPersonalData);
