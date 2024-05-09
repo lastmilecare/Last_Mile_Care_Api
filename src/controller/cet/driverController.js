@@ -309,40 +309,8 @@ exports.driverPersonalUpdate = async (req, res) => {
         return;
     }
 
-    const requiredFields = [
-        'driver_phone',
-        'blood_group',
-        'diabetes',
-        'hypertension',
-        'hypotension',
-        'epilepsy',
-        'physical_disability',
-        'physical_disability_details',
-        'mental_disability',
-        'mental_disability_details',
-        'vision_issues',
-        'vision_issues_details',
-        'hearing_issues',
-        'hearing_issues_details',
-        'major_accident',
-        'allergies',
-        'other_medical_info',
-        'alcohol_consumption',
-        'smoking',
-        'tobacco_consumption',
-        'birthmark_identification',
-    ];
 
-    const missingFields = requiredFields.filter(field => {
-        return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-    });
 
-    console.log("Missing Fields:", missingFields); // Log missing fields
-
-    if (missingFields.length > 0) {
-        const msg = missingFields.join(', ');
-        return res.status(400).json({ error: msg + " is required" });
-    }
 
     const data = {
         driver_phone,
