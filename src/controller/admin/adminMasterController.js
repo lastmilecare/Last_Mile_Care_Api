@@ -62,7 +62,6 @@ exports.updateSPO2s = async (req, res) => {
         sendSuccess(res, 201, insert, 'Create SPO2s successfully');
 
     } catch (error) {
-        console.log(error);
         sendError(res, 500, "internal server error");
         return
     }

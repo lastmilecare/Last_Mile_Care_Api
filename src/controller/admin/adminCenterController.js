@@ -56,7 +56,6 @@ exports.createCenter = async (req, res) => {
       return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
     });
 
-    console.log("Missing Fields:", missingFields); // Log missing fields
 
     if (missingFields.length > 0) {
       const msg = missingFields.join(', ');
@@ -84,7 +83,6 @@ exports.createCenter = async (req, res) => {
       agency_spoc_alternate_contact_number,
       project_signed_agreement_file: req.s3Url
     };
-    console.log(req);
 
     const insert = await centerService.insertCenter(data);
     sendSuccess(res, 201, insert, 'Create Center successfully');
@@ -121,11 +119,9 @@ exports.assignCenter = async (req, res) => {
       sendError(res, 404, "Invalid permission id", 'Invalid permission id');
       return
     }
-    console.log("fffffffffff")
     const result = await centerService.assignCenterToUser(req, getData);
     sendSuccess(res, 201, result, 'Center assign successfully');
   } catch (error) {
-    console.log("error", error)
     sendError(res, 500, error, 'Invalid input');
   }
 }
@@ -176,7 +172,7 @@ exports.centerEdit = async (req, res) => {
 
 
 exports.centerUpdate = async (req, res) => {
-  console.log(req.body)
+
   const {
     project_start_date,
     project_name,
@@ -285,7 +281,6 @@ exports.centerUserDetails = async (req, res) => {
 
     sendSuccess(res, 200, userDetailsWithoutPassword, 'User details retrieved successfully');
   } catch (error) {
-    console.log(error);
     sendError(res, 500, error, 'Invalid input');
   }
 }
@@ -341,7 +336,6 @@ exports.centerUserUpdate = async (req, res) => {
 
 
 exports.updateCenterUserStatus = async (req, res) => {
-  console.log("ddddddddddd")
   try {
     if (!req.body.id) {
       sendError(res, 400, "bad request", 'id required');

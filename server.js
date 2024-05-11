@@ -10,7 +10,6 @@ const app = express();
 const fileUpload = require('express-fileupload');
 
 //
-console.log(port);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: false }))

@@ -45,13 +45,11 @@ exports.updateRole = async (req, res) => {
     const insert = await rolseService.updateRole(data, req.body.id);
     sendSuccess(res, 200, insert, 'Update Role successfully');
   } catch (error) {
-    console.log(error);
     sendError(res, 500, error, 'Invalid input');
   }
 };
 
 exports.createRole = async (req, res) => {
-  console.log(req.body);
   try {
     const data = {
       role_title: req.body.role_title,

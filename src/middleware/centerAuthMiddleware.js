@@ -43,10 +43,8 @@ const verifyTokenMiddleware = async (req, res, next) => { // Add async keyword h
             sendError(res, 401, "Invalid_role", 'Invalid ROle');
         }
         req.userId = decoded.data.id;
-        console.log("userId", req.userId);
         next();
     } catch (err) {
-        console.log(err);
         if (err.name === 'JsonWebTokenError') {
             return sendError(res, 401, "JsonWebTokenError", 'JsonWebTokenError');
         }
