@@ -16,7 +16,7 @@ async function sendOTP(phoneNumber) {
         await client.messages.create({
             body: `Your OTP is: ${otp}`,
             from: twilioPhoneNumber,
-            to: phoneNumber
+            to: `+91${phoneNumber}`
         });
 
         return otp; // Return true if OTP is sent successfully
