@@ -20,7 +20,7 @@ exports.createDriver = async (req, res) => {
         abhaNumber,
         dateOfBirthOrAge,
         gender,
-        photographOfDriver,
+
         localAddress,
         localAddressDistrict,
         localAddressState,
@@ -29,7 +29,7 @@ exports.createDriver = async (req, res) => {
         emergencyContactNumber,
         idProof,
         idProof_number,
-        idProof_doc,
+
     } = req.body;
 
     const {
@@ -37,36 +37,19 @@ exports.createDriver = async (req, res) => {
         doc2,
 
     } = req.files || {};
-    const requiredFields = [
-        'name',
-        'healthCardNumber',
-        'driverId',
-        'abhaNumber',
-        'dateOfBirthOrAge',
-        'gender',
 
-        'localAddress',
-        'localAddressDistrict',
-        'localAddressState',
-        'contactNumber',
-        'emergencyContactName',
-        'emergencyContactNumber',
-        'idProof',
-        'idProof_number',
+    if (!name) {
+        sendError(res, 400, "name Required", 'name Required');
+        return
+    }
+    if (!driverId) {
+        sendError(res, 400, "driverId Required", 'driverId Required');
+        return
+    }
 
-    ];
 
     try {
-        const missingFields = requiredFields.filter(field => {
-            return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-        });
 
-        console.log("Missing Fields:", missingFields); // Log missing fields
-
-        if (missingFields.length > 0) {
-            const msg = missingFields.join(', ');
-            return res.status(400).json({ error: msg + " is required" });
-        }
 
         const data = {
             name,
@@ -506,7 +489,7 @@ exports.sendOtp = async (req, res) => {
                 otp: getOtp
             })
             sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
-
+            return
         } else {
             sendError(res, 400, 'Wrong Phone Number', 'Wrong Phone Number');
             return
