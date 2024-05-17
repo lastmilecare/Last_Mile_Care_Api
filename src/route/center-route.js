@@ -50,11 +50,12 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumber);
     app.post(`${prefixUrl}/driver/send/otp`, verifyTokenMiddleware, driverController.sendOtp);
     app.post(`${prefixUrl}/driver/verify/otp`, verifyTokenMiddleware, driverController.verifyOtp);
-    app.post(`${prefixUrl}/driver/package/list`, verifyTokenMiddleware, driverController.packageList);
     app.post(`${prefixUrl}/driver/create/health-checkup`, verifyTokenMiddleware, healthCheckupController.createHealthData);
     app.post(`${prefixUrl}/driver/view/health-checkup`, verifyTokenMiddleware, healthCheckupController.viewHealthData);
 
     app.post(`${prefixUrl}/driver/health-checkup/details`, verifyTokenMiddleware, healthCheckupController.detailsHealthData);
+    app.post(`${prefixUrl}/driver/package/list`, verifyTokenMiddleware, driverController.packageList);
+    app.post(`${prefixUrl}/driver/package/list/wise/unit`, verifyTokenMiddleware, driverController.packageListUnit);
 
 
 };

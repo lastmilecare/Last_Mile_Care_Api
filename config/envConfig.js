@@ -20,6 +20,11 @@ const BUCKET_NAME = process.env.BUCKET_NAME || 'BUCKET_NAME';
 // Other Keys
 const secretKey = process.env.SECRET_KEY || 'default_secret_key';
 const anotherKey = process.env.ANOTHER_KEY || 'default_another_key';
+
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN
+const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER
+
 const prefix = {
   admin: API_PREFIX_ADMIN,
   center: API_PREFIX_CENTER
@@ -45,6 +50,9 @@ module.exports = {
     secretKey,
     anotherKey,
   },
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_PHONE_NUMBER,
   s3: {
     S3AccessId,
     SecretId,

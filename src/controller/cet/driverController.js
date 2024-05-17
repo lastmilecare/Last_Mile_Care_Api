@@ -5,7 +5,24 @@ const {
     DRIVERMASTERPERSONAL,
     DRIVERFAMILYHISTORY,
     otp,
-    Packagemanagment
+    Packagemanagment,
+    Centerpackage,
+    Bloodgroup,
+    Bloodpressure,
+    Pulmonaryfunctiontest,
+    BMI,
+    CHOLESTEROL,
+    Cretenine,
+    ECG,
+    Eyetest,
+    Haemoglobin,
+    Hearingtest,
+    Hiv,
+    Pulse,
+    random_blood_sugar,
+    SPO2,
+    Temperature,
+    Alcholtest
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
@@ -472,17 +489,19 @@ exports.searchDriverByNumber = async (req, res) => {
 }
 
 exports.sendOtp = async (req, res) => {
-    if (!req.body.phoneNumber) {
+    const phoneNumber = req.body.phoneNumber;
+    if (!phoneNumber) {
         sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
         return;
     }
-    const phoneNumber = req.body.phoneNumber;
+
 
     try {
-        const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: req.body.phoneNumber }, raw: true, nest: true });
+        const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
 
         if (checkNumber) {
             const getOtp = await sendOTP(phoneNumber);
+            console.log("---------------", getOtp);
             await otp.create({
                 user_id: checkNumber.id,
                 phone: phoneNumber,
@@ -531,8 +550,29 @@ exports.verifyOtp = async (req, res) => {
 exports.packageList = async (req, res) => {
 
     try {
-        const reqData = await Packagemanagment.findAll({ where: { status: true }, raw: true, nest: true, order: [['id', 'DESC']] });
-        sendSuccess(res, 200, reqData, 'Success');
+        const reqData = await Centerpackage.findAll({
+            where: { center_id: 12, status: true },
+            include: [{ model: Packagemanagment, as: 'package' }],
+            raw: true,
+            nest: true,
+            order: [['id', 'DESC']]
+        });
+        const formattedData = reqData.map(data => {
+            return {
+
+                package: {
+                    id: data.package.id,
+                    package_name: data.package.package_name,
+                    package_id: data.package.package_id,
+                    package_list: data.package.package_list,
+                    status: data.package.status,
+                    createdAt: data.package.createdAt,
+                    updatedAt: data.package.updatedAt
+                }
+            };
+        });
+
+        sendSuccess(res, 200, formattedData, 'Success');
 
 
     } catch (error) {
@@ -540,3 +580,48 @@ exports.packageList = async (req, res) => {
         sendError(res, 500, error, 'Internal server error');
     }
 }
+
+
+exports.packageListUnit = async (req, res) => {
+    const package_list = req.body.package_list;
+    const data = {};
+    try {
+        const modelMapping = {
+            temperature: Temperature,
+            spo2: SPO2,
+            pulse: Pulse,
+            pft: Pulmonaryfunctiontest,
+            haemoglobin: Haemoglobin,
+            cretenine: Cretenine,
+            alchol: Alcholtest,
+            hiv: Hiv,
+            ecg: ECG,
+            bmi: BMI,
+            cholesterol: CHOLESTEROL,
+            eye: Eyetest,
+            hearing: Hearingtest,
+            'blood-pressure': Bloodpressure,
+            'blood-group': Bloodgroup,
+            'random-blood-sugar': random_blood_sugar,
+        };
+
+        // Loop through each item in package_list and query the corresponding model
+        for (const unit of package_list) {
+            // Check if the model exists in the mapping
+            if (unit in modelMapping) {
+                // Query the model and store the result in data
+                data[unit] = await modelMapping[unit].findOne();
+            } else {
+                console.warn(`Model '${unit}' not found for package unit.`);
+            }
+        }
+        sendSuccess(res, 200, data, 'Success');
+
+
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+

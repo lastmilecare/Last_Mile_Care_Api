@@ -41,7 +41,7 @@ npx sequelize-cli model:generate --name CHOLESTEROL --attributes package_price:s
   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
 
   
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
 
 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
  
