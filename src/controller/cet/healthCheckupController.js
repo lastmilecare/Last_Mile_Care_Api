@@ -14,9 +14,16 @@ const { sendOTP } = require('../../helper/sendOtp');
 exports.createHealthData = async (req, res) => {
 
     try {
+        const lastInsert = await driverhealthcheckup.findOne({
+            order: [['createdAt', 'DESC']]
+        });
+        const lastInsertId = lastInsert ? parseInt(lastInsert.id, 10) + 1 : 1;
+        const paddedLastInsertId = lastInsertId.toString().padStart(4, '0');
+        const uniqueId = req.body.patient_type + paddedLastInsertId;
+
 
         const insert = await driverhealthcheckup.create({
-
+            uniqueId: uniqueId,
             bmi_unit: req.body.bmi_unit,
             contactNumber: req.body.contactNumber,
             date_time: req.body.date_time,
@@ -33,7 +40,9 @@ exports.createHealthData = async (req, res) => {
             cholesterol_unit: req.body.cholesterol_unit,
             blood_pressure_unit: req.body.blood_pressure_unit,
             ecg_unit: req.body.ecg_unit,
-        })
+            accept_term_condition: true,
+        });
+
         sendSuccess(res, 201, insert, 'Health Data  Center successfully');
 
     } catch (error) {

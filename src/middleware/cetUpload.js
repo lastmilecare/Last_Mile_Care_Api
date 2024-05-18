@@ -107,57 +107,57 @@ const s3Data = new AWS.S3({
 // };
 const uploadToS3Middleware = (req, res, next) => {
     next();
-    // let cetUrl = {}; // Initialize an empty object to store file URLs
+    let cetUrl = {}; // Initialize an empty object to store file URLs
 
-    // // Function to upload a file to S3
-    // const uploadFileToS3 = (file, key) => {
-    //     const fileContent = file.data;
-    //     const params = {
-    //         Bucket: s3.BUCKET_NAME,
-    //         Key: file.name,
-    //         Body: fileContent,
-    //     };
-    //     s3Data.upload(params, (err, data) => {
-    //         console.log("key", key);
-    //         if (err) {
-    //             cetUrl[key] = { error: err.message };
-    //             console.log(cetUrl);
-    //             req.fileUrl = cetUrl
-    //             next();
-    //         } else {
-    //             cetUrl[key] = data.Location;
-    //         }
-    //         checkAllUploadsComplete();
-    //     });
-    // };
+    // Function to upload a file to S3
+    const uploadFileToS3 = (file, key) => {
+        const fileContent = file.data;
+        const params = {
+            Bucket: s3.BUCKET_NAME,
+            Key: file.name,
+            Body: fileContent,
+        };
+        s3Data.upload(params, (err, data) => {
+            console.log("key", key);
+            if (err) {
+                cetUrl[key] = { error: err.message };
+                console.log(cetUrl);
+                req.fileUrl = cetUrl
+                next();
+            } else {
+                cetUrl[key] = data.Location;
+            }
+            checkAllUploadsComplete();
+        });
+    };
 
-    // // Function to check if all uploads are complete and call next
-    // const checkAllUploadsComplete = () => {
-    //     // Check if all expected files are uploaded
-    //     const allFilesUploaded = (
-    //         req.files.panDoc &&
-    //         req.files.gstDoc &&
-    //         req.files.chequeDoc &&
-    //         req.files.incorporationDoc
-    //     );
-    //     if (allFilesUploaded) {
-    //         req.fileUrl = cetUrl; // Store the file URLs in the request object
-    //         next(); // Call next() after handling the uploads
-    //     }
-    // };
+    // Function to check if all uploads are complete and call next
+    const checkAllUploadsComplete = () => {
+        // Check if all expected files are uploaded
+        const allFilesUploaded = (
+            req.files.panDoc &&
+            req.files.gstDoc &&
+            req.files.chequeDoc &&
+            req.files.incorporationDoc
+        );
+        if (allFilesUploaded) {
+            req.fileUrl = cetUrl; // Store the file URLs in the request object
+            next(); // Call next() after handling the uploads
+        }
+    };
 
-    // // Upload each file to S3
-    // if (req.files.panDoc) {
-    //     uploadFileToS3(req.files.panDoc, 'panDoc');
-    // }
-    // if (req.files.gstDoc) {
-    //     uploadFileToS3(req.files.gstDoc, 'gstDoc');
-    // }
-    // if (req.files.chequeDoc) {
-    //     uploadFileToS3(req.files.chequeDoc, 'chequeDoc');
-    // }
-    // if (req.files.incorporationDoc) {
-    //     uploadFileToS3(req.files.incorporationDoc, 'incorporationDoc');
-    // }
+    // Upload each file to S3
+    if (req.files.panDoc) {
+        uploadFileToS3(req.files.panDoc, 'panDoc');
+    }
+    if (req.files.gstDoc) {
+        uploadFileToS3(req.files.gstDoc, 'gstDoc');
+    }
+    if (req.files.chequeDoc) {
+        uploadFileToS3(req.files.chequeDoc, 'chequeDoc');
+    }
+    if (req.files.incorporationDoc) {
+        uploadFileToS3(req.files.incorporationDoc, 'incorporationDoc');
+    }
 };
 module.exports = uploadToS3Middleware;
