@@ -74,7 +74,9 @@ exports.viewHealthData = async (req, res) => {
                 'createdAt'
             ],
             order: [['id', 'DESC']]
-        }); sendSuccess(res, 200, drivers, 'List of driver health checkup');
+        });
+
+        sendSuccess(res, 200, drivers, 'List of driver health checkup');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
@@ -89,7 +91,29 @@ exports.detailsHealthData = async (req, res) => {
     }
 
     try {
-        const drivers = await driverhealthcheckup.findOne({ where: { id: id } });
+        const drivers = await driverhealthcheckup.findOne({
+            where: { id: id },
+            include: [{
+                model: DRIVERMASTER,
+                as: 'driver',
+                attributes: ['id', 'name',]
+            }],
+            attributes: ['id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+                'createdAt'
+            ],
+            order: [['id', 'DESC']]
+        });
         sendSuccess(res, 200, drivers, 'List of driver health checkup');
     } catch (error) {
         sendError(res, 500, error, 'Internal server error');
