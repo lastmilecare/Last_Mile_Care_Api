@@ -39,7 +39,8 @@ exports.createHealthData = async (req, res) => {
             blood_pressure_unit: req.body.blood_pressure_unit || null,
             ecg_unit: req.body.ecg_unit || null,
             accept_term_condition: true, // Assuming this is always set to true
-            selected_test: req.body.selected_test
+            selected_test: req.body.selected_test,
+            signature: req.body.signature
         });
 
         sendSuccess(res, 201, insert, 'Health Data  Center successfully');
@@ -110,6 +111,7 @@ exports.detailsHealthData = async (req, res) => {
                 'package_list',
                 'verify_option',
                 'selected_test',
+
                 'createdAt'
             ],
             order: [['id', 'DESC']]
