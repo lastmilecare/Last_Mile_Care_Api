@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     random_blood_sugar_unit: DataTypes.JSON,
     hearing_unit: DataTypes.JSON,
     cholesterol_unit: DataTypes.JSON,
+    selected_test: DataTypes.JSON,
     blood_pressure_unit: DataTypes.JSON,
     ecg_unit: DataTypes.JSON,
     doc: DataTypes.STRING,

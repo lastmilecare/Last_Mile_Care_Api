@@ -20,27 +20,26 @@ exports.createHealthData = async (req, res) => {
         const lastInsertId = lastInsert ? parseInt(lastInsert.id, 10) + 1 : 1;
         const paddedLastInsertId = lastInsertId.toString().padStart(4, '0');
         const uniqueId = req.body.patient_type + paddedLastInsertId;
-
-
         const insert = await driverhealthcheckup.create({
             uniqueId: uniqueId,
-            bmi_unit: req.body.bmi_unit,
-            contactNumber: req.body.contactNumber,
-            date_time: req.body.date_time,
+            bmi_unit: req.body.bmi_unit || null,
+            contactNumber: req.body.contactNumber || null,
+            date_time: req.body.date_time || null,
             driver_id: req.body.driverId,
-            haemoglobin_unit: req.body.haemoglobin_unit,
-            package_list: req.body.package_list,
-            patient_type: req.body.patient_type,
-            spo2_unit: req.body.spo2_unit,
-            temperature_unit: req.body.temperature_unit,
-            transpoter: req.body.transpoter,
-            verify_option: req.body.verify_option,
-            random_blood_sugar_unit: req.body.random_blood_sugar_unit,
-            hearing_unit: req.body.hearing_unit,
-            cholesterol_unit: req.body.cholesterol_unit,
-            blood_pressure_unit: req.body.blood_pressure_unit,
-            ecg_unit: req.body.ecg_unit,
-            accept_term_condition: true,
+            haemoglobin_unit: req.body.haemoglobin_unit || null,
+            package_list: req.body.package_list || null,
+            patient_type: req.body.patient_type || null,
+            spo2_unit: req.body.spo2_unit || null,
+            temperature_unit: req.body.temperature_unit || null,
+            transpoter: req.body.transpoter || null,
+            verify_option: req.body.verify_option || null,
+            random_blood_sugar_unit: req.body.random_blood_sugar_unit || null,
+            hearing_unit: req.body.hearing_unit || null,
+            cholesterol_unit: req.body.cholesterol_unit || null,
+            blood_pressure_unit: req.body.blood_pressure_unit || null,
+            ecg_unit: req.body.ecg_unit || null,
+            accept_term_condition: true, // Assuming this is always set to true
+            selected_test: req.body.selected_test
         });
 
         sendSuccess(res, 201, insert, 'Health Data  Center successfully');
