@@ -16,18 +16,23 @@ exports.createHealthData = async (req, res) => {
     try {
 
         const insert = await driverhealthcheckup.create({
-            driver_id: req.body.driver_id,
-            package_and_test_history: req.body.package_and_test_history,
-            driver_details: req.body.driver_details,
-            transpoter: req.body.transpoter,
-            driver_type: req.body.driver_type,
-            vehicle_no: req.body.vehicle_no,
+
+            bmi_unit: req.body.bmi_unit,
+            contactNumber: req.body.contactNumber,
             date_time: req.body.date_time,
-            unique_code: req.body.unique_code,
+            driver_id: req.body.driver_id,
+            haemoglobin_unit: req.body.haemoglobin_unit,
+            package_list: req.body.package_list,
+            patient_type: req.body.patient_type,
             spo2_unit: req.body.spo2_unit,
             temperature_unit: req.body.temperature_unit,
-            pulse_unit: req.body.pulse_unit,
-            package_list: req.body.package_list,
+            transpoter: req.body.transpoter,
+            verify_option: req.body.verify_option,
+            random_blood_sugar_unit: req.body.random_blood_sugar_unit,
+            hearing_unit: req.body.hearing_unit,
+            cholesterol_unit: req.body.cholesterol_unit,
+            blood_pressure_unit: req.body.blood_pressure_unit,
+            ecg_unit: req.body.ecg_unit,
         })
         sendSuccess(res, 201, insert, 'Health Data  Center successfully');
 
