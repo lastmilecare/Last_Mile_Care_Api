@@ -1,5 +1,5 @@
  
-git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
+git push https://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@github.com/lastmilecare/Last_Mile_Care_Api.git main
 
 http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/
 
@@ -7,6 +7,7 @@ http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/
 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
 
  npx sequelize-cli db:migrate
+ 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
 
  
 npx sequelize-cli model:generate --name HIV --attributes standard_value_min:string,standard_value_max:string,within_deviation_value_min:string,within_deviation_value_max:string,units:string,out_of_range:string

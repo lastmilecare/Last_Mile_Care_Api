@@ -624,4 +624,12 @@ exports.packageListUnit = async (req, res) => {
         sendError(res, 500, error, 'Internal server error');
     }
 }
-
+exports.uploadSignature = (req, res) => {
+    try {
+        // Handle the uploaded file data, which is now available in req.fileData
+        const fileData = req.fileData;
+        sendSuccess(res, 200, fileData, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
+    }
+};
