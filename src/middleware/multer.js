@@ -1,27 +1,35 @@
 const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 const path = require('path');
 
-// Define the storage engine for Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './public/uploads'); // Set the destination folder for uploaded images
-  },
-  filename: (req, file, cb) => {
-    // Generate a unique filename for the uploaded image
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-    console.log('fname', file.originalname);
-  },
+const { s3 } = require("../../config/envConfig");
+
+// Configure AWS
+AWS.config.update({
+  accessKeyId: s3.S3AccessId,
+  secretAccessKey: s3.SecretId
 });
 
-// Create a Multer instance with the storage engine
+// Create an instance of the S3 object
+const s3Config = new AWS.S3();
+
+// Create the multer-s3 storage engine
+const storage = multerS3({
+  s3: s3Config,
+  bucket: s3.BUCKET_NAME,
+  key: function (req, file, cb) {
+
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const filename = uniqueSuffix + path.extname(file.originalname);
+    cb(null, filename);
+  }
+});
+
 const upload = multer({ storage: storage });
 
-// Middleware to handle file uploads conditionally
 const uploadMiddleware = (req, res, next) => {
-  // Check if a file is included in the request
   if (!req.file) {
-    // If no file is included, move to the next middleware
     return next();
   }
 
