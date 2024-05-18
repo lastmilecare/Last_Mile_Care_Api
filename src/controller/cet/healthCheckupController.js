@@ -18,7 +18,7 @@ exports.createHealthData = async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
         const lastInsertId = lastInsert ? parseInt(lastInsert.id, 10) + 1 : 1;
-        const paddedLastInsertId = lastInsertId.toString().padStart(4, '0');
+        const paddedLastInsertId = lastInsertId.toString().padStart(5, '0');
         const uniqueId = req.body.patient_type + paddedLastInsertId;
         const insert = await driverhealthcheckup.create({
             uniqueId: uniqueId,
@@ -53,8 +53,28 @@ exports.createHealthData = async (req, res) => {
 
 exports.viewHealthData = async (req, res) => {
     try {
-        const drivers = await driverhealthcheckup.findAll({ order: [['id', 'DESC']] });
-        sendSuccess(res, 200, drivers, 'List of driver health checkup');
+        const drivers = await driverhealthcheckup.findAll({
+            include: [{
+                model: DRIVERMASTER,
+                as: 'driver',
+                attributes: ['id', 'name',]
+            }],
+            attributes: ['id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+                'createdAt'
+            ],
+            order: [['id', 'DESC']]
+        }); sendSuccess(res, 200, drivers, 'List of driver health checkup');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');

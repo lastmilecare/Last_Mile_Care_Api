@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      driverhealthcheckup.belongsTo(models.DRIVERMASTER, { foreignKey: 'driver_id', as: 'driver' });
+
     }
   }
   driverhealthcheckup.init({
