@@ -20,7 +20,7 @@ exports.createHealthData = async (req, res) => {
             bmi_unit: req.body.bmi_unit,
             contactNumber: req.body.contactNumber,
             date_time: req.body.date_time,
-            driver_id: req.body.driver_id,
+            driver_id: req.body.driverId,
             haemoglobin_unit: req.body.haemoglobin_unit,
             package_list: req.body.package_list,
             patient_type: req.body.patient_type,
