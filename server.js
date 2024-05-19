@@ -11,8 +11,8 @@ const fileUpload = require('express-fileupload');
 
 //
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(fileUpload());
 app.use(cookieParser()); // Add cookie-parser middleware

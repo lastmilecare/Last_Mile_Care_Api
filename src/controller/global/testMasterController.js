@@ -26,9 +26,17 @@ exports.hearingTest = async (req, res) => {
         right_ear_units
     } = req.body;
 
-    const { doc1, doc2 } = req.files ?? {};
-    const leftEarAttachment = doc1 ? doc1.filename : null;
-    const rightEarAttachment = doc2 ? doc2.filename : null;
+
+
+
+    const fileUrls = {};
+    Object.keys(req.files).forEach(fieldname => {
+        if (req.files[fieldname] && req.files[fieldname][0]) {
+            fileUrls[fieldname] = req.files[fieldname][0].location;
+        }
+    });
+    const leftEarAttachment = fileUrls ? fileUrls.doc1 : null;
+    const rightEarAttachment = fileUrls ? fileUrls.doc2 : null;
     const data = {
         left_ear_standard_value_max,
         left_ear_standard_value_min,

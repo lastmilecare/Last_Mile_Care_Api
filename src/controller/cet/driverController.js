@@ -49,11 +49,18 @@ exports.createDriver = async (req, res) => {
 
     } = req.body;
 
-    const {
-        doc1,
-        doc2,
+    // const {
+    //     doc1,
+    //     doc2,
 
-    } = req.files || {};
+    // } = req.files || {};
+
+    const fileUrls = {};
+    Object.keys(req.files).forEach(fieldname => {
+        if (req.files[fieldname] && req.files[fieldname][0]) {
+            fileUrls[fieldname] = req.files[fieldname][0].location;
+        }
+    });
 
     if (!name) {
         sendError(res, 400, "name Required", 'name Required');
@@ -75,7 +82,7 @@ exports.createDriver = async (req, res) => {
             abhaNumber,
             dateOfBirthOrAge,
             gender,
-            photographOfDriver: doc1[0].path,
+            photographOfDriver: fileUrls.doc1 || null,
             localAddress,
             localAddressDistrict,
             localAddressState,
@@ -84,7 +91,7 @@ exports.createDriver = async (req, res) => {
             emergencyContactNumber,
             idProof,
             idProof_number,
-            idProof_doc: doc2[0].path,
+            idProof_doc: fileUrls.doc2 || null,
         };
 
         const insert = await DRIVERMASTER.create(data);
@@ -633,3 +640,4 @@ exports.uploadSignature = (req, res) => {
         sendError(res, 500, error, 'Internal server error');
     }
 };
+

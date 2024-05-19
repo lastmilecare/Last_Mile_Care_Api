@@ -2,7 +2,7 @@ const { prefix } = require('../../config/envConfig.js');
 const verifyTokenMiddleware = require('../middleware/centerAuthMiddleware.js');
 const uploadImagesToS3 = require('../middleware/cetUpload.js');
 const cetMangmentController = require('../controller/cet/cetMangmentController.js');
-const fileUploadMiddleware = require('../middleware/fileUploadMiddleware.js')
+const upload = require('../middleware/fileUploadMiddleware.js')
 const driverController = require('../controller/cet/driverController.js');
 const healthCheckupController = require('../controller/cet/healthCheckupController.js');
 const signatureUpload = require('../middleware/singleFileUpload');
@@ -13,7 +13,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, cetMangmentController.viewCET);
     app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, cetMangmentController.viewCETDetails);
     app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.updateCET);
-    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, fileUploadMiddleware.fields([
+    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, upload.fields([
         { name: 'doc1', maxCount: 1 },
         { name: 'doc2', maxCount: 1 },
 
@@ -38,6 +38,6 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/health-checkup/details`, verifyTokenMiddleware, healthCheckupController.detailsHealthData);
     app.post(`${prefixUrl}/driver/package/list`, verifyTokenMiddleware, driverController.packageList);
     app.post(`${prefixUrl}/driver/package/list/wise/unit`, verifyTokenMiddleware, driverController.packageListUnit);
-
+    app.post(`${prefixUrl}/driver/health-checkup/download`, verifyTokenMiddleware, healthCheckupController.driverHealthReportDownload);
 
 };

@@ -43,7 +43,7 @@ exports.createHealthData = async (req, res) => {
             signature: req.body.signature
         });
 
-        sendSuccess(res, 201, insert, 'Health Data  Center successfully');
+        sendSuccess(res, 201, insert, 'Health Checkup Created successfully');
 
     } catch (error) {
         console.log(error);
@@ -97,7 +97,12 @@ exports.detailsHealthData = async (req, res) => {
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
-                attributes: ['id', 'name',]
+                attributes: ['id', 'name', 'abhaNumber',
+                    'gender',
+                    'photographOfDriver',
+                    'localAddress',
+                    'healthCardNumber'
+                ]
             }],
             attributes: ['id',
                 'uniqueId',
@@ -152,6 +157,49 @@ exports.updateHealthDataById = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+};
+
+exports.driverHealthReportDownload = async (req, res) => {
+    const { id } = req.body;
+    if (!id) {
+        sendError(res, 400, "Id is required", 'BAD_REQUEST');
+        return
+    }
+
+    try {
+        const drivers = await driverhealthcheckup.findOne({
+            where: { id: id },
+            include: [{
+                model: DRIVERMASTER,
+                as: 'driver',
+                attributes: ['id', 'name', 'abhaNumber',
+                    'gender',
+                    'photographOfDriver',
+                    'localAddress',
+                    'healthCardNumber'
+                ]
+            }],
+            attributes: ['id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+
+                'createdAt'
+            ],
+            order: [['id', 'DESC']]
+        });
+        sendSuccess(res, 200, drivers, 'Success');
+    } catch (error) {
         sendError(res, 500, error, 'Internal server error');
     }
 };

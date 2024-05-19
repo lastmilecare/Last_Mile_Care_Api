@@ -3,10 +3,12 @@ const path = require('path');
 const AWS = require('aws-sdk');
 const multerS3 = require('multer-s3');
 const { s3 } = require("../../config/envConfig");
+
 // Configure AWS
 AWS.config.update({
     accessKeyId: s3.S3AccessId,
-    secretAccessKey: s3.SecretId
+    secretAccessKey: s3.SecretId,
+
 });
 const s3Config = new AWS.S3();
 
@@ -29,7 +31,6 @@ const storage = multerS3({
     s3: s3Config,
     bucket: s3.BUCKET_NAME,
     acl: 'public-read',
-    // contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: function (req, file, cb) {
         cb(null, { fieldName: file.fieldname });
     },
