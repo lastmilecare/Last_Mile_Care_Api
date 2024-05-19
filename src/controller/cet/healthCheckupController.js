@@ -54,6 +54,12 @@ exports.createHealthData = async (req, res) => {
 
 exports.viewHealthData = async (req, res) => {
     try {
+        const { startDate, endDate } = req.body;
+
+        // Convert received dates to UTC format
+        const startUtc = new Date(startDate).toISOString();
+        const endUtc = new Date(endDate).toISOString();
+
         const drivers = await driverhealthcheckup.findAll({
             include: [{
                 model: DRIVERMASTER,
@@ -74,6 +80,11 @@ exports.viewHealthData = async (req, res) => {
                 'selected_test',
                 'createdAt'
             ],
+            where: {
+                createdAt: {
+                    [Op.between]: [startUtc, endUtc]
+                }
+            },
             order: [['id', 'DESC']]
         });
 
