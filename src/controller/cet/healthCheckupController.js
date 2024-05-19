@@ -54,11 +54,21 @@ exports.createHealthData = async (req, res) => {
 
 exports.viewHealthData = async (req, res) => {
     try {
-        const { startDate, endDate } = req.body;
+        let startUtc, endUtc, queryData;
 
-        // Convert received dates to UTC format
-        const startUtc = new Date(startDate).toISOString();
-        const endUtc = new Date(endDate).toISOString();
+        const { startDate, endDate } = req.body;
+        if (startDate && endDate) { // Using && instead of &
+            startUtc = new Date(startDate).toISOString();
+            endUtc = new Date(endDate).toISOString();
+            queryData = {
+                where: {
+                    createdAt: {
+                        [Op.between]: [startUtc, endUtc]
+                    }
+                }
+            };
+        }
+
 
         const drivers = await driverhealthcheckup.findAll({
             include: [{
@@ -80,11 +90,7 @@ exports.viewHealthData = async (req, res) => {
                 'selected_test',
                 'createdAt'
             ],
-            where: {
-                createdAt: {
-                    [Op.between]: [startUtc, endUtc]
-                }
-            },
+            ...queryData,
             order: [['id', 'DESC']]
         });
 
