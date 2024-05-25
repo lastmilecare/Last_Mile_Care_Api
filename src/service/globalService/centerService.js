@@ -40,7 +40,7 @@ async function findAllCenter(req) {
 
 async function assignCenterToUser(req, getData) {
   try {
-    const { username, name, phone, email, password, center_id } = req.body;
+    const { username, name, phone, email, password, center_id, signature } = req.body;
 
     if (await checkUserNameExist(username.trim().toLowerCase())) {
       sendError(res, 400, "Username Already Exists", 'Username Already Exists');
@@ -71,7 +71,8 @@ async function assignCenterToUser(req, getData) {
     const userInsert = await User.create(data)
     await Centeruser.create({
       user_id: userInsert.id,
-      center_id: center_id
+      center_id: center_id,
+      signature: signature
     })
     return userInsert;
   } catch (error) {

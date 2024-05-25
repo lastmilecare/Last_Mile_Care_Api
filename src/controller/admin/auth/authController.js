@@ -100,8 +100,14 @@ exports.adminCreate = async (req, res) => {
       sendError(res, 400, "Email Already Exists", 'Email Already Exists');
       return
     }
-
+    console.log(getData);
+    const getRole = await userService.getRole("admin");
+    console.log(getRole);
+    const nextId = await userService.getLastId(getRole)
+    const extId = nextId ? parseInt(nextId.id) + 1 : 1;
+    const external_id = `A00${extId}`;
     const data = {
+      external_id: external_id,
       username: req.body.username.trim().toLowerCase(),
       role_id: getData.role_id,
       email: req.body.email.toLowerCase(),
@@ -115,6 +121,7 @@ exports.adminCreate = async (req, res) => {
     const result = await userService.createUser(data);
     sendSuccess(res, 201, result.username, 'Success');
   } catch (error) {
+    console.log(error);
     sendError(res, 500, error, 'Invalid input');
   }
 };

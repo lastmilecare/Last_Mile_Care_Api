@@ -27,6 +27,7 @@ const {
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
+const { sendOTPToWhatsApp } = require('../../helper/whatsApp');
 
 exports.createDriver = async (req, res) => {
 
@@ -502,13 +503,15 @@ exports.sendOtp = async (req, res) => {
         return;
     }
 
-
+    const getOtp = await sendOTPToWhatsApp("9088886641");
+    //const getOtp = await sendOTP(phoneNumber);
+    console.log("---------------", getOtp);
     try {
         const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
 
         if (checkNumber) {
-            const getOtp = await sendOTP(phoneNumber);
-            console.log("---------------", getOtp);
+            // const getOtp = await sendOTP(phoneNumber);
+            // console.log("---------------", getOtp);
             await otp.create({
                 user_id: checkNumber.id,
                 phone: phoneNumber,

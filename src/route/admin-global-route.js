@@ -4,6 +4,8 @@ const adminMasterController = require('../controller/admin/adminMasterController
 const packageController = require('../controller/global/packageController.js');
 const testMasterController = require('../controller/global/testMasterController.js');
 const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
+const signatureUpload = require('../middleware/singleFileUpload');
+const driverController = require('../controller/cet/driverController.js');
 
 const uploadMiddleware = require('../middleware/fileUploadMiddleware.js');
 const upload = require('../middleware/multer.js');
@@ -71,6 +73,7 @@ module.exports = function (app) {
 
     app.post(`${prefixUrl}/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageDetails);
     app.post(`${prefixUrl}/update/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageUpdate);
+    app.post(`${prefixUrl}/upload/signature`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
 
 
 };

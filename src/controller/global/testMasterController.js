@@ -177,6 +177,9 @@ exports.bloodPressure = async (req, res) => {
         diastolic_within_deviation_value_max,
         diastolic_units,
         diastolic_out_of_range,
+        within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
+        within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+        out_of_range_below: req.body.out_of_range_below,
     }
 
     try {
@@ -238,6 +241,9 @@ exports.bmiCheck = async (req, res) => {
         height_within_deviation_value_max,
         height_out_of_range,
         height_units,
+        within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
+        within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+        out_of_range_below: req.body.out_of_range_below,
     }
 
     try {

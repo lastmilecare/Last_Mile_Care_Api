@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     within_deviation_value_max: DataTypes.INTEGER,
     out_of_range: DataTypes.INTEGER,
     units: DataTypes.STRING,
+    within_deviation_value_min_Below: DataTypes.STRING,
+    within_deviation_value_max_Below: DataTypes.STRING,
+    out_of_range_below: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Temperature',

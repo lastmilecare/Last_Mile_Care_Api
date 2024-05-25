@@ -10,12 +10,14 @@ async function generateOTP() {
 
 async function sendOTP(phoneNumber) {
     const otp = await generateOTP();
+    console.log(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER);
+
     try {
-        // await client.messages.create({
-        //     body: `Your OTP is: ${otp}`,
-        //     from: TWILIO_PHONE_NUMBER,
-        //     to: `+91${phoneNumber}`
-        // });
+        await client.messages.create({
+            body: `Your OTP is: ${otp}`,
+            from: TWILIO_PHONE_NUMBER,
+            to: `+91${phoneNumber}`
+        });
         return otp; // Return OTP if sent successfully
     } catch (error) {
         console.error('Error sending OTP:', error);

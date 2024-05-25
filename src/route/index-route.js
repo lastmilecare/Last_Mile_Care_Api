@@ -2,6 +2,7 @@ const authRoutes = require('./admin-auth-route.js');
 const adminGlobalROute = require('./admin-global-route.js');
 const centerRoutes = require('./center-route.js');
 const centerAuthRoutes = require('./center-auth-route.js');
+const doctorAuthRoutes = require('./doctor-route.js');
 
 
 module.exports = function (app) {
@@ -9,5 +10,6 @@ module.exports = function (app) {
   centerRoutes(app);
   adminGlobalROute(app);
   centerAuthRoutes(app);
+  doctorAuthRoutes(app);
   // Add other route files as needed
 };

@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     agency_spoc_alternate_contact_number: DataTypes.STRING,
     project_signed_agreement_file: DataTypes.STRING,
 
+
   }, {
     sequelize,
     modelName: 'Center',

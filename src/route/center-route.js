@@ -39,5 +39,8 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/package/list`, verifyTokenMiddleware, driverController.packageList);
     app.post(`${prefixUrl}/driver/package/list/wise/unit`, verifyTokenMiddleware, driverController.packageListUnit);
     app.post(`${prefixUrl}/driver/health-checkup/download`, verifyTokenMiddleware, healthCheckupController.driverHealthReportDownload);
+    app.post(`${prefixUrl}/driver/health-checkup/history`, verifyTokenMiddleware, healthCheckupController.driverHealthHistory);
+    app.post(`${prefixUrl}/driver/doctor/list`, verifyTokenMiddleware, healthCheckupController.driverDoctorList);
+
 
 };

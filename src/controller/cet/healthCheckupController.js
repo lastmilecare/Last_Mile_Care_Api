@@ -5,7 +5,8 @@ const {
     DRIVERMASTERPERSONAL,
     DRIVERFAMILYHISTORY,
     otp,
-    driverhealthcheckup
+    driverhealthcheckup,
+    Doctor
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
@@ -218,5 +219,64 @@ exports.driverHealthReportDownload = async (req, res) => {
         sendSuccess(res, 200, drivers, 'Success');
     } catch (error) {
         sendError(res, 500, error, 'Internal server error');
+    }
+};
+exports.driverHealthHistory = async (req, res) => {
+    const { id } = req.body;
+    if (!id) {
+        sendError(res, 400, "Id is required", 'BAD_REQUEST');
+        return
+    }
+
+    try {
+        const drivers = await driverhealthcheckup.findAll({
+            where: { id: id },
+            include: [{
+                model: DRIVERMASTER,
+                as: 'driver',
+                attributes: ['id', 'name', 'abhaNumber',
+                    'gender',
+                    'photographOfDriver',
+                    'localAddress',
+                    'healthCardNumber'
+                ]
+            }],
+            attributes: ['id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+                'createdAt'
+            ],
+            order: [['id', 'DESC']]
+        });
+        sendSuccess(res, 200, drivers, 'List of driver health history');
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
+
+
+exports.driverDoctorList = async (req, res) => {
+
+    try {
+        const doctors = await Doctor.findAll({
+            include: [{
+                model: User,
+                where: { status: true },
+                as: 'User', // Ensure this alias matches the association alias
+                attributes: ['id', 'username', 'status', 'phone'] // Specify fields to include from the User model
+            }]
+        });
+        sendSuccess(res, 200, doctors, 'Success');
+    } catch (error) {
+        sendError(res, 500, error, 'Internal error');
     }
 };

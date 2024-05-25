@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN,
     status: DataTypes.BOOLEAN,
+    external_id: DataTypes.STRING,
+
 
   }, {
     sequelize,

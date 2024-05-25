@@ -289,7 +289,7 @@ exports.centerUserDetails = async (req, res) => {
 exports.centerUserUpdate = async (req, res) => {
   try {
     // Destructure request body
-    const { id, username, name, permission_id, phone, email, password, center_id } = req.body;
+    const { id, username, name, permission_id, phone, email, password, center_id, signature } = req.body;
 
     // Find the user record to update
     let user = await User.findByPk(id);
@@ -318,7 +318,7 @@ exports.centerUserUpdate = async (req, res) => {
       let centeruser = await Centeruser.findOne({ where: { user_id: id } });
       if (!centeruser) {
         // Create new centeruser if not exists
-        centeruser = await Centeruser.create({ user_id: id, center_id: center_id });
+        centeruser = await Centeruser.create({ user_id: id, center_id: center_id, signature: signature });
       } else {
         // Update existing centeruser
         centeruser.center_id = center_id;

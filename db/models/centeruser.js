@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   Centeruser.init({
     user_id: DataTypes.STRING,
-    center_id: DataTypes.BIGINT
+    center_id: DataTypes.BIGINT,
+    signature: DataTypes.STRING
+
   }, {
     sequelize,
     modelName: 'Centeruser',

@@ -90,3 +90,36 @@ Not edit lob
 addPackage successfully -> "Add Package successfully"   lob
 [9:01 PM, 4/13/2024] Soumen Da Project: https://last-mile-care.vercel.app/center-wise-package
 Status not update lob
+
+
+
+
+
+
+
+
+
+
+3)Add 3 Filed (Test master)
+Filed Name
+Within deviation value Min (Below)
+Within deviation value Max (Below)
+Out of range (Below)
+
+
+Test
+
+Blood Pressure (Systolic BP + Diastolic BP)
+BMI
+Temperature
+Pulse
+SpO2
+PFT
+RBS
+Hb
+Cretenine
+
+
+  within_deviation_value_min_Below: DataTypes.STRING,
+  within_deviation_value_max_Below: DataTypes.STRING,
+  out_of_range_below: DataTypes.STRING,
