@@ -17,10 +17,12 @@ module.exports = (sequelize, DataTypes) => {
   Packagemanagment.init({
     package_name: DataTypes.STRING,
     package_id: DataTypes.STRING,
+    package_type: DataTypes.STRING,
     package_list: {
       type: DataTypes.JSON
     },
-    status: DataTypes.BOOLEAN
+    status: DataTypes.BOOLEAN,
+    external_id: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Packagemanagment',

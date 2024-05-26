@@ -10,8 +10,18 @@ const {
 exports.addPackage = async (req, res) => {
 
     try {
-        const { package_name, package_id, package_list } = req.body
+        const { package_name, package_id, package_list, short_code } = req.body
+
+        const getLastCenterId = await Packagemanagment.findOne({
+            order: [['id', 'DESC']], // Correctly specify the order by clause
+        });
+
+        // Extract the numeric part and increment it
+        const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+        const external_id = `${short_code}00${nextId}`;
         const data = {
+            external_id: external_id,
+            package_type: short_code,
             package_name,
             package_id,
             package_list,
@@ -68,16 +78,26 @@ exports.updatePackageStatus = async (req, res) => {
     }
 };
 exports.addPackageTOCenter = async (req, res) => {
-    const { package_price,
+    const {
+        package_price,
         package_frequency,
         package_id,
-        center_id, } = req.body
+        center_id, short_code } = req.body
     try {
+        const getLastCenterId = await Centerpackage.findOne({
+            order: [['id', 'DESC']], // Correctly specify the order by clause
+        });
+
+        // Extract the numeric part and increment it
+        const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+        const external_id = `${short_code}00${nextId}`;
+
         const data = {
             package_price,
             package_frequency,
             package_id,
             center_id,
+            external_id: external_id,
             status: true
         };
 

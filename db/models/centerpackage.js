@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Centerpackage.init({
+    external_id: DataTypes.STRING,
     package_price: DataTypes.STRING,
     package_frequency: DataTypes.STRING,
     package_id: DataTypes.BIGINT,

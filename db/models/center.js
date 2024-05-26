@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Center.init({
+    external_id: DataTypes.STRING,
     createdBy: DataTypes.BIGINT,
     project_start_date: DataTypes.STRING,
     project_name: DataTypes.STRING,
@@ -34,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     agency_spoc_alternate_name: DataTypes.STRING,
     agency_spoc_alternate_contact_number: DataTypes.STRING,
     project_signed_agreement_file: DataTypes.STRING,
+    short_code: DataTypes.STRING,
 
 
   }, {

@@ -11,153 +11,56 @@ const s3Data = new AWS.S3({
     secretAccessKey: s3.SecretId
 });
 
-
-// const uploadToS3Middleware = (req, res, next) => {
-
-//     let cetUrl = {};
-//     if (!req.files) {
-//         return sendError(res, 400, "No files were uploaded.", 'No files were uploaded.');
-
-//     }
-//     if (req.files.panDoc) {
-//         const file = req.files.panDoc;
-//         console.log('panDoc', file)
-//         const fileContent = file.data;
-//         const params = {
-//             Bucket: s3.BUCKET_NAME,
-//             Key: file.name,
-//             Body: fileContent,
-//         };
-//         s3Data.upload(params, (err, data) => {
-//             if (err) {
-//                 console.error('Error uploading file to S3:', err);
-//                 cetUrl = { error: "data.Location" };
-
-//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
-//             }
-//             cetUrl = { panDoc: data.Location };
-
-//         });
-
-//     }
-//     if (req.files.gstDoc) {
-//         const file = req.files.gstDoc;
-//         const fileContent = file.data;
-//         const params = {
-//             Bucket: s3.BUCKET_NAME,
-//             Key: file.name,
-//             Body: fileContent,
-//         };
-//         s3Data.upload(params, (err, data) => {
-//             if (err) {
-//                 console.error('Error uploading file to S3:', err);
-//                 cetUrl = { error: "data.Location" };
-
-//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
-//             }
-//             cetUrl = { gstDoc: data.Location };
-
-//         });
-
-//     }
-//     if (req.files.chequeDoc) {
-//         const file = req.files.chequeDoc;
-//         const fileContent = file.data;
-//         const params = {
-//             Bucket: s3.BUCKET_NAME,
-//             Key: file.name,
-//             Body: fileContent,
-//         };
-//         s3Data.upload(params, (err, data) => {
-//             if (err) {
-//                 console.error('Error uploading file to S3:', err);
-//                 cetUrl = { error: "data.Location" };
-
-//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
-//             }
-//             cetUrl = { chequeDoc: data.Location };
-
-//         });
-
-//     }
-//     if (req.files.incorporationDoc) {
-//         const file = req.files.incorporationDoc;
-//         const fileContent = file.data;
-//         const params = {
-//             Bucket: s3.BUCKET_NAME,
-//             Key: file.name,
-//             Body: fileContent,
-//         };
-//         s3Data.upload(params, (err, data) => {
-//             if (err) {
-//                 console.error('Error uploading file to S3:', err);
-//                 cetUrl = { error: "data.Location" };
-
-//                 return sendError(res, 400, "Error uploading file to S3", 'Error uploading file to S3');
-//             }
-//             cetUrl = { incorporationDoc: data.Location };
-
-//         });
-
-//     }
-//     console.log("---------------------", cetUrl);
-//     req.fileUrl = cetUrl;
-//     next();
-
-// };
-const uploadToS3Middleware = (req, res, next) => {
-    next();
+const uploadToS3Middleware = async (req, res, next) => {
     let cetUrl = {}; // Initialize an empty object to store file URLs
 
     // Function to upload a file to S3
     const uploadFileToS3 = (file, key) => {
-        const fileContent = file.data;
-        const params = {
-            Bucket: s3.BUCKET_NAME,
-            Key: file.name,
-            Body: fileContent,
-        };
-        s3Data.upload(params, (err, data) => {
-            console.log("key", key);
-            if (err) {
-                cetUrl[key] = { error: err.message };
-                console.log(cetUrl);
-                req.fileUrl = cetUrl
-                next();
-            } else {
-                cetUrl[key] = data.Location;
+        return new Promise((resolve, reject) => {
+            if (!file) {
+                resolve(); // Resolve immediately if file is null or undefined
+                return;
             }
-            checkAllUploadsComplete();
+
+            const fileContent = file.data;
+            const params = {
+                Bucket: s3.BUCKET_NAME,
+                Key: file.name,
+                Body: fileContent,
+            };
+
+            s3Data.upload(params, (err, data) => {
+                if (err) {
+                    cetUrl[key] = { error: err.message };
+                    resolve(); // Resolve even if there's an error to avoid blocking
+                } else {
+                    cetUrl[key] = data.Location;
+                    resolve(); // Resolve on success
+                }
+            });
         });
     };
 
-    // Function to check if all uploads are complete and call next
-    const checkAllUploadsComplete = () => {
-        // Check if all expected files are uploaded
-        const allFilesUploaded = (
-            req.files.panDoc &&
-            req.files.gstDoc &&
-            req.files.chequeDoc &&
-            req.files.incorporationDoc
-        );
-        if (allFilesUploaded) {
-            req.fileUrl = cetUrl; // Store the file URLs in the request object
-            next(); // Call next() after handling the uploads
-        }
-    };
+    try {
+        // Create an array of promises for the uploads
+        const uploadPromises = [
+            uploadFileToS3(req.files ? req.files.panDoc : null, 'panDoc'),
+            uploadFileToS3(req.files ? req.files.gstDoc : null, 'gstDoc'),
+            uploadFileToS3(req.files ? req.files.chequeDoc : null, 'chequeDoc'),
+            uploadFileToS3(req.files ? req.files.incorporationDoc : null, 'incorporationDoc')
+        ];
 
-    // Upload each file to S3
-    if (req.files.panDoc) {
-        uploadFileToS3(req.files.panDoc, 'panDoc');
-    }
-    if (req.files.gstDoc) {
-        uploadFileToS3(req.files.gstDoc, 'gstDoc');
-    }
-    if (req.files.chequeDoc) {
-        uploadFileToS3(req.files.chequeDoc, 'chequeDoc');
-    }
-    if (req.files.incorporationDoc) {
-        uploadFileToS3(req.files.incorporationDoc, 'incorporationDoc');
+        // Wait for all upload promises to complete
+        await Promise.all(uploadPromises);
+
+        req.fileUrl = cetUrl; // Store the file URLs in the request object
+        next(); // Call next() after handling the uploads
+    } catch (error) {
+        console.error('Error uploading files:', error);
+        res.status(500).json({ error: 'Failed to upload files' });
     }
 };
+
+module.exports = uploadToS3Middleware;
+
 module.exports = uploadToS3Middleware;

@@ -71,12 +71,19 @@ exports.createDriver = async (req, res) => {
         sendError(res, 400, "driverId Required", 'driverId Required');
         return
     }
+    const getLastCenterId = await DRIVERMASTER.findOne({
+        order: [['id', 'DESC']], // Correctly specify the order by clause
+    });
 
+    // Extract the numeric part and increment it
+    const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+    const external_id = `LMC0000${nextId}`;
 
     try {
 
 
         const data = {
+            external_id: external_id,
             name,
             healthCardNumber,
             driverId,

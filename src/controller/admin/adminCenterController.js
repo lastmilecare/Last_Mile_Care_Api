@@ -31,14 +31,15 @@ exports.createCenter = async (req, res) => {
 
     project_end_date,
     agency_spoc_alternate_name,
-    agency_spoc_alternate_contact_number
+    agency_spoc_alternate_contact_number,
+    short_code,
   } = req.body;
 
 
   const requiredFields = [
     'project_start_date',
     'project_name',
-    'project_unique_id',
+
     'project_district',
     'project_state',
     'project_address',
@@ -62,11 +63,18 @@ exports.createCenter = async (req, res) => {
       return sendError(res, 400, msg + " is required", 'Invalid input');
 
     }
+    const getLastCenterId = await Center.findOne({
+      order: [['id', 'DESC']], // Correctly specify the order by clause
+    });
+
+    // Extract the numeric part and increment it
+    const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+    const external_id = `${short_code}00${nextId}`;
 
     const data = {
       project_start_date,
       project_name,
-      project_unique_id,
+      project_unique_id: null,
       project_district,
       project_state,
       project_address,
@@ -81,7 +89,9 @@ exports.createCenter = async (req, res) => {
       agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: req.s3Url
+      project_signed_agreement_file: req.s3Url,
+      external_id: external_id,
+      short_code: short_code
     };
 
     const insert = await centerService.insertCenter(data);

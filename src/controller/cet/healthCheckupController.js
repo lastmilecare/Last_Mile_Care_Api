@@ -18,22 +18,48 @@ exports.createHealthData = async (req, res) => {
         const lastInsert = await driverhealthcheckup.findOne({
             order: [['createdAt', 'DESC']]
         });
+        const short_code = req.body.short_code;
         const lastInsertId = lastInsert ? parseInt(lastInsert.id, 10) + 1 : 1;
         const paddedLastInsertId = lastInsertId.toString().padStart(5, '0');
-        const uniqueId = req.body.patient_type + paddedLastInsertId;
+        const uniqueId = short_code + paddedLastInsertId;
         const insert = await driverhealthcheckup.create({
             uniqueId: uniqueId,
-            bmi_unit: req.body.bmi_unit || null,
+            external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
             date_time: req.body.date_time || null,
             driver_id: req.body.driverId,
-            haemoglobin_unit: req.body.haemoglobin_unit || null,
-            package_list: req.body.package_list || null,
             patient_type: req.body.patient_type || null,
-            spo2_unit: req.body.spo2_unit || null,
-            temperature_unit: req.body.temperature_unit || null,
             transpoter: req.body.transpoter || null,
             verify_option: req.body.verify_option || null,
+            accept_term_condition: true,
+            signature: req.body.signature
+
+        });
+
+        sendSuccess(res, 201, insert, 'Health Checkup Created successfully');
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Internal server error');
+        return
+    }
+}
+exports.createHealthDataStep2 = async (req, res) => {
+    if (!req.body.last_insert_id) {
+        sendError(res, 400, "last_insert_id is required", 'last_insert_id is required');
+    }
+    const id = req.body.last_insert_id;
+    try {
+        const data = {
+            bmi_unit: req.body.bmi_unit || null,
+
+            haemoglobin_unit: req.body.haemoglobin_unit || null,
+            package_list: req.body.package_list || null,
+
+            spo2_unit: req.body.spo2_unit || null,
+            temperature_unit: req.body.temperature_unit || null,
+
+
             random_blood_sugar_unit: req.body.random_blood_sugar_unit || null,
             hearing_unit: req.body.hearing_unit || null,
             cholesterol_unit: req.body.cholesterol_unit || null,
@@ -41,10 +67,14 @@ exports.createHealthData = async (req, res) => {
             ecg_unit: req.body.ecg_unit || null,
             accept_term_condition: true, // Assuming this is always set to true
             selected_test: req.body.selected_test,
-            signature: req.body.signature
+        }
+        await driverhealthcheckup.update(data, {
+            where: {
+                id: id
+            }
         });
-
-        sendSuccess(res, 201, insert, 'Health Checkup Created successfully');
+        const getData = await driverhealthcheckup.findOne({ id: id });
+        sendSuccess(res, 201, getData, 'Health Checkup Created successfully');
 
     } catch (error) {
         console.log(error);
@@ -192,7 +222,10 @@ exports.driverHealthReportDownload = async (req, res) => {
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
-                attributes: ['id', 'name', 'abhaNumber',
+                attributes: [
+                    'id',
+                    'name',
+                    'abhaNumber',
                     'gender',
                     'photographOfDriver',
                     'localAddress',
@@ -211,7 +244,6 @@ exports.driverHealthReportDownload = async (req, res) => {
                 'package_list',
                 'verify_option',
                 'selected_test',
-
                 'createdAt'
             ],
             order: [['id', 'DESC']]

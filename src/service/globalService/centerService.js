@@ -40,7 +40,7 @@ async function findAllCenter(req) {
 
 async function assignCenterToUser(req, getData) {
   try {
-    const { username, name, phone, email, password, center_id, signature } = req.body;
+    const { username, name, phone, email, password, center_id, signature, short_code } = req.body;
 
     if (await checkUserNameExist(username.trim().toLowerCase())) {
       sendError(res, 400, "Username Already Exists", 'Username Already Exists');
@@ -54,6 +54,13 @@ async function assignCenterToUser(req, getData) {
       sendError(res, 400, "Email Already Exists", 'Email Already Exists');
       return
     }
+    const getLastCenterId = await Centeruser.findOne({
+      order: [['id', 'DESC']],
+    });
+
+
+    const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+    const external_id = `${short_code}00${nextId}`;
 
     const data = {
       username: username.trim().toLowerCase(),
@@ -65,14 +72,16 @@ async function assignCenterToUser(req, getData) {
       status: true,
       isAdmin: false,
       password: bcrypt.hashSync(password, 8),
-      center_id
+      center_id,
+      external_id: external_id
     }
 
     const userInsert = await User.create(data)
     await Centeruser.create({
       user_id: userInsert.id,
       center_id: center_id,
-      signature: signature
+      signature: signature,
+      short_code: short_code
     })
     return userInsert;
   } catch (error) {

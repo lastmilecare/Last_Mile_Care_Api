@@ -24,43 +24,40 @@ exports.createCET = async (req, res) => {
         accountNumber,
         ifscCode,
         bankName,
-        status
+        status,
+        short_code,
+        cet_type
     } = req.body;
 
 
     const requiredFields = [
         'name',
-        'uniqueId',
         'registeredAddress',
-        'correspondenceAddress',
         'contactNumber',
-        'spocName',
-        'spocWhatsappNumber',
-        'spocEmail',
-        'alternateSpocName',
-        'alternateSpocContactNumber',
-        'alternateSpocEmail',
-        'pan',
-        'gstin',
-        'accountNumber',
-        'ifscCode',
-        'bankName',
-        'status'
+
     ];
+    const missingFields = requiredFields.filter(field => {
+        return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
+    });
+
+    if (missingFields.length > 0) {
+        const msg = missingFields.join(', ');
+        return res.status(400).json({ error: msg + " is required" });
+    }
 
     try {
-        const missingFields = requiredFields.filter(field => {
-            return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
+
+
+        const getLastCenterId = await CETMANAGEMENT.findOne({
+            order: [['id', 'DESC']],
         });
 
-        console.log("Missing Fields:", missingFields); // Log missing fields
-
-        if (missingFields.length > 0) {
-            const msg = missingFields.join(', ');
-            return res.status(400).json({ error: msg + " is required" });
-        }
+        const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
+        const external_id = `${short_code}000${nextId}`;
 
         const data = {
+            external_id: external_id,
+            cet_type,
             name,
             uniqueId,
             registeredAddress,
@@ -79,13 +76,16 @@ exports.createCET = async (req, res) => {
             bankName,
             status: "In_Progress"
         };
-
+        console.log(data);
 
         const insert = await CETMANAGEMENT.create(data);
+        console.log(insert);
         sendSuccess(res, 201, insert, 'CET Center successfully');
+        return
     } catch (error) {
-        console.log(error);
+        console.log("error", error.message);
         sendError(res, 500, error, 'Invalid input');
+        return
     }
 }
 
@@ -93,19 +93,22 @@ exports.viewCET = async (req, res) => {
     try {
         const result = await CETMANAGEMENT.findAll({ raw: true, nest: true, });
         sendSuccess(res, 200, result, 'CET List Fetch Successful');
+
     } catch (error) {
         console.log(error);
         sendError(res, 500, "internal server error");
+
     }
 }
 exports.viewCETDetails = async (req, res) => {
     if (!req.body.id) {
         sendError(res, 400, "ID Required", 'ID Required');
-        return;
+
     }
     try {
         const result = await CETMANAGEMENT.findOne({ where: { id: req.body.id }, raw: true, nest: true, });
         sendSuccess(res, 200, result, 'CET Details Fetch Successful');
+
     } catch (error) {
         console.log(error);
         sendError(res, 500, "internal server error");

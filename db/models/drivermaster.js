@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DRIVERMASTER.init({
+    external_id: {
+      type: DataTypes.STRING
+    },
     name: {
       type: DataTypes.STRING
     },

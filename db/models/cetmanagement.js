@@ -14,10 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CETMANAGEMENT.init({
+    external_id: DataTypes.STRING,
+    cet_type: DataTypes.STRING,
+
     name: DataTypes.STRING,
     uniqueId: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     registeredAddress: {
       type: DataTypes.STRING,
