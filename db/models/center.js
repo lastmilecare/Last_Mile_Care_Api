@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     agency_spoc_alternate_contact_number: DataTypes.STRING,
     project_signed_agreement_file: DataTypes.STRING,
     short_code: DataTypes.STRING,
+    center_shortcode: DataTypes.STRING,
 
 
   }, {
