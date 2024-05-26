@@ -41,7 +41,7 @@ async function findAllCenter(req) {
 async function assignCenterToUser(req, getData) {
   try {
     const { username, name, phone, email, password, center_id, signature, short_code } = req.body;
-
+    const phoneNumber = String(phone)
     if (await checkUserNameExist(username.trim().toLowerCase())) {
       sendError(res, 400, "Username Already Exists", 'Username Already Exists');
       return
@@ -50,7 +50,7 @@ async function assignCenterToUser(req, getData) {
       sendError(res, 400, "Email Already Exists", 'Email Already Exists');
       return
     }
-    if (await checkPhoneExist(phone)) {
+    if (await checkPhoneExist(phoneNumber)) {
       sendError(res, 400, "Email Already Exists", 'Email Already Exists');
       return
     }
@@ -65,7 +65,7 @@ async function assignCenterToUser(req, getData) {
     const data = {
       username: username.trim().toLowerCase(),
       name,
-      phone,
+      phoneNumber,
       email: email.toLowerCase(),
       role_id: getData.role_id,
       permission_id: getData.id,
