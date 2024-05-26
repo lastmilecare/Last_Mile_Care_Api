@@ -510,15 +510,11 @@ exports.sendOtp = async (req, res) => {
         return;
     }
 
-    const getOtp = await sendOTPToWhatsApp("9088886641");
-    //const getOtp = await sendOTP(phoneNumber);
-    console.log("---------------", getOtp);
     try {
         const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
 
         if (checkNumber) {
-            // const getOtp = await sendOTP(phoneNumber);
-            // console.log("---------------", getOtp);
+            const getOtp = await sendOTP(phoneNumber);
             await otp.create({
                 user_id: checkNumber.id,
                 phone: phoneNumber,
@@ -537,6 +533,47 @@ exports.sendOtp = async (req, res) => {
     }
 }
 
+exports.whatsappOtp = async (req, res) => {
+    const phoneNumber = req.body.phoneNumber;
+    if (!phoneNumber) {
+        sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
+        return;
+    }
+
+    // const getOtp = await sendOTPToWhatsApp("9088886641");
+    // //const getOtp = await sendOTP(phoneNumber);
+    // console.log("---------------", getOtp);
+    try {
+        //const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
+
+        const getOtp = await sendOTPToWhatsApp(phoneNumber);
+        await otp.create({
+            user_id: checkNumber.id,
+            phone: phoneNumber,
+            otp: getOtp
+        })
+        sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
+        return
+
+        // if (checkNumber) {
+        //     const getOtp = await sendOTPToWhatsApp(phoneNumber);
+        //     await otp.create({
+        //         user_id: checkNumber.id,
+        //         phone: phoneNumber,
+        //         otp: getOtp
+        //     })
+        //     sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
+        //     return
+        // } else {
+        //     sendError(res, 400, 'Wrong Phone Number', 'Wrong Phone Number');
+        //     return
+        // }
+
+
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
+    }
+}
 exports.verifyOtp = async (req, res) => {
     if (!req.body.phoneNumber) {
         sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');

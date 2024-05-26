@@ -31,6 +31,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/family/history/update`, verifyTokenMiddleware, driverController.driverFamilyUpdate);
     app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumber);
     app.post(`${prefixUrl}/driver/send/otp`, verifyTokenMiddleware, driverController.sendOtp);
+    app.post(`${prefixUrl}/driver/send/otp/whatsapp`, driverController.whatsappOtp);
+
+
     app.post(`${prefixUrl}/driver/verify/otp`, verifyTokenMiddleware, driverController.verifyOtp);
 
     app.post(`${prefixUrl}/driver/upload/signature`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
