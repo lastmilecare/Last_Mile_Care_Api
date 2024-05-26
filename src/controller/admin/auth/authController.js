@@ -80,7 +80,7 @@ exports.adminCreate = async (req, res) => {
       sendError(res, 404, "permission id required", 'permission id required');
 
     }
-
+    const phone = String(req.body.phone);
     const getData = await userService.checkRole(req.body.permission_id);
 
     if (!getData) {
@@ -96,8 +96,8 @@ exports.adminCreate = async (req, res) => {
       sendError(res, 400, "Email Already Exists", 'Email Already Exists');
       return
     }
-    if (await checkPhoneExist(req.body.phone)) {
-      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+    if (await checkPhoneExist(phone)) {
+      sendError(res, 400, "phone Already Exists", 'phone Already Exists');
       return
     }
     console.log(getData);
@@ -113,7 +113,7 @@ exports.adminCreate = async (req, res) => {
       email: req.body.email.toLowerCase(),
       name: req.body.name,
       permission_id: req.body.permission_id,
-      phone: req.body.phone,
+      phone: phone,
       status: true,
       isAdmin: true,
       password: bcrypt.hashSync(req.body.password, 8),
