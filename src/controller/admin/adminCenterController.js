@@ -32,7 +32,7 @@ exports.createCenter = async (req, res) => {
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number,
-    short_code,
+    center_shortcode,
   } = req.body;
 
 
@@ -69,7 +69,7 @@ exports.createCenter = async (req, res) => {
 
     // Extract the numeric part and increment it
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
-    const external_id = `${short_code}00${nextId}`;
+    const external_id = `${center_shortcode}00${nextId}`;
 
     const data = {
       project_start_date,
@@ -91,7 +91,7 @@ exports.createCenter = async (req, res) => {
       agency_spoc_alternate_contact_number,
       project_signed_agreement_file: req.s3Url,
       external_id: external_id,
-      short_code: short_code
+      short_code: center_shortcode
     };
 
     const insert = await centerService.insertCenter(data);

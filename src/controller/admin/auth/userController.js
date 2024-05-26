@@ -8,6 +8,7 @@ exports.userList = async (req, res) => {
             attributes: [
                 'username',
                 'name',
+                'external_id',
                 'role_id',
                 'email',
                 'phone',
