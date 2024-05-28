@@ -3,6 +3,8 @@ const { prefix } = require('../../config/envConfig');
 const adminAuthController = require('../controller/admin/auth/authController.js');
 const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
 const userController = require('../controller/admin/auth/userController.js');
+const testController = require('../controller/testController.js');
+
 
 const prefixUrl = prefix.admin;
 module.exports = function (app) {
@@ -24,6 +26,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/permission-details`, verifyTokenMiddleware, adminAuthController.permissionDetails);
     app.post(`${prefixUrl}/permission-update`, verifyTokenMiddleware, adminAuthController.permissionUpdate);
 
+    app.post(`${prefixUrl}/otpsend`, verifyTokenMiddleware, testController.sendOtp);
 
 
 

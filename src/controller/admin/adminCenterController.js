@@ -28,7 +28,7 @@ exports.createCenter = async (req, res) => {
     agency_spoc_name,
     agency_spoc_email,
     agency_spoc_contact_number,
-
+    project_signed_agreement_file,
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number,
@@ -90,7 +90,7 @@ exports.createCenter = async (req, res) => {
       agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: req.s3Url,
+      //project_signed_agreement_file: project_signed_agreement_file,
       external_id: external_id,
       short_code: short_code,
       center_shortcode: center_shortcode

@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     qualification: DataTypes.STRING,
     signature: DataTypes.STRING,
     contact_number: DataTypes.STRING,
+    file_name: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Doctor',

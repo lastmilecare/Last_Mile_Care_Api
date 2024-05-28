@@ -8,7 +8,7 @@ const prefixUrl = prefix.admin;
 module.exports = function (app) {
     //center
 
-    app.post(`${prefixUrl}/upload/signature`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
+    app.post(`${prefixUrl}/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
 
     app.post(`${prefixUrl}/create/doctor`, verifyTokenMiddleware, doctorController.createDoctor);
     app.post(`${prefixUrl}/view/doctor`, verifyTokenMiddleware, doctorController.viewDoctor);

@@ -12,6 +12,9 @@ const upload = require('../middleware/multer.js');
 const centerFileUpload = require('../middleware/centerFile.js');
 const prefixUrl = prefix.admin;
 module.exports = function (app) {
+    app.post(`${prefixUrl}/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
+
+
     //center
     app.post(`${prefixUrl}/create/center`, verifyTokenMiddleware, centerFileUpload, adminCenterController.createCenter);
     app.post(`${prefixUrl}/view/center`, verifyTokenMiddleware, adminCenterController.viewCenter);
@@ -73,7 +76,6 @@ module.exports = function (app) {
 
     app.post(`${prefixUrl}/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageDetails);
     app.post(`${prefixUrl}/update/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageUpdate);
-    app.post(`${prefixUrl}/upload/signature`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
 
 
 };
