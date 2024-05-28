@@ -34,6 +34,7 @@ exports.createCenter = async (req, res) => {
     agency_spoc_alternate_contact_number,
     center_shortcode,
     short_code,
+    agreement_file
   } = req.body;
 
 
@@ -90,7 +91,7 @@ exports.createCenter = async (req, res) => {
       agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      //project_signed_agreement_file: project_signed_agreement_file,
+      project_signed_agreement_file: agreement_file ? agreement_file[0].url : null,
       external_id: external_id,
       short_code: short_code,
       center_shortcode: center_shortcode
@@ -99,6 +100,7 @@ exports.createCenter = async (req, res) => {
     const insert = await centerService.insertCenter(data);
     sendSuccess(res, 201, insert, 'Create Center successfully');
   } catch (error) {
+    console.log(error);
     sendError(res, 500, error, 'Invalid input');
   }
 };
@@ -202,7 +204,8 @@ exports.centerUpdate = async (req, res) => {
     project_end_date,
     agency_spoc_alternate_name,
     agency_spoc_alternate_contact_number,
-    id
+    id,
+    agreement_file
   } = req.body;
 
   const requiredFields = [
@@ -253,7 +256,7 @@ exports.centerUpdate = async (req, res) => {
       project_end_date,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: req.filePath
+      project_signed_agreement_file: agreement_file ? agreement_file[0].url : null,
     };
 
     // Assuming you have a function to update the center

@@ -25,6 +25,10 @@ exports.createCET = async (req, res) => {
         ifscCode,
         bankName,
         status,
+        attachPanCopy,
+        attachGstin,
+        attachCancelledChequeOrPassbook,
+        attachCertificateOfIncorporation,
         short_code,
         cet_type
     } = req.body;
@@ -74,7 +78,11 @@ exports.createCET = async (req, res) => {
             accountNumber,
             ifscCode,
             bankName,
-            status: "In_Progress"
+            status: "In_Progress",
+            attachPanCopy: attachPanCopy ? attachPanCopy[0].url : null,
+            attachGstin: attachGstin ? attachGstin[0].url : null,
+            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook[0].url : null,
+            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation[0].url : null,
         };
         console.log(data);
 
@@ -138,15 +146,14 @@ exports.updateCET = async (req, res) => {
         accountNumber,
         ifscCode,
         bankName,
-        status
-    } = req.body;
-
-    const {
+        status,
         attachPanCopy,
         attachGstin,
         attachCancelledChequeOrPassbook,
         attachCertificateOfIncorporation
-    } = req.files || {};
+    } = req.body;
+
+
 
     const requiredFields = [
         'name',
@@ -198,10 +205,10 @@ exports.updateCET = async (req, res) => {
             ifscCode,
             bankName,
             status,
-            attachPanCopy: attachPanCopy ? attachPanCopy[0].filename : null,
-            attachGstin: attachGstin ? attachGstin[0].filename : null,
-            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook[0].filename : null,
-            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation[0].filename : null
+            attachPanCopy: attachPanCopy ? attachPanCopy[0].url : null,
+            attachGstin: attachGstin ? attachGstin[0].url : null,
+            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook[0].url : null,
+            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation[0].url : null,
         };
 
         // Update CET data in the database

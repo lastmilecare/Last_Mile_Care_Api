@@ -23,20 +23,15 @@ exports.hearingTest = async (req, res) => {
         right_ear_within_deviation_value_min,
         right_ear_within_deviation_value_max,
         right_ear_out_of_range,
-        right_ear_units
+        right_ear_units,
+        leftEarAttachment,
+        rightEarAttachment
     } = req.body;
 
 
 
-
-    const fileUrls = {};
-    Object.keys(req.files).forEach(fieldname => {
-        if (req.files[fieldname] && req.files[fieldname][0]) {
-            fileUrls[fieldname] = req.files[fieldname][0].location;
-        }
-    });
-    const leftEarAttachment = fileUrls ? fileUrls.doc1 : null;
-    const rightEarAttachment = fileUrls ? fileUrls.doc2 : null;
+    const leftEarAttachmentUlr = leftEarAttachment ? leftEarAttachment[0].url : null;
+    const rightEarAttachmentUlr = rightEarAttachment ? rightEarAttachment[0].url : null;
     const data = {
         left_ear_standard_value_max,
         left_ear_standard_value_min,
@@ -50,8 +45,8 @@ exports.hearingTest = async (req, res) => {
         right_ear_within_deviation_value_max,
         right_ear_out_of_range,
         right_ear_units,
-        left_ear_attach_certificate_of_incorporation: leftEarAttachment,
-        right_ear_attach_certificate_of_incorporation: rightEarAttachment
+        left_ear_attach_certificate_of_incorporation: leftEarAttachmentUlr,
+        right_ear_attach_certificate_of_incorporation: rightEarAttachmentUlr
     };
 
 
@@ -122,12 +117,12 @@ exports.bloodGroup = async (req, res) => {
 
 exports.ecgUpdate = async (req, res) => {
     let insert;
-    const { option_1, option_2, option_3 } = req.body
+    const { option_1, option_2, option_3, document } = req.body
     const data = {
         option_1,
         option_2,
         option_3,
-        // doc: req.file.filename
+        doc: document ? document[0].url : null,
     }
 
     try {

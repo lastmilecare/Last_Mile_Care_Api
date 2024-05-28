@@ -13,11 +13,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, cetMangmentController.viewCET);
     app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, cetMangmentController.viewCETDetails);
     app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.updateCET);
-    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, upload.fields([
-        { name: 'doc1', maxCount: 1 },
-        { name: 'doc2', maxCount: 1 },
-
-    ]), driverController.createDriver);
+    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, uploadImagesToS3, driverController.createDriver);
     app.post(`${prefixUrl}/driver/list`, verifyTokenMiddleware, driverController.getDriverList);
     app.post(`${prefixUrl}/driver/details`, verifyTokenMiddleware, driverController.getDriverDetails);
     app.post(`${prefixUrl}/driver/update`, verifyTokenMiddleware, driverController.updateDriver);

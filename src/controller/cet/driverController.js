@@ -46,15 +46,12 @@ exports.createDriver = async (req, res) => {
         emergencyContactName,
         emergencyContactNumber,
         idProof,
-        idProof_number,
+        idProof_number, photographOfDriver,
+        idProof_doc
 
     } = req.body;
 
-    // const {
-    //     doc1,
-    //     doc2,
 
-    // } = req.files || {};
 
     const fileUrls = {};
     Object.keys(req.files).forEach(fieldname => {
@@ -81,7 +78,6 @@ exports.createDriver = async (req, res) => {
 
     try {
 
-
         const data = {
             external_id: external_id,
             name,
@@ -90,7 +86,7 @@ exports.createDriver = async (req, res) => {
             abhaNumber,
             dateOfBirthOrAge,
             gender,
-            photographOfDriver: fileUrls.doc1 || null,
+            photographOfDriver: photographOfDriver ? photographOfDriver[0].url : null,
             localAddress,
             localAddressDistrict,
             localAddressState,
@@ -99,7 +95,7 @@ exports.createDriver = async (req, res) => {
             emergencyContactNumber,
             idProof,
             idProof_number,
-            idProof_doc: fileUrls.doc2 || null,
+            idProof_doc: idProof_doc ? idProof_doc[0].url : null,
         };
 
         const insert = await DRIVERMASTER.create(data);

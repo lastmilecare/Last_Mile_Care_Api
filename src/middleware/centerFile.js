@@ -14,11 +14,11 @@ const s3Config = new AWS.S3();
 
 
 const centerFileUpload = (req, res, next) => {
-
+    next();
+    return;
     if (!req.files) {
         req.filePath = null;
-        next();
-        return;
+
     }
 
     const file = req.files.agreement_file;

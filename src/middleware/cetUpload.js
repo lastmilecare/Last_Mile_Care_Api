@@ -12,6 +12,8 @@ const s3Data = new AWS.S3({
 });
 
 const uploadToS3Middleware = async (req, res, next) => {
+    next();
+    return
     let cetUrl = {}; // Initialize an empty object to store file URLs
 
     // Function to upload a file to S3
