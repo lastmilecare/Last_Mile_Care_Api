@@ -14,12 +14,13 @@ async function generateOTP() {
 
 async function sendOTPToWhatsApp(phoneNumber) {
     const otp = await generateOTP();
-    console.log(client);
+    const messageText = `Your OTP is ${otp}. Please share this with the respective personnel to get your mobile verified and generate your request for an appointment.`;
+
     try {
         const send = await client.messages.create({
             from: `whatsapp:${WP_TWILIO_PHONE_NUMBER}`,
-            body: `Hello there! Your OTP is: ${otp}`,
-            to: `whatsapp:+91${phoneNumber}`
+            body: messageText,
+            to: `whatsapp:+${phoneNumber}`
         });
         console.log('OTP sent successfully:', send.sid);
         return { otp, sid: send.sid };

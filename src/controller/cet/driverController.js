@@ -536,34 +536,13 @@ exports.whatsappOtp = async (req, res) => {
         return;
     }
 
-    // const getOtp = await sendOTPToWhatsApp("9088886641");
-    // //const getOtp = await sendOTP(phoneNumber);
-    // console.log("---------------", getOtp);
+
     try {
-        //const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
 
-        const getOtp = await sendOTPToWhatsApp(phoneNumber);
-        await otp.create({
-            user_id: checkNumber.id,
-            phone: phoneNumber,
-            otp: getOtp
-        })
-        sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
-        return
+        const { otp, sid } = await sendOTPToWhatsApp(phoneNumber);
+        return res.status(200).json({ success: true, code: 200, data: `Your OTP is: ${otp}`, message: 'OTP sent successfully', sid });
 
-        // if (checkNumber) {
-        //     const getOtp = await sendOTPToWhatsApp(phoneNumber);
-        //     await otp.create({
-        //         user_id: checkNumber.id,
-        //         phone: phoneNumber,
-        //         otp: getOtp
-        //     })
-        //     sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
-        //     return
-        // } else {
-        //     sendError(res, 400, 'Wrong Phone Number', 'Wrong Phone Number');
-        //     return
-        // }
+
 
 
     } catch (error) {
