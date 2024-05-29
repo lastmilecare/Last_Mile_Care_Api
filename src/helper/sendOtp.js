@@ -1,10 +1,10 @@
 const twilio = require('twilio');
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, } = require('../../config/envConfig');
-
+const axios = require('axios');
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 async function generateOTP() {
-    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otp = Math.floor(1000 + Math.random() * 9000);
     return otp.toString();
 }
 
@@ -12,12 +12,27 @@ async function sendOTP(phoneNumber) {
     const otp = await generateOTP();
 
     try {
-        // await client.messages.create({
-        //     body: `Your OTP is: ${otp}`,
-        //     from: TWILIO_PHONE_NUMBER,
-        //     to: `+91${phoneNumber}`
-        // });
-        return otp; // Return OTP if sent successfully
+
+        const messageText = `Your OTP is ${otp}. Please share this with the respective personnel to get your mobile verified and generate your request for an appointment.`;
+        const username = 'anupam@senpiper.com';
+        const apiKey = encodeURIComponent('2959e07743f0e2661572cdd9dcf42dd182d4345a');
+        const numbers = encodeURIComponent(`+91${phoneNumber}`);
+        const sender = encodeURIComponent('SNPIPR');
+        const message = encodeURIComponent(messageText);
+        console.log(messageText);
+        // Prepare data for GET request
+        const data = `hash=${apiKey}&username=${username}&numbers=${numbers}&sender=${sender}&message=${message}`;
+
+        // Send the GET request with axios
+        axios.get(`https://api.textlocal.in/send/?${data}`)
+            .then(response => {
+                // Process your response here
+                console.log(response.data);
+                return response.data
+            })
+            .catch(error => {
+                console.error('There was an error sending the message:', error);
+            });
     } catch (error) {
         console.error('Error sending OTP:', error);
         throw error; // Throw the error to be handled by the caller

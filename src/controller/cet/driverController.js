@@ -508,7 +508,7 @@ exports.sendOtp = async (req, res) => {
 
     try {
         const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
-
+        console.log(checkNumber);
         if (checkNumber) {
             const getOtp = await sendOTP(phoneNumber);
             await otp.create({
