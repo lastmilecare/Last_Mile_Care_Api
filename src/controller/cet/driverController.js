@@ -510,7 +510,7 @@ exports.sendOtp = async (req, res) => {
                 phone: phoneNumber,
                 otp: getOtp
             })
-            sendSuccess(res, 200, "Your OTP Is : " + getOtp, 'OTP Send Successfully');
+            sendSuccess(res, 200, "OTP Send Successfully", 'OTP Send Successfully');
             return
         } else {
             sendError(res, 400, 'Wrong Phone Number', 'Wrong Phone Number');
