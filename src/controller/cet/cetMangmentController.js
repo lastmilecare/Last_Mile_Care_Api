@@ -79,10 +79,10 @@ exports.createCET = async (req, res) => {
             ifscCode,
             bankName,
             status: "In_Progress",
-            attachPanCopy: attachPanCopy ? attachPanCopy[0].url : null,
-            attachGstin: attachGstin ? attachGstin[0].url : null,
-            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook[0].url : null,
-            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation[0].url : null,
+            attachPanCopy: attachPanCopy ? attachPanCopy : null,
+            attachGstin: attachGstin ? attachGstin : null,
+            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook : null,
+            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation : null,
         };
         console.log(data);
 
@@ -205,10 +205,10 @@ exports.updateCET = async (req, res) => {
             ifscCode,
             bankName,
             status,
-            attachPanCopy: attachPanCopy ? attachPanCopy[0].url : null,
-            attachGstin: attachGstin ? attachGstin[0].url : null,
-            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook[0].url : null,
-            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation[0].url : null,
+            attachPanCopy: attachPanCopy ? attachPanCopy : null,
+            attachGstin: attachGstin ? attachGstin : null,
+            attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook : null,
+            attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation : null,
         };
 
         // Update CET data in the database

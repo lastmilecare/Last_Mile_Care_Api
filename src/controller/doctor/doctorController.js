@@ -30,8 +30,8 @@ exports.createDoctor = async (req, res) => {
             contact_number,
             user_id: insert.id,
             qualification,
-            signature: signature[0].url,
-            file_name: signature[0].name,
+            signature: signature,
+            file_name: null,
             external_id: external_id
         };
 
@@ -113,8 +113,8 @@ exports.updateDoctor = async (req, res) => {
         await Doctor.update({
             registration_number,
             qualification,
-            signature: signature[0].url,
-            file_name: signature[0].name,
+            signature: signature,
+            file_name: null,
         }, { where: { id } });
 
         // Fetch updated doctor data

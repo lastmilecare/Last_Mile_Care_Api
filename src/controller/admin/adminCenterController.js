@@ -91,7 +91,7 @@ exports.createCenter = async (req, res) => {
       agency_address,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: agreement_file ? agreement_file[0].url : null,
+      project_signed_agreement_file: agreement_file ? agreement_file : null,
       external_id: external_id,
       short_code: short_code,
       center_shortcode: center_shortcode
@@ -256,7 +256,7 @@ exports.centerUpdate = async (req, res) => {
       project_end_date,
       agency_spoc_alternate_name,
       agency_spoc_alternate_contact_number,
-      project_signed_agreement_file: agreement_file ? agreement_file[0].url : null,
+      project_signed_agreement_file: agreement_file ? agreement_file : null,
     };
 
     // Assuming you have a function to update the center

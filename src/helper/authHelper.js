@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const configJwt = require('../../config/envConfig');
 const configJwttoken = configJwt.JWT_ADMIN;
 const configJwttokenCenter = configJwt.JWT_CENTER;
-const { sequelize, User, } = require("../../db/models");
+const { sequelize, User, userlog } = require("../../db/models");
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 
@@ -118,3 +118,17 @@ exports.checkPhoneExist = async (phone) => {
   }
 };
 
+exports.createUserLogs = async (userId, type, description) => {
+  try {
+    await userlog.create({
+      user_id: userId,
+      action_type: type,
+      action_description: description,
+      action_time: new Date(),
+    });
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

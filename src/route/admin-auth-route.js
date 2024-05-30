@@ -25,8 +25,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view-permission`, verifyTokenMiddleware, adminAuthController.viewPermission);
     app.post(`${prefixUrl}/permission-details`, verifyTokenMiddleware, adminAuthController.permissionDetails);
     app.post(`${prefixUrl}/permission-update`, verifyTokenMiddleware, adminAuthController.permissionUpdate);
+    app.post(`${prefixUrl}/user/logs`, verifyTokenMiddleware, adminAuthController.userLogs);
 
-    app.post(`${prefixUrl}/otpsend`, verifyTokenMiddleware, testController.sendOtp);
+    // app.post(`${prefixUrl}/otpsend`, verifyTokenMiddleware, testController.sendOtp);
 
 
 

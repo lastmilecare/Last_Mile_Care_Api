@@ -75,6 +75,7 @@ exports.viewRole = async (req, res) => {
 };
 
 exports.adminCreate = async (req, res) => {
+  const currentUser = req.userId;
   try {
     if (!req.body.permission_id) {
       sendError(res, 404, "permission id required", 'permission id required');
@@ -119,6 +120,8 @@ exports.adminCreate = async (req, res) => {
       password: bcrypt.hashSync(req.body.password, 8),
     }
     const result = await userService.createUser(data);
+    const description = `create a new admin user ${external_id}, `
+    await authHelper.createUserLogs(result.id, "create_admin_user", description)
     sendSuccess(res, 201, result.username, 'Success');
   } catch (error) {
     console.log(error);
@@ -335,6 +338,26 @@ exports.userUpdate = async (req, res) => {
   }
 }
 
+
+
+exports.userLogs = async (req, res) => {
+  try {
+
+
+    // sendSuccess(res, 200, req.body.username, 'User data updated successfully');
+  } catch (error) {
+    console.log(error);
+    // sendError(res, 500, "Internal server error", error);
+    return
+  }
+}
+
+
+
+
+
+//
+
 function createSlug(inputString) {
   // Using the slugify package
   return slugify(inputString, {
@@ -343,3 +366,6 @@ function createSlug(inputString) {
     lower: true              // Convert to lowercase
   });
 }
+
+
+

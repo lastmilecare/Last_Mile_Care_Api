@@ -30,8 +30,8 @@ exports.hearingTest = async (req, res) => {
 
 
 
-    const leftEarAttachmentUlr = leftEarAttachment ? leftEarAttachment[0].url : null;
-    const rightEarAttachmentUlr = rightEarAttachment ? rightEarAttachment[0].url : null;
+    const leftEarAttachmentUlr = leftEarAttachment ? leftEarAttachment : null;
+    const rightEarAttachmentUlr = rightEarAttachment ? rightEarAttachment : null;
     const data = {
         left_ear_standard_value_max,
         left_ear_standard_value_min,
@@ -122,7 +122,7 @@ exports.ecgUpdate = async (req, res) => {
         option_1,
         option_2,
         option_3,
-        doc: document ? document[0].url : null,
+        doc: document ? document : null,
     }
 
     try {

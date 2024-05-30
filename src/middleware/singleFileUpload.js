@@ -9,13 +9,13 @@ AWS.config.update({
 const s3Config = new AWS.S3();
 
 const signatureUpload = async (req, res, next) => {
-    if (!req.body.file) {
-        return res.status(400).send('File data or fileName is missing.');
+    if (!req.body.file_url) {
+        return res.status(400).send('file_url data   is missing.');
     }
-    const maxBase64Size = 2 * 1024 * 1024; // 2 MB for base64 encoded size
+    const maxBase64Size = 10 * 1024 * 1024; // 2 MB for base64 encoded size
 
-    const fileData = req.body.file;
-    const fileName = req.body.fileName;
+    const fileData = req.body.file_url;
+    const fileName = req.body.name;
     if (fileData.length > maxBase64Size) {
         return res.status(400).send('Base64 string size exceeds 2 MB');
     }
@@ -29,6 +29,10 @@ const signatureUpload = async (req, res, next) => {
             Key: `uploads/${fileName}`,
             Body: buffer,
             ContentType: mimeType,
+            Metadata: {
+                fileName
+            }
+
         };
 
         // Upload file to S3

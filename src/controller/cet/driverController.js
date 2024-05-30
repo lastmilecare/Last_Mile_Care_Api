@@ -53,12 +53,6 @@ exports.createDriver = async (req, res) => {
 
 
 
-    const fileUrls = {};
-    Object.keys(req.files).forEach(fieldname => {
-        if (req.files[fieldname] && req.files[fieldname][0]) {
-            fileUrls[fieldname] = req.files[fieldname][0].location;
-        }
-    });
 
     if (!name) {
         sendError(res, 400, "name Required", 'name Required');
@@ -86,7 +80,7 @@ exports.createDriver = async (req, res) => {
             abhaNumber,
             dateOfBirthOrAge,
             gender,
-            photographOfDriver: photographOfDriver ? photographOfDriver[0].url : null,
+            photographOfDriver: photographOfDriver ? photographOfDriver : null,
             localAddress,
             localAddressDistrict,
             localAddressState,
@@ -95,7 +89,7 @@ exports.createDriver = async (req, res) => {
             emergencyContactNumber,
             idProof,
             idProof_number,
-            idProof_doc: idProof_doc ? idProof_doc[0].url : null,
+            idProof_doc: idProof_doc ? idProof_doc : null,
         };
 
         const insert = await DRIVERMASTER.create(data);
