@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     idProof: {
-      type: DataTypes.ENUM('voterid', 'drivingLicense', 'aadhar')
+      type: DataTypes.STRING
     },
     idProof_number: {
       type: DataTypes.STRING
