@@ -17,12 +17,14 @@ module.exports = (sequelize, DataTypes) => {
     user_id: {
       type: DataTypes.INTEGER
     },
+
     action_type: {
       type: DataTypes.STRING
     },
     action_description: {
       type: DataTypes.STRING
     },
+
     action_time: {
       type: DataTypes.STRING
     },

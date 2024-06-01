@@ -27,7 +27,7 @@ const {
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
-const { sendWhatsAppMessage } = require('../../helper/whatsApp');
+const { sendWhatsAppMessage, sendWhatsAppTemplateMessage } = require('../../helper/whatsApp');
 
 exports.createDriver = async (req, res) => {
 
@@ -151,8 +151,6 @@ exports.updateDriver = async (req, res) => {
         sendError(res, 500, error, 'Internal server error');
     }
 }
-
-
 ////////////// Personal data
 
 exports.createDriverPersonalData = async (req, res) => {
@@ -339,9 +337,6 @@ exports.driverPersonalUpdate = async (req, res) => {
         sendError(res, 500, error, 'Internal server error');
     }
 }
-
-
-
 ////Family datta
 
 exports.createDriverFamilyData = async (req, res) => {
@@ -525,15 +520,17 @@ exports.sendOtp = async (req, res) => {
 
 exports.whatsappOtp = async (req, res) => {
     const phoneNumber = req.body.phoneNumber;
+    const name = req.body.name;
     if (!phoneNumber) {
         sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
         return;
     }
     try {
 
-        const result = await sendWhatsAppMessage(phoneNumber, "lab", "xyz.com");
+        const result = await sendWhatsAppTemplateMessage(phoneNumber, name, "https://last-mile-care.vercel.app/images/LMC_logo.png", "https://last-mile-care.vercel.app/images/LMC_logo.png");
         return res.status(200).json({ success: true, code: 200, result, result });
     } catch (error) {
+        console.log(error);
         sendError(res, 500, error, 'Internal server error');
     }
 }

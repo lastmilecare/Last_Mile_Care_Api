@@ -55,7 +55,7 @@ async function assignCenterToUser(req, res, getData) {
     const data = {
       username: username.trim().toLowerCase(),
       name,
-      phoneNumber,
+      phone: phoneNumber,
       email: email.toLowerCase(),
       role_id: getData.role_id,
       permission_id: getData.id,
