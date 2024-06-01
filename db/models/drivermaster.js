@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     dateOfBirthOrAge: {
-      type: DataTypes.DATE
+      type: DataTypes.STRING
     },
     gender: {
       type: DataTypes.ENUM('Male', 'Female', 'Other')

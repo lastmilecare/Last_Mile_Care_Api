@@ -13,6 +13,7 @@ const {
 } = require("../../../../db/models");
 const bcrypt = require("bcryptjs");
 const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../../helper/authHelper.js");
+const { createUserLogs } = require("../../../helper/globalHelper.js");
 
 
 exports.roleDetails = async (req, res) => {
@@ -101,9 +102,7 @@ exports.adminCreate = async (req, res) => {
       sendError(res, 400, "phone Already Exists", 'phone Already Exists');
       return
     }
-    console.log(getData);
     const getRole = await userService.getRole("admin");
-    console.log(getRole);
     const nextId = await userService.getLastId(getRole)
     const extId = nextId ? parseInt(nextId.id) + 1 : 1;
     const external_id = `A00${extId}`;
@@ -121,7 +120,14 @@ exports.adminCreate = async (req, res) => {
     }
     const result = await userService.createUser(data);
     const description = `create a new admin user ${external_id}, `
-    await authHelper.createUserLogs(result.id, "create_admin_user", description)
+    await authHelper.createUserLogs(result.id, "create_admin_user", description);
+    const logData = {
+      user_id: currentUser,
+      action_type: "adminCreate",
+      action_description: data
+    }
+    await createUserLogs(logData);
+
     sendSuccess(res, 201, result.username, 'Success');
   } catch (error) {
     console.log(error);

@@ -22,11 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     action_description: {
-      type: DataTypes.STRING
+      type: DataTypes.JSON
     },
 
     action_time: {
-      type: DataTypes.STRING
+      type: DataTypes.DATE
     },
   }, {
     sequelize,

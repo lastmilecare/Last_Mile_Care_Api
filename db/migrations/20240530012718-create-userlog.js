@@ -16,10 +16,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       action_description: {
-        type: Sequelize.STRING
+        type: Sequelize.JSON
       },
       action_time: {
-        type: Sequelize.STRING
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
