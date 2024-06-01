@@ -56,6 +56,9 @@ module.exports = (sequelize, DataTypes) => {
     emergencyContactNumber: {
       type: DataTypes.STRING
     },
+    idProof_name: {
+      type: DataTypes.STRING
+    },
     idProof: {
       type: DataTypes.STRING
     },
