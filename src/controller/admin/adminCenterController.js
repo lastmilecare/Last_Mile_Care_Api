@@ -2,6 +2,7 @@ const { sendSuccess, sendError } = require('../../util/responseHandler');
 const centerService = require('../../service/globalService/centerService');
 const userService = require('../../service/adminService/userService.js');
 const bcrypt = require("bcryptjs");
+const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../helper/authHelper");
 
 const {
   sequelize,
@@ -126,16 +127,30 @@ exports.assignCenter = async (req, res) => {
       sendError(res, 404, "permission id required", 'permission id required');
       return
     }
-
+    const { username, name, phone, email, password, center_id, signature, short_code } = req.body;
+    const phoneNumber = String(phone)
+    if (await checkUserNameExist(username.trim().toLowerCase())) {
+      sendError(res, 400, "Username Already Exists", 'Username Already Exists');
+      return
+    }
+    if (await checkEmailExist(email.toLowerCase())) {
+      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+      return
+    }
+    if (await checkPhoneExist(phoneNumber)) {
+      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+      return
+    }
 
     const getData = await userService.checkRole(req.body.permission_id);
     if (!getData) {
       sendError(res, 404, "Invalid permission id", 'Invalid permission id');
       return
     }
-    const result = await centerService.assignCenterToUser(req, getData);
+    const result = await centerService.assignCenterToUser(req, res, getData);
     sendSuccess(res, 201, result, 'Center assign successfully');
   } catch (error) {
+    console.log(error);
     sendError(res, 500, error, 'Invalid input');
   }
 }
@@ -305,7 +320,7 @@ exports.centerUserUpdate = async (req, res) => {
   try {
     // Destructure request body
     const { id, username, name, permission_id, phone, email, password, center_id, signature } = req.body;
-
+    let centeruser;
     // Find the user record to update
     let user = await User.findByPk(id);
     if (!user) {
@@ -330,7 +345,7 @@ exports.centerUserUpdate = async (req, res) => {
 
     // If center_id is provided, update associated center
     if (center_id) {
-      let centeruser = await Centeruser.findOne({ where: { user_id: id } });
+      centeruser = await Centeruser.findOne({ where: { user_id: id } });
       if (!centeruser) {
         // Create new centeruser if not exists
         centeruser = await Centeruser.create({ user_id: id, center_id: center_id, signature: signature });
@@ -342,7 +357,7 @@ exports.centerUserUpdate = async (req, res) => {
     }
 
     // Send success response with updated user data
-    sendSuccess(res, 200, user, 'User data updated successfully');
+    sendSuccess(res, 200, { user, centeruser }, 'User data updated successfully');
   } catch (error) {
     // Handle errors
     return sendError(res, 500, error.message, 'Invalid input');

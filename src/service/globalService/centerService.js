@@ -6,6 +6,7 @@ const {
   Centeruser, Permission
 } = require("../../../db/models");
 const bcrypt = require("bcryptjs");
+const { sendSuccess, sendError } = require('../../util/responseHandler');
 
 const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../helper/authHelper");
 
@@ -38,22 +39,11 @@ async function findAllCenter(req) {
   }
 }
 
-async function assignCenterToUser(req, getData) {
+async function assignCenterToUser(req, res, getData) {
   try {
     const { username, name, phone, email, password, center_id, signature, short_code } = req.body;
     const phoneNumber = String(phone)
-    if (await checkUserNameExist(username.trim().toLowerCase())) {
-      sendError(res, 400, "Username Already Exists", 'Username Already Exists');
-      return
-    }
-    if (await checkEmailExist(email.toLowerCase())) {
-      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
-      return
-    }
-    if (await checkPhoneExist(phoneNumber)) {
-      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
-      return
-    }
+
     const getLastCenterId = await Centeruser.findOne({
       order: [['id', 'DESC']],
     });
@@ -76,15 +66,18 @@ async function assignCenterToUser(req, getData) {
       external_id: external_id
     }
 
-    const userInsert = await User.create(data)
-    await Centeruser.create({
+    const userInsert = await User.create(data);
+    console.log(signature);
+    const userData = await Centeruser.create({
       user_id: userInsert.id,
       center_id: center_id,
       signature: signature,
       short_code: short_code
     })
-    return userInsert;
+    const resData = { signature, userInsert }
+    return resData;
   } catch (error) {
+    console.log(error);
     throw new Error(error);
   }
 }

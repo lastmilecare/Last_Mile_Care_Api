@@ -27,7 +27,7 @@ const {
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
-const { sendOTPToWhatsApp } = require('../../helper/whatsApp');
+const { sendWhatsAppMessage } = require('../../helper/whatsApp');
 
 exports.createDriver = async (req, res) => {
 
@@ -529,16 +529,10 @@ exports.whatsappOtp = async (req, res) => {
         sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
         return;
     }
-
-
     try {
 
-        const { otp, sid } = await sendOTPToWhatsApp(phoneNumber);
-        return res.status(200).json({ success: true, code: 200, data: `Your OTP is: ${otp}`, message: 'OTP sent successfully', sid });
-
-
-
-
+        const result = await sendWhatsAppMessage(phoneNumber, "lab", "xyz.com");
+        return res.status(200).json({ success: true, code: 200, result, result });
     } catch (error) {
         sendError(res, 500, error, 'Internal server error');
     }
