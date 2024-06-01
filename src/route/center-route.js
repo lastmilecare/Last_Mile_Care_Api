@@ -8,6 +8,7 @@ const healthCheckupController = require('../controller/cet/healthCheckupControll
 const signatureUpload = require('../middleware/singleFileUpload');
 const prefixUrl = prefix.center;
 module.exports = function (app) {
+    app.post(`${prefixUrl}/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
 
     app.post(`${prefixUrl}/create/CET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.createCET);
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, cetMangmentController.viewCET);
