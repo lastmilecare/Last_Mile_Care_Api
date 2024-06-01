@@ -8,7 +8,7 @@ const authHelper = require('../../../helper/authHelper.js');
 const {
   sequelize,
   Role,
-  User,
+  User, userlog,
   Permission
 } = require("../../../../db/models");
 const bcrypt = require("bcryptjs");
@@ -349,11 +349,23 @@ exports.userUpdate = async (req, res) => {
 exports.userLogs = async (req, res) => {
   try {
 
+    const data = await userlog.findAll({
+      include: [{
+        model: User,
+        as: 'User',
+        attributes: ['id', 'username', 'email'], // Specify attributes to include
+      }],
+      order: [
+        ['id', 'DESC']
+      ]
+    });
+    sendSuccess(res, 200, data, '  success');
 
     // sendSuccess(res, 200, req.body.username, 'User data updated successfully');
   } catch (error) {
     console.log(error);
-    // sendError(res, 500, "Internal server error", error);
+    sendError(res, 500, "Internal server error", error);
+
     return
   }
 }
