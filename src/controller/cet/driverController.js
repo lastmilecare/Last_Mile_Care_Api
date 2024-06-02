@@ -22,7 +22,9 @@ const {
     random_blood_sugar,
     SPO2,
     Temperature,
-    Alcholtest
+    Alcholtest,
+    Centeruser,
+    Center
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
@@ -565,15 +567,19 @@ exports.verifyOtp = async (req, res) => {
     }
 }
 exports.packageList = async (req, res) => {
-    const cId = req.userId
+    const cId = req.userId;
+
     try {
+        const centerData = await Centeruser.findOne({ where: { user_id: cId }, raw: true, nest: true });
         const reqData = await Centerpackage.findAll({
-            where: { center_id: cId, status: true },
+            where: { center_id: centerData.center_id, status: true },
             include: [{ model: Packagemanagment, as: 'package' }],
             raw: true,
             nest: true,
             order: [['id', 'DESC']]
         });
+        console.log(reqData, cId);
+
         const formattedData = reqData.map(data => {
             return {
 
