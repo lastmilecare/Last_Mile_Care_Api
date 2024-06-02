@@ -19,20 +19,29 @@ async function sendOTP(phoneNumber) {
         const numbers = encodeURIComponent(`+91${phoneNumber}`);
         const sender = encodeURIComponent('SNPIPR');
         const message = encodeURIComponent(messageText);
-        console.log(messageText);
-        // Prepare data for GET request
         const data = `hash=${apiKey}&username=${username}&numbers=${numbers}&sender=${sender}&message=${message}`;
+        const response = await axios.get(`https://api.textlocal.in/send/?${data}`);
 
-        // Send the GET request with axios
-        axios.get(`https://api.textlocal.in/send/?${data}`)
-            .then(response => {
-                // Process your response here
-                console.log(response.data);
-                return response.data
-            })
-            .catch(error => {
-                console.error('There was an error sending the message:', error);
-            });
+        const resData = {
+            response: response.data,
+            otp: otp
+        };
+        console.log("resData", resData);
+        return resData;
+
+        // axios.get(`https://api.textlocal.in/send/?${data}`)
+        //     .then(response => {
+        //         // Process your response here
+        //         const resData = {
+        //             response: response.data,
+        //             otp: otp
+        //         }
+        //         console.log("resData", resData);
+        //         return resData
+        //     })
+        //     .catch(error => {
+        //         console.error('There was an error sending the message:', error);
+        //     });
     } catch (error) {
         console.error('Error sending OTP:', error);
         throw error; // Throw the error to be handled by the caller

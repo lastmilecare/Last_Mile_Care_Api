@@ -499,13 +499,14 @@ exports.sendOtp = async (req, res) => {
 
     try {
         const checkNumber = await DRIVERMASTER.findOne({ where: { contactNumber: phoneNumber }, raw: true, nest: true });
-        console.log(checkNumber);
+
         if (checkNumber) {
             const getOtp = await sendOTP(phoneNumber);
+            console.log("getOtp", getOtp);
             await otp.create({
                 user_id: checkNumber.id,
                 phone: phoneNumber,
-                otp: getOtp
+                otp: getOtp.otp
             })
             sendSuccess(res, 200, "OTP Send Successfully", 'OTP Send Successfully');
             return
@@ -529,7 +530,7 @@ exports.whatsappOtp = async (req, res) => {
     }
     try {
 
-        const result = await sendWhatsAppTemplateMessage(phoneNumber, name, "https://last-mile-care.vercel.app/images/LMC_logo.png", "https://last-mile-care.vercel.app/images/LMC_logo.png");
+        const result = await sendWhatsAppTemplateMessage("lab", "http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/");
         return res.status(200).json({ success: true, code: 200, result, result });
     } catch (error) {
         console.log(error);
@@ -547,10 +548,10 @@ exports.verifyOtp = async (req, res) => {
     }
     try {
         const checkNumber = await otp.findOne({ where: { phone: req.body.phoneNumber, otp: req.body.otp } });
-
+        console.log(checkNumber);
         if (checkNumber) {
             await checkNumber.destroy();
-            sendSuccess(res, 200, "the OTP verification was successful", 'the OTP verification was successful');
+            sendSuccess(res, 200, "the OTP verification is successful", 'the OTP verification is successful');
 
         } else {
             sendError(res, 400, 'Wrong Otp', 'Wrong Otp');
