@@ -565,10 +565,10 @@ exports.verifyOtp = async (req, res) => {
     }
 }
 exports.packageList = async (req, res) => {
-
+    const cId = req.userId
     try {
         const reqData = await Centerpackage.findAll({
-            where: { center_id: 12, status: true },
+            where: { center_id: cId, status: true },
             include: [{ model: Packagemanagment, as: 'package' }],
             raw: true,
             nest: true,
