@@ -300,11 +300,19 @@ exports.driverHealthReportDownload = async (req, res) => {
                 });
             }
         }
+        for (const key in selectedTest) {
+            if (additionalData.hasOwnProperty(key)) {
+                selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
+            }
+        }
 
         const data = {
-            drivers,
+            drivers: {
+                ...drivers.get({ plain: true }),
+                selected_test: selectedTest
+            },
             additionalData
-        }
+        };
         sendSuccess(res, 200, data, 'List of driver health checkup');
         return
     } catch (error) {
