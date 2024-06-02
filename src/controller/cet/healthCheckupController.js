@@ -1,12 +1,31 @@
 const {
     sequelize,
     User,
+    otp,
+    driverhealthcheckup,
+    Doctor,
     DRIVERMASTER,
     DRIVERMASTERPERSONAL,
     DRIVERFAMILYHISTORY,
-    otp,
-    driverhealthcheckup,
-    Doctor
+
+    Packagemanagment,
+    Centerpackage,
+    Bloodgroup,
+    Bloodpressure,
+    Pulmonaryfunctiontest,
+    BMI,
+    CHOLESTEROL,
+    Cretenine,
+    ECG,
+    Eyetest,
+    Haemoglobin,
+    Hearingtest,
+    Hiv,
+    Pulse,
+    random_blood_sugar,
+    SPO2,
+    Temperature,
+    Alcholtest
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
@@ -164,7 +183,6 @@ exports.detailsHealthData = async (req, res) => {
                 'package_list',
                 'verify_option',
                 'selected_test',
-
                 'createdAt'
             ],
             order: [['id', 'DESC']]
@@ -232,7 +250,8 @@ exports.driverHealthReportDownload = async (req, res) => {
                     'healthCardNumber'
                 ]
             }],
-            attributes: ['id',
+            attributes: [
+                'id',
                 'uniqueId',
                 'accept_term_condition',
                 'driver_id',
@@ -248,7 +267,46 @@ exports.driverHealthReportDownload = async (req, res) => {
             ],
             order: [['id', 'DESC']]
         });
-        sendSuccess(res, 200, drivers, 'Success');
+
+
+        const modelMapping = {
+            temperature_unit: Temperature,
+            spo2_unit: SPO2,
+            pulse_unit: Pulse,
+            pulmonary_function_test_unit: Pulmonaryfunctiontest,
+            haemoglobin_unit: Haemoglobin,
+            cretenine_unit: Cretenine,
+            alchol_test_unit: Alcholtest,
+            hiv_unit: Hiv,
+            ecg_unit: ECG,
+            bmi_unit: BMI,
+            cholesterol_unit: CHOLESTEROL,
+            eyetest_unit: Eyetest,
+            hearing_unit: Hearingtest,
+            blood_pressure_unit: Bloodpressure,
+            blood_group_unit: Bloodgroup,
+            random_blood_sugar_unit: random_blood_sugar
+        };
+
+        const selectedTest = drivers.selected_test;
+        const additionalData = {};
+        const bmiData = await BMI.findOne({ raw: true, nest: true });
+        console.log(bmiData, selectedTest);
+        for (const key in selectedTest) {
+            if (modelMapping.hasOwnProperty(key)) {
+                const model = modelMapping[key];
+                additionalData[key] = await model.findOne({
+                    raw: true, nest: true
+                });
+            }
+        }
+
+        const data = {
+            drivers,
+            additionalData
+        }
+        sendSuccess(res, 200, data, 'List of driver health checkup');
+        return
     } catch (error) {
         sendError(res, 500, error, 'Internal server error');
     }

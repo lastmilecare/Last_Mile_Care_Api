@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
 
-    weighti_standard_value_min: {
+    weight_standard_value_min: {
       type: DataTypes.INTEGER
     },
     weight_standard_value_max: {

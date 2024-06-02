@@ -224,7 +224,7 @@ exports.bmiCheck = async (req, res) => {
         bmi_within_deviation_value_max,
         bmi_out_of_range,
         bmi_units,
-        weighti_standard_value_min,
+        weight_standard_value_min: weighti_standard_value_min,
         weight_standard_value_max,
         weight_within_deviation_value_min,
         weight_within_deviation_value_max,
