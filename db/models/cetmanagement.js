@@ -62,6 +62,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
 
     },
+    short_code: {
+      type: DataTypes.STRING,
+
+    },
     attachPanCopy: {
       type: DataTypes.STRING,
 
