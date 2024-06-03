@@ -30,7 +30,9 @@ exports.createCET = async (req, res) => {
         attachCancelledChequeOrPassbook,
         attachCertificateOfIncorporation,
         short_code,
-        cet_type
+        cet_type,
+
+
     } = req.body;
 
 
@@ -60,6 +62,7 @@ exports.createCET = async (req, res) => {
         const external_id = `${short_code}000${nextId}`;
 
         const data = {
+            center_id: req.userId,
             external_id: external_id,
             short_code: short_code,
             cet_type,

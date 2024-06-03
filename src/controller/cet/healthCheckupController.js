@@ -45,7 +45,7 @@ exports.createHealthData = async (req, res) => {
             uniqueId: uniqueId,
             external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
-            date_time: req.body.date_time || null,
+            date_time: req.body.date_time,
             driver_id: req.body.driverId,
             patient_type: req.body.patient_type || null,
             transpoter: req.body.transpoter || null,
@@ -71,14 +71,11 @@ exports.createHealthDataStep2 = async (req, res) => {
     try {
         const data = {
             bmi_unit: req.body.bmi_unit || null,
-
             haemoglobin_unit: req.body.haemoglobin_unit || null,
             package_list: req.body.package_list || null,
-
             spo2_unit: req.body.spo2_unit || null,
             temperature_unit: req.body.temperature_unit || null,
-
-
+            date_time: req.body.date_time,
             random_blood_sugar_unit: req.body.random_blood_sugar_unit || null,
             hearing_unit: req.body.hearing_unit || null,
             cholesterol_unit: req.body.cholesterol_unit || null,

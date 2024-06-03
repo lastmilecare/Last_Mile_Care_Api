@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   CETMANAGEMENT.init({
     external_id: DataTypes.STRING,
     cet_type: DataTypes.STRING,
-
+    center_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     uniqueId: {
       type: DataTypes.STRING,
