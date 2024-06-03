@@ -76,6 +76,7 @@ exports.createDriver = async (req, res) => {
     try {
 
         const data = {
+            createdBy: req.userId,
             external_id: external_id,
             name,
             healthCardNumber,

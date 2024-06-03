@@ -42,6 +42,7 @@ exports.createHealthData = async (req, res) => {
         const paddedLastInsertId = lastInsertId.toString().padStart(5, '0');
         const uniqueId = short_code + paddedLastInsertId;
         const insert = await driverhealthcheckup.create({
+            createdBy: req.userId,
             uniqueId: uniqueId,
             external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
@@ -52,7 +53,6 @@ exports.createHealthData = async (req, res) => {
             verify_option: req.body.verify_option || null,
             accept_term_condition: true,
             signature: req.body.signature
-
         });
 
         sendSuccess(res, 201, insert, 'Health Checkup Created successfully');

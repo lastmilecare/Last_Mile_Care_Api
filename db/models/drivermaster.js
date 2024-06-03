@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     external_id: {
       type: DataTypes.STRING
     },
+    createdBy: {
+      type: DataTypes.INTEGER
+    },
     name: {
       type: DataTypes.STRING
     },
