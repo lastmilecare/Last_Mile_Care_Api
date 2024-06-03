@@ -61,6 +61,7 @@ exports.createCET = async (req, res) => {
 
         const data = {
             external_id: external_id,
+            short_code: short_code,
             cet_type,
             name,
             uniqueId,
