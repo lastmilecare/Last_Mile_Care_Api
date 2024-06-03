@@ -70,6 +70,7 @@ exports.createHealthDataStep2 = async (req, res) => {
     const id = req.body.last_insert_id;
     try {
         const data = {
+            doctor_id: req.body.doctor_id,
             bmi_unit: req.body.bmi_unit || null,
             haemoglobin_unit: req.body.haemoglobin_unit || null,
             package_list: req.body.package_list || null,
@@ -224,98 +225,7 @@ exports.updateHealthDataById = async (req, res) => {
     }
 };
 
-exports.driverHealthReportDownload = async (req, res) => {
-    const { id } = req.body;
-    if (!id) {
-        sendError(res, 400, "Id is required", 'BAD_REQUEST');
-        return
-    }
 
-    try {
-        const drivers = await driverhealthcheckup.findOne({
-            where: { id: id },
-            include: [{
-                model: DRIVERMASTER,
-                as: 'driver',
-                attributes: [
-                    'id',
-                    'name',
-                    'abhaNumber',
-                    'gender',
-                    'photographOfDriver',
-                    'localAddress',
-                    'healthCardNumber'
-                ]
-            }],
-            attributes: [
-                'id',
-                'uniqueId',
-                'accept_term_condition',
-                'driver_id',
-                'transpoter',
-                'driver_type',
-                'vehicle_no',
-                'signature',
-                'date_time',
-                'package_list',
-                'verify_option',
-                'selected_test',
-                'createdAt'
-            ],
-            order: [['id', 'DESC']]
-        });
-
-
-        const modelMapping = {
-            temperature_unit: Temperature,
-            spo2_unit: SPO2,
-            pulse_unit: Pulse,
-            pulmonary_function_test_unit: Pulmonaryfunctiontest,
-            haemoglobin_unit: Haemoglobin,
-            cretenine_unit: Cretenine,
-            alchol_test_unit: Alcholtest,
-            hiv_unit: Hiv,
-            ecg_unit: ECG,
-            bmi_unit: BMI,
-            cholesterol_unit: CHOLESTEROL,
-            eyetest_unit: Eyetest,
-            hearing_unit: Hearingtest,
-            blood_pressure_unit: Bloodpressure,
-            blood_group_unit: Bloodgroup,
-            random_blood_sugar_unit: random_blood_sugar
-        };
-
-        const selectedTest = drivers.selected_test;
-        const additionalData = {};
-        const bmiData = await BMI.findOne({ raw: true, nest: true });
-        console.log(bmiData, selectedTest);
-        for (const key in selectedTest) {
-            if (modelMapping.hasOwnProperty(key)) {
-                const model = modelMapping[key];
-                additionalData[key] = await model.findOne({
-                    raw: true, nest: true
-                });
-            }
-        }
-        for (const key in selectedTest) {
-            if (additionalData.hasOwnProperty(key)) {
-                selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
-            }
-        }
-
-        const data = {
-            drivers: {
-                ...drivers.get({ plain: true }),
-                selected_test: selectedTest
-            },
-            additionalData
-        };
-        sendSuccess(res, 200, data, 'List of driver health checkup');
-        return
-    } catch (error) {
-        sendError(res, 500, error, 'Internal server error');
-    }
-};
 exports.driverHealthHistory = async (req, res) => {
     const { id } = req.body;
     if (!id) {
@@ -358,7 +268,6 @@ exports.driverHealthHistory = async (req, res) => {
     }
 }
 
-
 exports.driverDoctorList = async (req, res) => {
 
     try {
@@ -373,5 +282,239 @@ exports.driverDoctorList = async (req, res) => {
         sendSuccess(res, 200, doctors, 'Success');
     } catch (error) {
         sendError(res, 500, error, 'Internal error');
+    }
+};
+
+// exports.driverHealthReportDownload = async (req, res) => {
+//     const { id } = req.body;
+//     if (!id) {
+//         sendError(res, 400, "Id is required", 'BAD_REQUEST');
+//         return
+//     }
+
+//     try {
+//         const drivers = await driverhealthcheckup.findOne({
+//             where: { id: id },
+//             include: [{
+//                 model: DRIVERMASTER,
+//                 as: 'driver',
+//                 attributes: [
+//                     'id',
+//                     'name',
+//                     'abhaNumber',
+//                     'gender',
+//                     'photographOfDriver',
+//                     'localAddress',
+//                     'healthCardNumber'
+//                 ]
+//             }],
+//             attributes: [
+//                 'id',
+//                 'uniqueId',
+//                 'accept_term_condition',
+//                 'driver_id',
+//                 'transpoter',
+//                 'driver_type',
+//                 'vehicle_no',
+//                 'signature',
+//                 'date_time',
+//                 'package_list',
+//                 'verify_option',
+//                 'selected_test',
+//                 'createdAt'
+//             ],
+//             order: [['id', 'DESC']]
+//         });
+
+
+//         const modelMapping = {
+//             temperature_unit: Temperature,
+//             spo2_unit: SPO2,
+//             pulse_unit: Pulse,
+//             pulmonary_function_test_unit: Pulmonaryfunctiontest,
+//             haemoglobin_unit: Haemoglobin,
+//             cretenine_unit: Cretenine,
+//             alchol_test_unit: Alcholtest,
+//             hiv_unit: Hiv,
+//             ecg_unit: ECG,
+//             bmi_unit: BMI,
+//             cholesterol_unit: CHOLESTEROL,
+//             eyetest_unit: Eyetest,
+//             hearing_unit: Hearingtest,
+//             blood_pressure_unit: Bloodpressure,
+//             blood_group_unit: Bloodgroup,
+//             random_blood_sugar_unit: random_blood_sugar
+//         };
+
+//         const selectedTest = drivers.selected_test;
+//         const additionalData = {};
+
+//         for (const key in selectedTest) {
+//             if (modelMapping.hasOwnProperty(key)) {
+//                 const model = modelMapping[key];
+//                 additionalData[key] = await model.findOne({
+//                     raw: true, nest: true
+//                 });
+//             }
+//         }
+//         for (const key in selectedTest) {
+//             if (additionalData.hasOwnProperty(key)) {
+//                 selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
+//             }
+//         }
+
+//         const data = {
+//             drivers: {
+//                 ...drivers.get({ plain: true }),
+//                 selected_test: selectedTest
+//             },
+//             additionalData
+//         };
+//         sendSuccess(res, 200, data, 'List of driver health checkup');
+//         return
+//     } catch (error) {
+//         sendError(res, 500, error, 'Internal server error');
+//     }
+// };
+
+exports.driverHealthReportDownload = async (req, res) => {
+    const { id } = req.body;
+    if (!id) {
+        sendError(res, 400, "Id is required", 'BAD_REQUEST');
+        return;
+    }
+
+    try {
+        const drivers = await driverhealthcheckup.findOne({
+            where: { id: id },
+            include: [{
+                model: DRIVERMASTER,
+                as: 'driver',
+                attributes: [
+                    'id',
+                    'name',
+                    'abhaNumber',
+                    'gender',
+                    'photographOfDriver',
+                    'localAddress',
+                    'healthCardNumber'
+                ]
+            }],
+            attributes: [
+                'id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+                'createdAt'
+            ],
+            order: [['id', 'DESC']]
+        });
+
+        if (!drivers) {
+            sendError(res, 404, "Driver health checkup record not found", 'NOT_FOUND');
+            return;
+        }
+
+        const selectedTestKeys = Object.keys(drivers.selected_test);
+        const modelMapping = {
+            temperature_unit: Temperature,
+            spo2_unit: SPO2,
+            pulse_unit: Pulse,
+            pulmonary_function_test_unit: Pulmonaryfunctiontest,
+            haemoglobin_unit: Haemoglobin,
+            cretenine_unit: Cretenine,
+            alchol_test_unit: Alcholtest,
+            hiv_unit: Hiv,
+            ecg_unit: ECG,
+            bmi_unit: BMI,
+            cholesterol_unit: CHOLESTEROL,
+            eyetest_unit: Eyetest,
+            hearing_unit: Hearingtest,
+            blood_pressure_unit: Bloodpressure,
+            blood_group_unit: Bloodgroup,
+            random_blood_sugar_unit: random_blood_sugar
+        };
+
+        const additionalDataPromises = selectedTestKeys.map(async (key) => {
+            if (modelMapping[key]) {
+                const model = modelMapping[key];
+                const data = await model.findOne({
+                    raw: true,
+                    nest: true
+                });
+                return { key, data };
+            }
+            return null;
+        });
+
+        const additionalDataResults = await Promise.all(additionalDataPromises);
+        const additionalData = additionalDataResults.reduce((acc, result) => {
+            if (result) {
+                acc[result.key] = result.data;
+            }
+            return acc;
+        }, {});
+
+        // Merge the additional data with the selected tests
+        const selectedTest = drivers.selected_test;
+        for (const key in selectedTest) {
+            if (additionalData.hasOwnProperty(key)) {
+                selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
+            }
+        }
+
+        // Prepare data for JSON response
+        const reportData = [];
+        let srNo = 1;
+        for (const key in selectedTest) {
+            if (selectedTest.hasOwnProperty(key)) {
+                const testData = selectedTest[key];
+                let healthData = '';
+
+                // Handle special case structures for specific tests
+                if (key === 'blood_pressure_unit') {
+                    healthData = `${testData.systolic_value || 'NA'}/${testData.diastolic_value || 'NA'}`;
+                } else if (key === 'bmi_unit') {
+                    healthData = `${testData.bmi_value || 'NA'}`;
+                } else {
+                    healthData = Object.values(testData).join('/');
+                }
+
+                const units = testData.units || 'NA';
+                const standardValue = `${testData.standard_value_min || 'NA'} to ${testData.standard_value_max || 'NA'}`;
+                reportData.push({
+                    srNo,
+                    testName: key.replace('_unit', '').replace(/_/g, ' ').toUpperCase(),
+                    healthData,
+                    units,
+                    standardValue,
+                    remarks: testData.comment || ''
+                });
+                srNo++;
+            }
+        }
+
+        // Prepare the final data object
+        const data = {
+            driverDetails: {
+                name: drivers.driver.name,
+                healthCardNumber: drivers.driver.healthCardNumber,
+                abhaNumber: drivers.driver.abhaNumber
+            },
+            report: reportData,
+            additionalData
+        };
+
+        sendSuccess(res, 200, data, 'Driver health report');
+    } catch (error) {
+        sendError(res, 500, error, 'Internal server error');
     }
 };

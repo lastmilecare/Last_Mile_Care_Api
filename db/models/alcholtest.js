@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   Alcholtest.init({
     standard_value_min: DataTypes.INTEGER,
     standard_value_max: DataTypes.INTEGER,
