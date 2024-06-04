@@ -399,7 +399,20 @@ exports.driverHealthReportDownload = async (req, res) => {
                     'localAddress',
                     'healthCardNumber'
                 ]
-            }],
+            },
+            {
+                model: Doctor,
+                as: 'doctor',
+                include: [{
+                    model: User,
+                    as: 'User', // Ensure this alias matches the association alias
+                    attributes: ['id', 'username', 'status', 'phone'] // Specify fields to include from the User model
+                }]
+
+            },
+
+
+            ],
             attributes: [
                 'id',
                 'uniqueId',
@@ -423,7 +436,6 @@ exports.driverHealthReportDownload = async (req, res) => {
             return;
         }
 
-        const selectedTestKeys = Object.keys(drivers.selected_test);
         const modelMapping = {
             temperature_unit: Temperature,
             spo2_unit: SPO2,
@@ -443,78 +455,43 @@ exports.driverHealthReportDownload = async (req, res) => {
             random_blood_sugar_unit: random_blood_sugar
         };
 
-        const additionalDataPromises = selectedTestKeys.map(async (key) => {
-            if (modelMapping[key]) {
-                const model = modelMapping[key];
-                const data = await model.findOne({
-                    raw: true,
-                    nest: true
-                });
-                return { key, data };
-            }
-            return null;
-        });
-
-        const additionalDataResults = await Promise.all(additionalDataPromises);
-        const additionalData = additionalDataResults.reduce((acc, result) => {
-            if (result) {
-                acc[result.key] = result.data;
-            }
-            return acc;
-        }, {});
-
-        // Merge the additional data with the selected tests
         const selectedTest = drivers.selected_test;
-        for (const key in selectedTest) {
-            if (additionalData.hasOwnProperty(key)) {
-                selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
-            }
+        let additionalData = {};
+        let metaData = {};
+        const dataArray = []
+        for (const testKey in selectedTest) {
+            console.log(testKey);
         }
 
-        // Prepare data for JSON response
-        const reportData = [];
-        let srNo = 1;
         for (const key in selectedTest) {
-            if (selectedTest.hasOwnProperty(key)) {
-                const testData = selectedTest[key];
-                let healthData = '';
-
-                // Handle special case structures for specific tests
-                if (key === 'blood_pressure_unit') {
-                    healthData = `${testData.systolic_value || 'NA'}/${testData.diastolic_value || 'NA'}`;
-                } else if (key === 'bmi_unit') {
-                    healthData = `${testData.bmi_value || 'NA'}`;
-                } else {
-                    healthData = Object.values(testData).join('/');
-                }
-
-                const units = testData.units || 'NA';
-                const standardValue = `${testData.standard_value_min || 'NA'} to ${testData.standard_value_max || 'NA'}`;
-                reportData.push({
-                    srNo,
-                    testName: key.replace('_unit', '').replace(/_/g, ' ').toUpperCase(),
-                    healthData,
-                    units,
-                    standardValue,
-                    remarks: testData.comment || ''
+            if (modelMapping.hasOwnProperty(key)) {
+                const model = modelMapping[key];
+                additionalData[key] = await model.findOne({
+                    raw: true, nest: true
                 });
-                srNo++;
             }
         }
 
-        // Prepare the final data object
-        const data = {
-            driverDetails: {
-                name: drivers.driver.name,
-                healthCardNumber: drivers.driver.healthCardNumber,
-                abhaNumber: drivers.driver.abhaNumber
-            },
-            report: reportData,
-            additionalData
-        };
+        for (const element of Object.keys(selectedTest)) {
+            console.log(element);
+            metaData[element] = { metaData: { ...additionalData[element] }, ...selectedTest[element] };
+        }
 
-        sendSuccess(res, 200, data, 'Driver health report');
+
+        console.log(".....................", metaData);
+
+        console.log("--------- additionalData", additionalData);
+        console.log("--------- selectedTest", selectedTest);
+
+        const resData = {
+            drivers,
+            metaData
+        }
+
+        sendSuccess(res, 200, resData, 'Driver health report');
+        return
     } catch (error) {
+        console.log(error);
         sendError(res, 500, error, 'Internal server error');
     }
 };
