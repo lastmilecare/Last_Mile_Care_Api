@@ -472,12 +472,23 @@ exports.driverHealthReportDownload = async (req, res) => {
             }
         }
 
-        for (const element of Object.keys(selectedTest)) {
-            console.log(element);
-            metaData[element] = { metaData: { ...additionalData[element] }, ...selectedTest[element] };
+        // for (const element of Object.keys(selectedTest)) {
+
+        //     console.log(element);
+        //     metaData[element] = { extraData: { ...additionalData[element] }, ...selectedTest[element] };
+        // }
+
+        for (const key in selectedTest) {
+            if (modelMapping.hasOwnProperty(key)) {
+                if (typeof selectedTest[key] === 'object') {
+                    metaData[key] = { extraData: additionalData[key], ...selectedTest[key] };
+                } else {
+                    metaData[key] = { extraData: additionalData[key], [key]: selectedTest[key] };
+                }
+            } else {
+                metaData[key] = selectedTest[key];
+            }
         }
-
-
         console.log(".....................", metaData);
 
         console.log("--------- additionalData", additionalData);
