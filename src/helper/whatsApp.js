@@ -12,15 +12,22 @@ async function sendWhatsAppTemplateMessage(name, url) {
     const mediaUrl = "https://last-mile-care-center.vercel.app/images/LMC_logo.png";
     try {
         // Send message using Twilio API
-        //const message = await sendMessageThroughTwilio(phoneNumber, messageBody, twilioConfig);
-        await client.messages
+        const message = await client.messages
             .create({
                 from: 'whatsapp:+917209152555',
                 body: `Dear ${name}, Please find the link of your health package report. \nWe thank you for choosing 1Care Center. In case of emergency, call: 80921 02102. \n${url}`,
-                mediaUrl: [mediaUrl],
+                // mediaUrl: mediaUrl,
                 to: 'whatsapp:+919088886641'
-            })
-            .then(message => console.log(message));
+            });
+
+        console.log('Message SID:', message.sid);
+        console.log('Message Status:', message.status);
+
+        // Wait for message status to be updated (optional)
+        // setTimeout(async () => {
+        //     const updatedMessage = await client.messages(message.sid).fetch();
+        //     console.log('Updated Message Status:', updatedMessage.status);
+        // }, 10000); // 10 seconds delay
 
     } catch (error) {
         console.error('Error sending message:', error);
