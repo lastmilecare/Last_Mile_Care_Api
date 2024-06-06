@@ -2,12 +2,14 @@ const {
     sequelize,
     User,
     otp,
+    Center,
+    Centeruser,
     driverhealthcheckup,
     Doctor,
     DRIVERMASTER,
     DRIVERMASTERPERSONAL,
     DRIVERFAMILYHISTORY,
-
+    CETMANAGEMENT,
     Packagemanagment,
     Centerpackage,
     Bloodgroup,
@@ -29,6 +31,7 @@ const {
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
+
 const { sendOTP } = require('../../helper/sendOtp');
 
 exports.createHealthData = async (req, res) => {
@@ -52,7 +55,8 @@ exports.createHealthData = async (req, res) => {
             transpoter: req.body.transpoter || null,
             verify_option: req.body.verify_option || null,
             accept_term_condition: true,
-            signature: req.body.signature
+            signature: req.body.signature,
+            doctor_id: req.body.doctor_id,
         });
 
         sendSuccess(res, 201, insert, 'Health Checkup Created successfully');
@@ -84,6 +88,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             ecg_unit: req.body.ecg_unit || null,
             accept_term_condition: true, // Assuming this is always set to true
             selected_test: req.body.selected_test,
+            is_submited: true
         }
         await driverhealthcheckup.update(data, {
             where: {
@@ -284,99 +289,6 @@ exports.driverDoctorList = async (req, res) => {
         sendError(res, 500, error, 'Internal error');
     }
 };
-
-// exports.driverHealthReportDownload = async (req, res) => {
-//     const { id } = req.body;
-//     if (!id) {
-//         sendError(res, 400, "Id is required", 'BAD_REQUEST');
-//         return
-//     }
-
-//     try {
-//         const drivers = await driverhealthcheckup.findOne({
-//             where: { id: id },
-//             include: [{
-//                 model: DRIVERMASTER,
-//                 as: 'driver',
-//                 attributes: [
-//                     'id',
-//                     'name',
-//                     'abhaNumber',
-//                     'gender',
-//                     'photographOfDriver',
-//                     'localAddress',
-//                     'healthCardNumber'
-//                 ]
-//             }],
-//             attributes: [
-//                 'id',
-//                 'uniqueId',
-//                 'accept_term_condition',
-//                 'driver_id',
-//                 'transpoter',
-//                 'driver_type',
-//                 'vehicle_no',
-//                 'signature',
-//                 'date_time',
-//                 'package_list',
-//                 'verify_option',
-//                 'selected_test',
-//                 'createdAt'
-//             ],
-//             order: [['id', 'DESC']]
-//         });
-
-
-//         const modelMapping = {
-//             temperature_unit: Temperature,
-//             spo2_unit: SPO2,
-//             pulse_unit: Pulse,
-//             pulmonary_function_test_unit: Pulmonaryfunctiontest,
-//             haemoglobin_unit: Haemoglobin,
-//             cretenine_unit: Cretenine,
-//             alchol_test_unit: Alcholtest,
-//             hiv_unit: Hiv,
-//             ecg_unit: ECG,
-//             bmi_unit: BMI,
-//             cholesterol_unit: CHOLESTEROL,
-//             eyetest_unit: Eyetest,
-//             hearing_unit: Hearingtest,
-//             blood_pressure_unit: Bloodpressure,
-//             blood_group_unit: Bloodgroup,
-//             random_blood_sugar_unit: random_blood_sugar
-//         };
-
-//         const selectedTest = drivers.selected_test;
-//         const additionalData = {};
-
-//         for (const key in selectedTest) {
-//             if (modelMapping.hasOwnProperty(key)) {
-//                 const model = modelMapping[key];
-//                 additionalData[key] = await model.findOne({
-//                     raw: true, nest: true
-//                 });
-//             }
-//         }
-//         for (const key in selectedTest) {
-//             if (additionalData.hasOwnProperty(key)) {
-//                 selectedTest[key] = { ...additionalData[key], ...selectedTest[key] };
-//             }
-//         }
-
-//         const data = {
-//             drivers: {
-//                 ...drivers.get({ plain: true }),
-//                 selected_test: selectedTest
-//             },
-//             additionalData
-//         };
-//         sendSuccess(res, 200, data, 'List of driver health checkup');
-//         return
-//     } catch (error) {
-//         sendError(res, 500, error, 'Internal server error');
-//     }
-// };
-
 exports.driverHealthReportDownload = async (req, res) => {
     const { id } = req.body;
     if (!id) {
@@ -385,6 +297,50 @@ exports.driverHealthReportDownload = async (req, res) => {
     }
 
     try {
+
+        const helthData = await driverhealthcheckup.findOne({
+            where: { id: id },
+            raw: true,
+            nest: true
+        })
+        const centerUserId = helthData.createdBy;
+        const packageList = helthData.package_list;
+        const userData = await User.findOne({
+            where: { id: centerUserId },
+            attributes: [
+                'username',
+                'name',
+                'email',
+                'phone',
+                'status',
+                'external_id'
+            ],
+            raw: true,
+            nest: true,
+        });
+
+        const getCenterUser = await Centeruser.findOne({ where: { user_id: centerUserId }, raw: true, nest: true });
+        const getCenterUserData = await Center.findOne({ where: { id: getCenterUser.center_id }, raw: true, nest: true });
+        const getPackageData = await Packagemanagment.findAll({
+            where: {
+                id: {
+                    [Op.in]: packageList
+                }
+            },
+            raw: true,
+            nest: true
+        });
+
+        const centerMetaData = {
+            signature: getCenterUser.signature,
+            getCenterUserData,
+            userData
+        }
+        const packageMetaData = {
+            getPackageData
+        }
+
+
         const drivers = await driverhealthcheckup.findOne({
             where: { id: id },
             attributes: [
@@ -401,35 +357,48 @@ exports.driverHealthReportDownload = async (req, res) => {
                 'package_list',
                 'verify_option',
                 'selected_test',
-                'createdAt'
+                'createdAt',
+                'createdBy'
             ],
 
-            include: [{
-                model: DRIVERMASTER,
-                as: 'driver',
-                attributes: [
-                    'id',
-                    'name',
-                    'abhaNumber',
-                    'gender',
-                    'photographOfDriver',
-                    'localAddress',
-                    'healthCardNumber',
-                    'contactNumber',
-                    'emergencyContactName'
+            include: [
+                {
+                    model: Doctor,
+                    as: 'doctor',
+                    include: [{
+                        model: User,
+                        as: 'User', // Ensure this alias matches the association alias
+                        attributes: ['id', 'username', 'status', 'phone'] // Specify fields to include from the User model
+                    }]
 
-                ]
-            },
-            {
-                model: Doctor,
-                as: 'doctor',
-                include: [{
-                    model: User,
-                    as: 'User', // Ensure this alias matches the association alias
-                    attributes: ['id', 'username', 'status', 'phone'] // Specify fields to include from the User model
-                }]
+                },
 
-            },
+                {
+                    model: DRIVERMASTER,
+                    as: 'driver',
+                    attributes: [
+                        'id',
+                        'name',
+                        'abhaNumber',
+                        'gender',
+                        'photographOfDriver',
+                        'localAddress',
+                        'healthCardNumber',
+                        'contactNumber',
+                        'emergencyContactName'
+
+                    ]
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+
+                },
 
 
             ],
@@ -495,7 +464,9 @@ exports.driverHealthReportDownload = async (req, res) => {
 
         const resData = {
             drivers,
-            metaData
+            metaData,
+            centerMetaData,
+            packageMetaData
         }
 
         sendSuccess(res, 200, resData, 'Driver health report');

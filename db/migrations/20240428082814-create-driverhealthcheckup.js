@@ -9,6 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      is_submited: Sequelize.BOOLEAN,
+
       driver_id: Sequelize.INTEGER,
       package_and_test_history: Sequelize.STRING,
       driver_details: Sequelize.STRING,
