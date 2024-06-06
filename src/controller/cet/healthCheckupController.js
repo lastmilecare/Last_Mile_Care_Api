@@ -459,9 +459,6 @@ exports.driverHealthReportDownload = async (req, res) => {
         let additionalData = {};
         let metaData = {};
         const dataArray = []
-        for (const testKey in selectedTest) {
-            console.log(testKey);
-        }
 
         for (const key in selectedTest) {
             if (modelMapping.hasOwnProperty(key)) {
@@ -489,10 +486,6 @@ exports.driverHealthReportDownload = async (req, res) => {
                 metaData[key] = selectedTest[key];
             }
         }
-        console.log(".....................", metaData);
-
-        console.log("--------- additionalData", additionalData);
-        console.log("--------- selectedTest", selectedTest);
 
         const resData = {
             drivers,
