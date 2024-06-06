@@ -387,6 +387,23 @@ exports.driverHealthReportDownload = async (req, res) => {
     try {
         const drivers = await driverhealthcheckup.findOne({
             where: { id: id },
+            attributes: [
+                'id',
+                'doctor_id',
+                'uniqueId',
+                'accept_term_condition',
+                'driver_id',
+                'transpoter',
+                'driver_type',
+                'vehicle_no',
+                'signature',
+                'date_time',
+                'package_list',
+                'verify_option',
+                'selected_test',
+                'createdAt'
+            ],
+
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
@@ -413,21 +430,7 @@ exports.driverHealthReportDownload = async (req, res) => {
 
 
             ],
-            attributes: [
-                'id',
-                'uniqueId',
-                'accept_term_condition',
-                'driver_id',
-                'transpoter',
-                'driver_type',
-                'vehicle_no',
-                'signature',
-                'date_time',
-                'package_list',
-                'verify_option',
-                'selected_test',
-                'createdAt'
-            ],
+
             order: [['id', 'DESC']]
         });
 

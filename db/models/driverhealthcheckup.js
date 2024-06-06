@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       driverhealthcheckup.belongsTo(models.DRIVERMASTER, { foreignKey: 'driver_id', as: 'driver' });
       driverhealthcheckup.belongsTo(models.Doctor, { foreignKey: 'doctor_id', as: 'doctor' });
+
     }
   }
   driverhealthcheckup.init({
