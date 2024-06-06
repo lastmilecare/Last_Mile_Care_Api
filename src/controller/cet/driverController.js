@@ -527,13 +527,14 @@ exports.sendOtp = async (req, res) => {
 exports.whatsappOtp = async (req, res) => {
     const phoneNumber = req.body.phoneNumber;
     const name = req.body.name;
+    const url = req.body.url
     if (!phoneNumber) {
         sendError(res, 400, "Phone Number is required!", 'Phone Number is required!');
         return;
     }
     try {
 
-        const result = await sendWhatsAppTemplateMessage("lab", "http://ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com:8080/");
+        const result = await sendWhatsAppTemplateMessage(name, url, phoneNumber);
         return res.status(200).json({ success: true, code: 200, result, result });
     } catch (error) {
         console.log(error);
