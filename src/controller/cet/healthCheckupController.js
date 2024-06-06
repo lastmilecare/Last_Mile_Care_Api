@@ -414,7 +414,10 @@ exports.driverHealthReportDownload = async (req, res) => {
                     'gender',
                     'photographOfDriver',
                     'localAddress',
-                    'healthCardNumber'
+                    'healthCardNumber',
+                    'contactNumber',
+                    'emergencyContactName'
+
                 ]
             },
             {
