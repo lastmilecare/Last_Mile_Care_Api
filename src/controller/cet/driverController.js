@@ -106,7 +106,7 @@ exports.createDriver = async (req, res) => {
 }
 exports.getDriverList = async (req, res) => {
     try {
-        const drivers = await DRIVERMASTER.findAll({ order: [['id', 'DESC']] });
+        const drivers = await DRIVERMASTER.findAll({ where: { createdBy: req.userId }, order: [['id', 'DESC']] });
         sendSuccess(res, 200, drivers, 'List of drivers');
     } catch (error) {
         console.log(error);

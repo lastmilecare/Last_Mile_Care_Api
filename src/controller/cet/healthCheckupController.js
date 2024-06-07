@@ -117,7 +117,8 @@ exports.viewHealthData = async (req, res) => {
                 where: {
                     createdAt: {
                         [Op.between]: [startUtc, endUtc]
-                    }
+                    },
+                    createdBy: req.userId
                 }
             };
         }
