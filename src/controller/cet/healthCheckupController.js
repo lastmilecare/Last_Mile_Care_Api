@@ -88,7 +88,8 @@ exports.createHealthDataStep2 = async (req, res) => {
             ecg_unit: req.body.ecg_unit || null,
             accept_term_condition: true, // Assuming this is always set to true
             selected_test: req.body.selected_test,
-            is_submited: true
+            is_submited: true,
+            vehicle_no: req.body.vehicle_no,
         }
         await driverhealthcheckup.update(data, {
             where: {
@@ -359,7 +360,8 @@ exports.driverHealthReportDownload = async (req, res) => {
                 'verify_option',
                 'selected_test',
                 'createdAt',
-                'createdBy'
+                'createdBy',
+                'external_id'
             ],
 
             include: [
