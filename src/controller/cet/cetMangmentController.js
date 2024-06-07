@@ -104,7 +104,7 @@ exports.createCET = async (req, res) => {
 exports.viewCET = async (req, res) => {
     try {
         //where: { center_id: req.userId },
-        const result = await CETMANAGEMENT.findAll({ raw: true, nest: true, });
+        const result = await CETMANAGEMENT.findAll({ where: { center_id: req.userId }, raw: true, nest: true, });
         sendSuccess(res, 200, result, 'CET List Fetch Successful');
 
     } catch (error) {
