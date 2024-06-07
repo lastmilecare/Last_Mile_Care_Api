@@ -154,27 +154,27 @@ exports.detailsHealthData = async (req, res) => {
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
-                attributes: ['id', 'name', 'abhaNumber',
-                    'gender',
-                    'photographOfDriver',
-                    'localAddress',
-                    'healthCardNumber'
-                ]
+                // attributes: ['id', 'name', 'abhaNumber',
+                //     'gender',
+                //     'photographOfDriver',
+                //     'localAddress',
+                //     'healthCardNumber'
+                // ]
             }],
-            attributes: ['id',
-                'uniqueId',
-                'accept_term_condition',
-                'driver_id',
-                'transpoter',
-                'driver_type',
-                'vehicle_no',
-                'signature',
-                'date_time',
-                'package_list',
-                'verify_option',
-                'selected_test',
-                'createdAt'
-            ],
+            // attributes: ['id',
+            //     'uniqueId',
+            //     'accept_term_condition',
+            //     'driver_id',
+            //     'transpoter',
+            //     'driver_type',
+            //     'vehicle_no',
+            //     'signature',
+            //     'date_time',
+            //     'package_list',
+            //     'verify_option',
+            //     'selected_test',
+            //     'createdAt'
+            // ],
             order: [['id', 'DESC']]
         });
         sendSuccess(res, 200, drivers, 'List of driver health checkup');
