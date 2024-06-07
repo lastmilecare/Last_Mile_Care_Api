@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    family_member_1_relation: {
+      type: DataTypes.STRING
+    },
     family_member_1: {
       type: DataTypes.STRING
     },

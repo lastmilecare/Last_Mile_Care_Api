@@ -354,6 +354,7 @@ exports.createDriverFamilyData = async (req, res) => {
         parent_hypertension,
         parent_hypotension,
         other_genetic_disease,
+        family_member_1_relation
     } = req.body;
 
     // Ensure required fields are present and of correct type
@@ -381,6 +382,7 @@ exports.createDriverFamilyData = async (req, res) => {
             parent_hypertension,
             parent_hypotension,
             other_genetic_disease,
+            family_member_1_relation
         });
         sendSuccess(res, 201, insert, 'DRIVERFAMILYHISTORY Center successfully');
     } catch (error) {
