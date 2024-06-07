@@ -129,20 +129,7 @@ exports.viewHealthData = async (req, res) => {
                 as: 'driver',
                 attributes: ['id', 'name',]
             }],
-            attributes: ['id',
-                'uniqueId',
-                'accept_term_condition',
-                'driver_id',
-                'transpoter',
-                'driver_type',
-                'vehicle_no',
-                'signature',
-                'date_time',
-                'package_list',
-                'verify_option',
-                'selected_test',
-                'createdAt'
-            ],
+
             ...queryData,
             order: [['id', 'DESC']]
         });
