@@ -347,19 +347,8 @@ exports.driverHealthReportDownload = async (req, res) => {
 
                 {
                     model: DRIVERMASTER,
-                    as: 'driver',
-                    attributes: [
-                        'id',
-                        'name',
-                        'abhaNumber',
-                        'gender',
-                        'photographOfDriver',
-                        'localAddress',
-                        'healthCardNumber',
-                        'contactNumber',
-                        'emergencyContactName'
+                    as: 'driver'
 
-                    ]
                 },
                 {
                     model: CETMANAGEMENT,
