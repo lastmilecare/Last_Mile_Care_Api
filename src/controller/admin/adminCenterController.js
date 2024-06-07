@@ -223,35 +223,9 @@ exports.centerUpdate = async (req, res) => {
     agreement_file
   } = req.body;
 
-  const requiredFields = [
-    'project_start_date',
-    'project_name',
-    'project_unique_id',
-    'project_district',
-    'project_state',
-    'project_address',
-    'agency_name',
-    'agency_district',
-    'agency_state',
-    'agency_spoc_name',
-    'agency_spoc_email',
-    'agency_spoc_contact_number',
-    'id',
-    'agency_address'
-  ];
 
   try {
-    const missingFields = requiredFields.filter(field => {
-      return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-    });
 
-    console.log("Missing Fields:", missingFields); // Log missing fields
-
-    if (missingFields.length > 0) {
-      const msg = missingFields.join(', ');
-      sendSuccess(res, 400, msg + " is required", msg + ' is required');
-      return
-    }
 
     const data = {
       project_start_date,
