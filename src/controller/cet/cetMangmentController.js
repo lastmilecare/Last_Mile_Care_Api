@@ -82,7 +82,7 @@ exports.createCET = async (req, res) => {
             accountNumber,
             ifscCode,
             bankName,
-            status: "In_Progress",
+            status: "Active",
             attachPanCopy: attachPanCopy ? attachPanCopy : null,
             attachGstin: attachGstin ? attachGstin : null,
             attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook : null,
@@ -160,37 +160,8 @@ exports.updateCET = async (req, res) => {
 
 
 
-    const requiredFields = [
-        'name',
-        'uniqueId',
-        'registeredAddress',
-        'correspondenceAddress',
-        'contactNumber',
-        'spocName',
-        'spocWhatsappNumber',
-        'spocEmail',
-        'alternateSpocName',
-        'alternateSpocContactNumber',
-        'alternateSpocEmail',
-        'pan',
-        'gstin',
-        'accountNumber',
-        'ifscCode',
-        'bankName',
-        'status'
-    ];
-
     try {
-        const missingFields = requiredFields.filter(field => {
-            return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-        });
 
-        console.log("Missing Fields:", missingFields); // Log missing fields
-
-        if (missingFields.length > 0) {
-            const msg = missingFields.join(', ');
-            return res.status(400).json({ error: msg + " is required" });
-        }
 
         const data = {
             name,
