@@ -108,22 +108,20 @@ exports.createHealthDataStep2 = async (req, res) => {
 
 exports.viewHealthData = async (req, res) => {
     try {
-        let startUtc, endUtc, queryData;
-
         const { startDate, endDate } = req.body;
-        if (startDate && endDate) { // Using && instead of &
-            startUtc = new Date(startDate).toISOString();
-            endUtc = new Date(endDate).toISOString();
-            queryData = {
-                where: {
-                    createdAt: {
-                        [Op.between]: [startUtc, endUtc]
-                    },
-                    createdBy: req.userId
-                }
+        let queryData = {
+            where: {
+                createdBy: req.userId // Always include this condition
+            }
+        };
+
+        if (startDate && endDate) {
+            const startUtc = new Date(startDate).toISOString();
+            const endUtc = new Date(endDate).toISOString();
+            queryData.where.createdAt = {
+                [Op.between]: [startUtc, endUtc]
             };
         }
-
 
         const drivers = await driverhealthcheckup.findAll({
             include: [{
