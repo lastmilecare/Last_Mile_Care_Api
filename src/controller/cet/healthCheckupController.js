@@ -128,7 +128,7 @@ exports.viewHealthData = async (req, res) => {
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
-                attributes: ['id', 'name',]
+
             }],
 
             ...queryData,
