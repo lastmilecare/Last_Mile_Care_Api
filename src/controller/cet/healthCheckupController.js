@@ -57,6 +57,7 @@ exports.createHealthData = async (req, res) => {
             accept_term_condition: true,
             signature: req.body.signature,
             doctor_id: req.body.doctor_id,
+            is_submited: false,
         });
 
         sendSuccess(res, 201, insert, 'Health Checkup Created successfully');
