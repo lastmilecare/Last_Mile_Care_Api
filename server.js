@@ -22,7 +22,7 @@ app.use(cors());
 indexRoutes(app);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code 04-05-2024' });
+  res.json({ message: 'Updated Code V1 08-06-2024' });
 });
 
 app.listen(port, () => {
