@@ -464,7 +464,7 @@ exports.driverFamilyUpdate = async (req, res) => {
             }, {
                 where: { id: id }
             });
-            res.status(200).json({ message: 'Family member record updated successfully' });
+            sendSuccess(res, 201, existingRecord, 'Family member record updated successfully');
             return
         } else {
             // Create a new family member record
@@ -479,7 +479,7 @@ exports.driverFamilyUpdate = async (req, res) => {
                 other_genetic_disease,
                 family_member_1_relation
             });
-            res.status(201).json({ message: 'Family member record created successfully' });
+            sendSuccess(res, 201, existingRecord, 'Family member record updated successfully');
             return
         }
     } catch (error) {
