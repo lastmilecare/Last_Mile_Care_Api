@@ -410,10 +410,10 @@ exports.driverFamilyDetails = async (req, res) => {
     try {
         const driver = await DRIVERMASTER.findOne({ where: { id: req.body.id } });
 
-        const insert = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: req.body.id } });
+        const familyData = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: req.body.id } });
         const resData = {
             driver,
-            insert
+            familyData
         }
         sendSuccess(res, 200, resData, 'DRIVERFAMILYHISTORY Fetch successfully');
     } catch (error) {
