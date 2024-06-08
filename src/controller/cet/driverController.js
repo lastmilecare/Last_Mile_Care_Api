@@ -408,8 +408,14 @@ exports.driverFamilyDetails = async (req, res) => {
         return;
     }
     try {
+        const driver = await DRIVERMASTER.findOne({ where: { id: req.body.id } });
+
         const insert = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: req.body.id } });
-        sendSuccess(res, 200, insert, 'DRIVERFAMILYHISTORY Fetch successfully');
+        const resData = {
+            driver,
+            insert
+        }
+        sendSuccess(res, 200, resData, 'DRIVERFAMILYHISTORY Fetch successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
