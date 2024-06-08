@@ -4,11 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Center extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
       Center.belongsToMany(models.User, { through: models.Centeruser, foreignKey: 'center_id', as: 'users' });
 
@@ -37,8 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     project_signed_agreement_file: DataTypes.STRING,
     short_code: DataTypes.STRING,
     center_shortcode: DataTypes.STRING,
-
-
   }, {
     sequelize,
     modelName: 'Center',

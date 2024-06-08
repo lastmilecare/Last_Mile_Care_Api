@@ -442,6 +442,7 @@ exports.driverFamilyUpdate = async (req, res) => {
             parent_hypertension,
             parent_hypotension,
             other_genetic_disease,
+            driver_id,
             family_member_1_relation
         } = req.body;
 
@@ -450,30 +451,39 @@ exports.driverFamilyUpdate = async (req, res) => {
             return
         }
 
-        // Check if the family member record exists
-        const existingRecord = await DRIVERFAMILYHISTORY.findByPk(id);
-        if (!existingRecord) {
-            sendError(res, 404, 'Family member record not found', 'Family member record not found');
+        if (existingRecord) {
+            // Update the existing family member record
+            await DRIVERFAMILYHISTORY.update({
+                driver_phone,
+                family_member_1,
+                family_member_2,
+                parent_diabetic,
+                parent_hypertension,
+                parent_hypotension,
+                other_genetic_disease,
+                family_member_1_relation,
+                driver_id
+            }, {
+                where: { id: id }
+            });
+            res.status(200).json({ message: 'Family member record updated successfully' });
+            return
+        } else {
+            // Create a new family member record
+            await DRIVERFAMILYHISTORY.create({
+                id,
+                driver_phone,
+                family_member_1,
+                family_member_2,
+                parent_diabetic,
+                parent_hypertension,
+                parent_hypotension,
+                other_genetic_disease,
+                family_member_1_relation
+            });
+            res.status(201).json({ message: 'Family member record created successfully' });
             return
         }
-
-        // Update the family member record
-        await DRIVERFAMILYHISTORY.update({
-            driver_phone,
-            family_member_1,
-            family_member_2,
-            parent_diabetic,
-            parent_hypertension,
-            parent_hypotension,
-            other_genetic_disease,
-            family_member_1_relation
-        }, {
-            where: { id: id }
-        });
-
-        // Fetch and return the updated family member record
-        const updatedRecord = await DRIVERFAMILYHISTORY.findByPk(id);
-        sendSuccess(res, 200, updatedRecord, 'DRIVERFAMILYHISTORY updated successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
