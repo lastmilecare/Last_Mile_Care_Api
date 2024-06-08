@@ -450,6 +450,7 @@ exports.driverFamilyUpdate = async (req, res) => {
             sendError(res, 400, 'id required', 'id required');
             return
         }
+        const existingRecord = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: driver_id }, raw: true, nest: true });
 
         if (existingRecord) {
             // Update the existing family member record
@@ -462,7 +463,7 @@ exports.driverFamilyUpdate = async (req, res) => {
                 parent_hypotension,
                 other_genetic_disease,
                 family_member_1_relation,
-                driver_id
+
             }, {
                 where: { id: id }
             });
@@ -471,7 +472,7 @@ exports.driverFamilyUpdate = async (req, res) => {
         } else {
             // Create a new family member record
             await DRIVERFAMILYHISTORY.create({
-                id,
+                driver_id,
                 driver_phone,
                 family_member_1,
                 family_member_2,
