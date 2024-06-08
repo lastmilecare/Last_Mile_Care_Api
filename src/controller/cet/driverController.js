@@ -257,8 +257,14 @@ exports.driverPersonalDetails = async (req, res) => {
         return;
     }
     try {
-        const drivers = await DRIVERMASTERPERSONAL.findOne({ where: { id: req.body.id } });
-        sendSuccess(res, 200, drivers, 'Driver Data');
+        const driver = await DRIVERMASTER.findOne({ where: { id: id } });
+
+        const driverPersonalData = await DRIVERMASTERPERSONAL.findOne({ where: { id: req.body.id } });
+        const resData = {
+            driver,
+            driverPersonalData
+        }
+        sendSuccess(res, 200, resData, 'Driver Data');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
