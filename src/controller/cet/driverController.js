@@ -438,6 +438,7 @@ exports.driverFamilyUpdate = async (req, res) => {
             driver_id,
             family_member_1_relation,
             family_member_2_relation
+
         } = req.body;
 
 

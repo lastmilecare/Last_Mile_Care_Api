@@ -228,31 +228,13 @@ exports.driverHealthHistory = async (req, res) => {
 
     try {
         const drivers = await driverhealthcheckup.findAll({
-            where: { id: id },
+            where: { driver_id: id },
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
-                attributes: ['id', 'name', 'abhaNumber',
-                    'gender',
-                    'photographOfDriver',
-                    'localAddress',
-                    'healthCardNumber'
-                ]
+
             }],
-            attributes: ['id',
-                'uniqueId',
-                'accept_term_condition',
-                'driver_id',
-                'transpoter',
-                'driver_type',
-                'vehicle_no',
-                'signature',
-                'date_time',
-                'package_list',
-                'verify_option',
-                'selected_test',
-                'createdAt'
-            ],
+
             order: [['id', 'DESC']]
         });
         sendSuccess(res, 200, drivers, 'List of driver health history');
