@@ -259,7 +259,7 @@ exports.driverPersonalDetails = async (req, res) => {
     try {
         const driver = await DRIVERMASTER.findOne({ where: { id: id } });
 
-        const driverPersonalData = await DRIVERMASTERPERSONAL.findOne({ where: { id: req.body.id } });
+        const driverPersonalData = await DRIVERMASTERPERSONAL.findOne({ where: { driver_id: req.body.id } });
         const resData = {
             driver,
             driverPersonalData
