@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     family_member_1_relation: {
       type: DataTypes.STRING
     },
+    family_member_2_relation: {
+      type: DataTypes.STRING
+    },
     family_member_1: {
       type: DataTypes.STRING
     },

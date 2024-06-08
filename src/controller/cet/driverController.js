@@ -352,7 +352,8 @@ exports.createDriverFamilyData = async (req, res) => {
         parent_hypertension,
         parent_hypotension,
         other_genetic_disease,
-        family_member_1_relation
+        family_member_1_relation,
+        family_member_2_relation
     } = req.body;
 
     // Ensure required fields are present and of correct type
