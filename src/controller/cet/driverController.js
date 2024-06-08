@@ -408,7 +408,7 @@ exports.driverFamilyDetails = async (req, res) => {
         return;
     }
     try {
-        const insert = await DRIVERFAMILYHISTORY.findOne({ where: { id: req.body.id } });
+        const insert = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: req.body.id } });
         sendSuccess(res, 200, insert, 'DRIVERFAMILYHISTORY Fetch successfully');
     } catch (error) {
         console.log(error);
@@ -424,13 +424,13 @@ exports.driverFamilyUpdate = async (req, res) => {
         const {
             id,
             driver_phone,
-            driver_id,
             family_member_1,
             family_member_2,
             parent_diabetic,
             parent_hypertension,
             parent_hypotension,
             other_genetic_disease,
+            family_member_1_relation
         } = req.body;
 
         if (!id) {
@@ -448,13 +448,13 @@ exports.driverFamilyUpdate = async (req, res) => {
         // Update the family member record
         await DRIVERFAMILYHISTORY.update({
             driver_phone,
-            driver_id,
             family_member_1,
             family_member_2,
             parent_diabetic,
             parent_hypertension,
             parent_hypotension,
             other_genetic_disease,
+            family_member_1_relation
         }, {
             where: { id: id }
         });
