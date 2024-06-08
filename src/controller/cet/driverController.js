@@ -27,7 +27,7 @@ const {
     Center
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
 const { sendWhatsAppMessage, sendWhatsAppTemplateMessage } = require('../../helper/whatsApp');
 
@@ -298,15 +298,6 @@ exports.driverPersonalUpdate = async (req, res) => {
 
     } = req.body;
 
-    const id = req.body.id;
-    if (!req.body.id) {
-        sendError(res, 400, "ID Required", 'ID Required');
-        return;
-    }
-
-
-
-
     const data = {
         driver_phone,
         driver_id: parseInt(driver_id), // Convert to integer if needed
@@ -333,16 +324,17 @@ exports.driverPersonalUpdate = async (req, res) => {
     };
 
     try {
-        console.log(data);
 
-        const updatedRecord = await DRIVERMASTERPERSONAL.update(data, { where: { id: id } });
-        if (updatedRecord[0] === 0) {
-            sendError(res, 404, 'Driver not found or not updated', 'Driver personal data updated successfully');
-            return
+        const existingRecord = await DRIVERMASTERPERSONAL.findOne({ where: { driver_id: driver_id }, raw: true, nest: true });
+        if (existingRecord) {
+            await DRIVERMASTERPERSONAL.update(data, { where: { driver_id } });
+            sendSuccess(res, 200, data, 'Driver personal data updated successfully');
+        } else {
+            // Create a new record
+            await DRIVERMASTERPERSONAL.create(data);
+            sendSuccess(res, 200, data, 'Driver personal data created successfully');
         }
 
-        const updatedDriver = await DRIVERMASTERPERSONAL.findByPk(id);
-        sendSuccess(res, 200, updatedDriver, 'Driver personal data updated successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
@@ -443,7 +435,8 @@ exports.driverFamilyUpdate = async (req, res) => {
             parent_hypotension,
             other_genetic_disease,
             driver_id,
-            family_member_1_relation
+            family_member_1_relation,
+            family_member_2_relation
         } = req.body;
 
 
@@ -460,6 +453,7 @@ exports.driverFamilyUpdate = async (req, res) => {
                 parent_hypotension,
                 other_genetic_disease,
                 family_member_1_relation,
+                family_member_2_relation
 
             }, {
                 where: { id: id }
@@ -477,7 +471,8 @@ exports.driverFamilyUpdate = async (req, res) => {
                 parent_hypertension,
                 parent_hypotension,
                 other_genetic_disease,
-                family_member_1_relation
+                family_member_1_relation,
+                family_member_2_relation
             });
             sendSuccess(res, 201, existingRecord, 'Family member record updated successfully');
             return
