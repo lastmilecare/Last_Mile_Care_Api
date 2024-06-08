@@ -446,10 +446,7 @@ exports.driverFamilyUpdate = async (req, res) => {
             family_member_1_relation
         } = req.body;
 
-        if (!id) {
-            sendError(res, 400, 'id required', 'id required');
-            return
-        }
+
         const existingRecord = await DRIVERFAMILYHISTORY.findOne({ where: { driver_id: driver_id }, raw: true, nest: true });
 
         if (existingRecord) {
