@@ -48,16 +48,7 @@ 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
  
 
 
- ssh -i "LMC-DEV.pem" ec2-user@ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com
- sudo -i
- cd /usr/lmc/Last_Mile_Care_Api/
- git stash
- git pull
- git stash pop or 
- git reset --hard HEAD
 
- pm2 restart all
- chmod 400 LMC-DEV.pem
 
 
  npx sequelize-cli model:generate --name CENTER --attributes name:string 
@@ -123,3 +114,25 @@ Cretenine
   within_deviation_value_min_Below: DataTypes.STRING,
   within_deviation_value_max_Below: DataTypes.STRING,
   out_of_range_below: DataTypes.STRING,
+
+
+
+
+
+
+
+
+
+
+
+
+   ssh -i "LMC-DEV.pem" ec2-user@ec2-3-107-17-120.ap-southeast-2.compute.amazonaws.com
+ sudo -i
+ cd /usr/lmc/Last_Mile_Care_Api/
+ git stash
+ git pull
+ git stash pop or 
+ git reset --hard HEAD
+
+ pm2 restart all
+ chmod 400 LMC-DEV.pem
