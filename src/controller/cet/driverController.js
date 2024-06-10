@@ -297,6 +297,7 @@ exports.driverPersonalUpdate = async (req, res) => {
         birthmark_identification,
 
     } = req.body;
+    const driver = await DRIVERMASTER.findOne({ where: { id: driver_id } });
 
     const data = {
         driver_id: parseInt(driver_id), // Convert to integer if needed
@@ -320,7 +321,7 @@ exports.driverPersonalUpdate = async (req, res) => {
         smoking: smoking,
         tobacco_consumption: tobacco_consumption,
         birthmark_identification,
-        driver_phone: null
+        driver_phone: driver.contactNumber
     };
 
     try {
