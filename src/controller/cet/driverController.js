@@ -273,7 +273,7 @@ exports.driverPersonalDetails = async (req, res) => {
 
 exports.driverPersonalUpdate = async (req, res) => {
     const {
-        driver_phone,
+
         driver_id,
         blood_group,
         diabetes,
@@ -299,7 +299,6 @@ exports.driverPersonalUpdate = async (req, res) => {
     } = req.body;
 
     const data = {
-        driver_phone,
         driver_id: parseInt(driver_id), // Convert to integer if needed
         blood_group,
         diabetes: diabetes, // Convert string to boolean
@@ -321,6 +320,7 @@ exports.driverPersonalUpdate = async (req, res) => {
         smoking: smoking,
         tobacco_consumption: tobacco_consumption,
         birthmark_identification,
+        driver_phone: null
     };
 
     try {
