@@ -298,7 +298,8 @@ exports.driverHealthReportDownload = async (req, res) => {
                 }
             },
             raw: true,
-            nest: true
+            nest: true,
+            order: [['id', 'DESC']]
         });
 
         const centerMetaData = {

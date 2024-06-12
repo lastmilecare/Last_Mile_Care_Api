@@ -50,7 +50,8 @@ exports.viewDoctor = async (req, res) => {
                 model: User,
                 as: 'User', // Ensure this alias matches the association alias
                 attributes: ['id', 'username', 'status', 'phone'] // Specify fields to include from the User model
-            }]
+            }],
+            order: [['id', 'DESC']]
         });
         sendSuccess(res, 200, doctors, 'Success');
     } catch (error) {
@@ -137,19 +138,18 @@ exports.updateDoctor = async (req, res) => {
 exports.updateDoctorStatus = async (req, res) => {
     const { id, status } = req.body;
 
-    // Validate the presence of the doctor's ID
     if (!id) {
         sendError(res, 400, "BAD_REQUEST", "Doctor ID required");
         return;
     }
 
     try {
-        // Find the doctor by ID and include associated user information
         const doctor = await Doctor.findOne({
             where: { id },
             include: [{
                 model: User,
                 as: 'User', // Ensure this alias matches the association alias
+                where: { status: true },
                 attributes: ['id', 'username', 'phone'] // Specify fields to include from the User model
             }]
         });

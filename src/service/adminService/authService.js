@@ -10,9 +10,12 @@ const {
 async function adminAuth(email, password) {
   try {
     const result = await User.findOne({
-      where: { email: email },
-      isAdmin: true,
-      status: true,
+      where: {
+        email: email,
+        isAdmin: true,
+
+      },
+
       include: [
         {
           model: Permission,
@@ -25,6 +28,9 @@ async function adminAuth(email, password) {
 
 
     });
+    if (result.status == false) {
+      return { status: "account_inactive" };
+    }
 
     if (result) {
       const findRole = await Role.findOne({
@@ -50,9 +56,7 @@ async function adminAuth(email, password) {
 async function centerAuth(email, password) {
   try {
     const result = await User.findOne({
-      where: { email: email },
-      isAdmin: false,
-      status: true,
+      where: { email: email, isAdmin: false },
       include: [
         {
           model: Permission,
@@ -65,8 +69,10 @@ async function centerAuth(email, password) {
 
 
     });
-    console.log(result);
-    console.log("result", result.toJSON());
+    if (result.status == false) {
+      return { status: "account_inactive" };
+    }
+
 
     if (result) {
       const findRole = await Role.findOne({

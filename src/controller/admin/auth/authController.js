@@ -105,7 +105,7 @@ exports.adminCreate = async (req, res) => {
     const getRole = await userService.getRole("admin");
     const nextId = await userService.getLastId(getRole)
     const extId = nextId ? parseInt(nextId.id) + 1 : 1;
-    const external_id = `A00${extId}`;
+    const external_id = `A${extId.toString().padStart(3, '0')}`;
     const data = {
       external_id: external_id,
       username: req.body.username.trim().toLowerCase(),
@@ -148,6 +148,10 @@ exports.adminAuth = async (req, res) => {
     const result = await authService.adminAuth(req.body.email, req.body.password);
     if (result.status == "no_user_found") {
       sendError(res, 404, "no_user_found", 'No User Found!');
+      return
+    }
+    if (result.status == "account_inactive") {
+      sendError(res, 401, "account_inactive", 'account inactive!');
       return
     }
     if (result.slug != "admin") {
