@@ -1,4 +1,9 @@
-const { sequelize, User, userlog } = require("../../db/models");
+const {
+    sequelize,
+    User,
+    userlog,
+    Center,
+    Centeruser } = require("../../db/models");
 
 exports.createUserLogs = async (data) => {
     try {
@@ -8,7 +13,6 @@ exports.createUserLogs = async (data) => {
             action_description,
 
         } = data;
-        console.log("-------------------------------", data);
 
         const insert = await userlog.create({
             user_id: user_id,
@@ -19,6 +23,17 @@ exports.createUserLogs = async (data) => {
         return insert;
     } catch (error) {
         // Handle any potential errors here
+
+        throw error;
+    }
+};
+
+exports.getCenterId = async (id) => {
+    try {
+        return await Centeruser.findOne({ where: { user_id: id }, raw: true, nest: true })
+
+    } catch (error) {
+
 
         throw error;
     }

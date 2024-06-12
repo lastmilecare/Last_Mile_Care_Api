@@ -1,9 +1,13 @@
 const {
     sequelize,
     User,
-    CETMANAGEMENT
+    CETMANAGEMENT,
+    Center,
+    Centeruser
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
+const { getCenterId } = require('../../helper/globalHelper')
+
 
 exports.createCET = async (req, res) => {
 
@@ -60,9 +64,10 @@ exports.createCET = async (req, res) => {
 
         const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
         const external_id = `${short_code}000${nextId}`;
+        const cId = await getCenterId(req.userId);
 
         const data = {
-            center_id: req.userId,
+            center_id: cId.center_id,
             external_id: external_id,
             short_code: short_code,
             cet_type,
@@ -103,8 +108,9 @@ exports.createCET = async (req, res) => {
 
 exports.viewCET = async (req, res) => {
     try {
-        //where: { center_id: req.userId },
-        const result = await CETMANAGEMENT.findAll({ where: { center_id: req.userId }, raw: true, nest: true, order: [['id', 'DESC']] });
+        const cId = await getCenterId(req.userId);
+
+        const result = await CETMANAGEMENT.findAll({ where: { center_id: cId.center_id }, raw: true, nest: true, order: [['id', 'DESC']] });
         sendSuccess(res, 200, result, 'CET List Fetch Successful');
 
     } catch (error) {

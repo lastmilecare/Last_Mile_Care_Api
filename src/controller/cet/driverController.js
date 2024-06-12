@@ -30,6 +30,7 @@ const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op, where } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
 const { sendWhatsAppMessage, sendWhatsAppTemplateMessage } = require('../../helper/whatsApp');
+const { getCenterId } = require('../../helper/globalHelper')
 
 exports.createDriver = async (req, res) => {
 
@@ -72,11 +73,12 @@ exports.createDriver = async (req, res) => {
     // Extract the numeric part and increment it
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
     const external_id = `LMC0000${nextId}`;
+    const cId = await getCenterId(req.userId);
 
     try {
 
         const data = {
-            createdBy: req.userId,
+            createdBy: cId.center_id,
             external_id: external_id,
             name,
             healthCardNumber,
@@ -106,7 +108,9 @@ exports.createDriver = async (req, res) => {
 }
 exports.getDriverList = async (req, res) => {
     try {
-        const drivers = await DRIVERMASTER.findAll({ where: { createdBy: req.userId }, order: [['id', 'DESC']] });
+        const cId = await getCenterId(req.userId);
+
+        const drivers = await DRIVERMASTER.findAll({ where: { createdBy: cId.center_id }, order: [['id', 'DESC']] });
         sendSuccess(res, 200, drivers, 'List of drivers');
     } catch (error) {
         console.log(error);

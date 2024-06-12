@@ -31,6 +31,7 @@ const {
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
+const { getCenterId } = require('../../helper/globalHelper')
 
 const { sendOTP } = require('../../helper/sendOtp');
 
@@ -44,8 +45,10 @@ exports.createHealthData = async (req, res) => {
         const lastInsertId = lastInsert ? parseInt(lastInsert.id, 10) + 1 : 1;
         const paddedLastInsertId = lastInsertId.toString().padStart(5, '0');
         const uniqueId = short_code + paddedLastInsertId;
+        const cId = await getCenterId(req.userId);
+
         const insert = await driverhealthcheckup.create({
-            createdBy: req.userId,
+            createdBy: cId.center_id,
             uniqueId: uniqueId,
             external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
@@ -110,9 +113,11 @@ exports.createHealthDataStep2 = async (req, res) => {
 exports.viewHealthData = async (req, res) => {
     try {
         const { startDate, endDate } = req.body;
+        const cId = await getCenterId(req.userId);
+
         let queryData = {
             where: {
-                createdBy: req.userId // Always include this condition
+                createdBy: cId.center_id // Always include this condition
             }
         };
 
