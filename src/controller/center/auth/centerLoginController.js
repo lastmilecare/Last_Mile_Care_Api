@@ -10,6 +10,8 @@ const {
     Permission
 } = require("../../../../db/models");
 const bcrypt = require("bcryptjs");
+const { createUserLogs } = require("../../../helper/globalHelper.js");
+
 exports.login = async (req, res) => {
     try {
         if (!req.body.email) {
@@ -38,6 +40,14 @@ exports.login = async (req, res) => {
             sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
             return;
         }
+        const logData = {
+            user_id: result.id,
+            action_type: "center_login",
+            action_description: null,
+            user_ip: req.userIp,
+            action_time: new Date().toISOString(),
+        }
+        await createUserLogs(logData);
         sendSuccess(res, 200, tokenData, 'Login Successfully');
         return;
     } catch (error) {

@@ -119,14 +119,7 @@ exports.adminCreate = async (req, res) => {
       password: bcrypt.hashSync(req.body.password, 8),
     }
     const result = await userService.createUser(data);
-    const description = `create a new admin user ${external_id}, `
-    await authHelper.createUserLogs(result.id, "create_admin_user", description);
-    const logData = {
-      user_id: currentUser,
-      action_type: "adminCreate",
-      action_description: data
-    }
-    await createUserLogs(logData);
+
 
     sendSuccess(res, 201, result.username, 'Success');
   } catch (error) {
@@ -163,10 +156,21 @@ exports.adminAuth = async (req, res) => {
       sendError(res, 404, "no_user_found or invalid_password", 'Invalid Password');
       return;
     }
+    console.log("------->>>", result);
     const mergedData = { ...tokenData, ...result };
+    const logData = {
+      user_id: result.id,
+      action_type: "admin_login",
+      action_description: null,
+      user_ip: req.userIp,
+      action_time: new Date().toISOString(),
+    }
+    await createUserLogs(logData);
+
     sendSuccess(res, 200, tokenData, 'Login Successfully');
     return;
   } catch (error) {
+    console.log(error);
     sendError(res, 500, "internal server error", error);
     return;
   }

@@ -12,13 +12,27 @@ const app = express();
 const jsonLimit = "1gb";
 const urlencodedLimit = "1gb";
 const fileUploadLimit = 100 * 1024 * 1024; // 100MB
+app.set('trust proxy', 1);
+
 
 app.use(express.json({ limit: jsonLimit }));
 app.use(express.urlencoded({ extended: true, limit: urlencodedLimit }));
 app.use(fileUpload({ limits: { fileSize: fileUploadLimit } }));
 app.use(cookieParser());
 app.use(cors());
+app.use((req, res, next) => {
+  let ip = req.ip || req.connection.remoteAddress;
 
+  // Check for the x-forwarded-for header if behind a proxy
+  if (req.headers['x-forwarded-for']) {
+    ip = req.headers['x-forwarded-for'].split(',')[0];
+  }
+
+  console.log('User IP Address:', ip);
+  req.userIp = ip; // Attach the IP to the request object if needed elsewhere
+
+  next();
+});
 indexRoutes(app);
 
 app.get('/', (req, res) => {

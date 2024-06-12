@@ -8,10 +8,11 @@ const testController = require('../controller/testController.js');
 
 const prefixUrl = prefix.admin;
 module.exports = function (app) {
+    app.post(`${prefixUrl}/login`, adminAuthController.adminAuth);
+
 
     app.post(`${prefixUrl}/create`, verifyTokenMiddleware, adminAuthController.adminCreate);
     app.post(`${prefixUrl}/user/list`, verifyTokenMiddleware, userController.userList);
-    app.post(`${prefixUrl}/login`, adminAuthController.adminAuth);
     app.post(`${prefixUrl}/user/status/update`, verifyTokenMiddleware, adminAuthController.userStatusUpdate);
     app.post(`${prefixUrl}/user/details`, verifyTokenMiddleware, adminAuthController.userDetails);
     app.post(`${prefixUrl}/user/update`, verifyTokenMiddleware, adminAuthController.userUpdate);

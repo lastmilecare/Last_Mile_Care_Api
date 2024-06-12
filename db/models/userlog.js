@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     user_id: {
       type: DataTypes.INTEGER
     },
+    user_ip: {
+      type: DataTypes.STRING
+    },
 
     action_type: {
       type: DataTypes.STRING

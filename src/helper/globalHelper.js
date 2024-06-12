@@ -11,14 +11,17 @@ exports.createUserLogs = async (data) => {
             user_id,
             action_type,
             action_description,
+            user_ip,
+            action_time,
 
         } = data;
 
         const insert = await userlog.create({
             user_id: user_id,
             action_type: action_type,
+            user_ip: user_ip,
             action_description: action_description,
-            action_time: new Date(),
+            action_time: action_time,
         })
         return insert;
     } catch (error) {
