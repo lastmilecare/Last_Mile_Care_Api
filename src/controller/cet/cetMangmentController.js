@@ -93,10 +93,8 @@ exports.createCET = async (req, res) => {
             attachCancelledChequeOrPassbook: attachCancelledChequeOrPassbook ? attachCancelledChequeOrPassbook : null,
             attachCertificateOfIncorporation: attachCertificateOfIncorporation ? attachCertificateOfIncorporation : null,
         };
-        console.log(data);
 
         const insert = await CETMANAGEMENT.create(data);
-        console.log(insert);
         sendSuccess(res, 201, insert, 'CET Center successfully');
         return
     } catch (error) {
