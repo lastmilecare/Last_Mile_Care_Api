@@ -29,7 +29,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
 
         try {
             const getUser = await User.findOne({
-                where: { id: decoded.data.id, isAdmin: true, status: true },
+                where: { id: decoded.data.id, isAdmin: true },
                 attributes: ['role_id', 'id', 'isAdmin'],
                 include: {
                     model: Role, // Assuming Role is the name of your Role model
@@ -39,7 +39,10 @@ const verifyTokenMiddleware = async (req, res, next) => {
                 raw: true,
                 nest: true
             });
-
+            if (!getUser.status == false) {
+                sendError(res, 401, "account_inactive", 'account_inactive');
+                return
+            }
             if (!getUser) {
                 return sendError(res, 401, "User not found or not authorized", 'User not found or not authorized');
             }

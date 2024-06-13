@@ -40,7 +40,7 @@ const verifyTokenMiddleware = async (req, res, next) => { // Add async keyword h
         });
         if (getUser.status == false) {
             sendError(res, 401, "account_inactive", 'account_inactive');
-
+            return
         }
 
         if (!getUser.role.slug == 'center') {
