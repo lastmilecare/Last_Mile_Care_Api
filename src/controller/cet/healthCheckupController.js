@@ -294,7 +294,7 @@ exports.driverHealthReportDownload = async (req, res) => {
             nest: true,
         });
 
-        const getCenterUser = await Centeruser.findOne({ where: { user_id: centerUserId }, raw: true, nest: true });
+        const getCenterUser = await Centeruser.findOne({ where: { center_id: centerUserId }, raw: true, nest: true });
         const getCenterUserData = await Center.findOne({ where: { id: getCenterUser.center_id }, raw: true, nest: true });
         const getPackageData = await Packagemanagment.findAll({
             where: {
