@@ -78,7 +78,6 @@ async function assignCenterToUser(req, res, getData) {
     const resData = { signature, userInsert }
     return resData;
   } catch (error) {
-    console.log(error);
     throw new Error(error);
   }
 }
@@ -124,4 +123,12 @@ async function findCenter(id) {
 
 
 
-module.exports = { updateCenter, findCenter, getCenterUser, centerStatusUpdate, assignCenterToUser, findAllCenter, insertCenter };
+module.exports = {
+  updateCenter,
+  findCenter,
+  getCenterUser,
+  centerStatusUpdate,
+  assignCenterToUser,
+  findAllCenter,
+  insertCenter
+};

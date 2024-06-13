@@ -215,4 +215,15 @@ async function updatHivService(req, data) {
     }
 }
 
-module.exports = { updatHivService, updateAlcholtestService, updateCretenineService, updateHaemoglobinServive, updatePulmonaryTest, updatePulseService, updateRBS, updateMasterupdateSPO2s, updateMasterTempture };
+module.exports = {
+    updatHivService,
+    updateAlcholtestService,
+    updateCretenineService,
+    updateHaemoglobinServive,
+    updatePulmonaryTest,
+    updatePulseService,
+    updateRBS,
+    updateMasterupdateSPO2s,
+    updateMasterTempture
+};
+

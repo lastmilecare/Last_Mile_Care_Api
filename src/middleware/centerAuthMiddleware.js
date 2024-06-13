@@ -28,7 +28,7 @@ const verifyTokenMiddleware = async (req, res, next) => { // Add async keyword h
         }
 
         const getUser = await User.findOne({
-            where: { id: decoded.data.id, isAdmin: false },
+            where: { id: decoded.data.id, isAdmin: false, status: true },
             attributes: ['role_id', 'id', 'isAdmin'],
             include: {
                 model: Role, // Assuming Role is the name of your Role model
@@ -40,7 +40,7 @@ const verifyTokenMiddleware = async (req, res, next) => { // Add async keyword h
         });
 
         if (!getUser.role.slug == 'center') {
-            sendError(res, 401, "Invalid_role", 'Invalid ROle');
+            sendError(res, 401, "Invalid_role", 'Invalid Role or account deactivate');
         }
         req.userId = decoded.data.id;
         next();

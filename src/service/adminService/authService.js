@@ -207,6 +207,18 @@ async function permmissiondUpdate(mergedObject) {
     throw new Error(error);
   }
 }
-module.exports = { centerAuth, permmissiondUpdate, permmissionDelete, updatePermission, updatePermissionMetadata, findPermissionData, insertPermissionMetadata, changeStatue, findPermission, insertPermission, adminAuth };
+module.exports = {
+  centerAuth,
+  permmissiondUpdate,
+  permmissionDelete,
+  updatePermission,
+  updatePermissionMetadata,
+  findPermissionData,
+  insertPermissionMetadata,
+  changeStatue,
+  findPermission,
+  insertPermission,
+  adminAuth
+};
 
 

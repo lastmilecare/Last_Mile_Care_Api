@@ -9,7 +9,6 @@ const {
 
 async function checkRole(permission_id) {
   try {
-    console.log("ffffffffffffffff")
     return await Permission.findOne({
       where: { id: permission_id },
       raw: true,
@@ -54,4 +53,9 @@ async function createUser(data) {
     throw new Error(error);
   }
 }
-module.exports = { checkRole, getRole, getLastId, createUser };
+module.exports = {
+  checkRole,
+  getRole,
+  getLastId,
+  createUser
+};

@@ -35,4 +35,9 @@ async function updateRole(data, id) {
   }
 }
 
-module.exports = { updateRole, getRoleData, roleInsert, rolefindAll };
+module.exports = {
+  updateRole,
+  getRoleData,
+  roleInsert,
+  rolefindAll
+};
