@@ -50,7 +50,8 @@ async function assignCenterToUser(req, res, getData) {
 
 
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
-    const external_id = `${short_code}00${nextId}`;
+    // const external_id = `${short_code}00${nextId}`;
+    const external_id = `${short_code}${nextId.toString().padStart(3, '0')}`;
 
     const data = {
       username: username.trim().toLowerCase(),

@@ -72,8 +72,9 @@ exports.createCenter = async (req, res) => {
 
     // Extract the numeric part and increment it
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
-    const external_id = `${short_code}00${nextId}`;
+    //const external_id = `${short_code}00${nextId}`;
 
+    const external_id = `${short_code}${nextId.toString().padStart(3, '0')}`;
     const data = {
       project_start_date,
       project_name,
