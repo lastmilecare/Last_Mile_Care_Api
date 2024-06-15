@@ -132,3 +132,45 @@ exports.createUserLogs = async (userId, type, description) => {
     throw error;
   }
 };
+//cet login
+exports.checkUserPassCet = async (password, userdata, res) => {
+  try {
+    let passwordIsValid = bcrypt.compareSync(password, userdata.password);
+
+    if (!passwordIsValid) {
+      return { "status": "invalid_password" };
+    }
+
+    const token = jwt.sign(
+      {
+        data: {
+          id: userdata.id,
+        },
+      },
+      configJwttokenCenter,
+      { expiresIn: '10d' } // Token expires after 10 days
+    );
+
+    let makeResponseObject = {
+      token,
+      role: userdata.slug,
+      username: userdata.username,
+      isAdmin: false,
+      isCet: true,
+      permission: userdata.permission || null
+    };
+
+    const cookieOptions = {
+      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days in milliseconds
+      httpOnly: true,
+      // Add other cookie options as needed
+    };
+    res.setHeader('Set-Cookie', cookie.serialize('cet_token', token, cookieOptions));
+
+    return makeResponseObject;
+  } catch (error) {
+    // Handle any potential errors here
+    console.error('Error in generating JWT token:', error);
+    throw error;
+  }
+};

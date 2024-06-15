@@ -6,7 +6,8 @@ const testMasterController = require('../controller/global/testMasterController.
 const verifyTokenMiddleware = require('../middleware/verifyTokenMiddleware.js');
 const signatureUpload = require('../middleware/singleFileUpload');
 const driverController = require('../controller/cet/driverController.js');
-
+const uploadImagesToS3 = require('../middleware/cetUpload.js');
+const AdminCetMangmentController = require('../controller/cet/AdminCetMangmentController');
 const uploadMiddleware = require('../middleware/fileUploadMiddleware.js');
 const upload = require('../middleware/multer.js');
 const centerFileUpload = require('../middleware/centerFile.js');
@@ -18,14 +19,17 @@ module.exports = function (app) {
     //center
     app.post(`${prefixUrl}/create/center`, verifyTokenMiddleware, centerFileUpload, adminCenterController.createCenter);
     app.post(`${prefixUrl}/view/center`, verifyTokenMiddleware, adminCenterController.viewCenter);
-    app.post(`${prefixUrl}/create-center-user`, verifyTokenMiddleware, adminCenterController.assignCenter);
     app.post(`${prefixUrl}/edit/center`, verifyTokenMiddleware, adminCenterController.centerEdit);
+    app.post(`${prefixUrl}/update/center/status`, verifyTokenMiddleware, adminCenterController.updateCenterStatus);
     app.post(`${prefixUrl}/update/center`, verifyTokenMiddleware, centerFileUpload, adminCenterController.centerUpdate);
+
+    //centeruser
+    app.post(`${prefixUrl}/create-center-user`, verifyTokenMiddleware, adminCenterController.assignCenter);
     app.post(`${prefixUrl}/center/user/view`, verifyTokenMiddleware, adminCenterController.centerUser);
     app.post(`${prefixUrl}/center/user/details`, verifyTokenMiddleware, adminCenterController.centerUserDetails);
     app.post(`${prefixUrl}/center/user/update`, verifyTokenMiddleware, adminCenterController.centerUserUpdate);
-    app.post(`${prefixUrl}/update/center/status`, verifyTokenMiddleware, adminCenterController.updateCenterStatus);
     app.post(`${prefixUrl}/update/center/user/status`, verifyTokenMiddleware, adminCenterController.updateCenterUserStatus);
+    //test
     app.post(`${prefixUrl}/update/temperature`, verifyTokenMiddleware, adminMasterController.updateTemperature);
     app.post(`${prefixUrl}/update/spo2`, verifyTokenMiddleware, adminMasterController.updateSPO2s);
     app.post(`${prefixUrl}/update/random-blood-sugar`, verifyTokenMiddleware, adminMasterController.updateRandomBloodSugar);
@@ -75,4 +79,17 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/update/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageUpdate);
 
 
+    //cet admin
+    app.post(`${prefixUrl}/create/CET`, verifyTokenMiddleware, uploadImagesToS3, AdminCetMangmentController.createCET);
+    app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, AdminCetMangmentController.viewCET);
+    app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, AdminCetMangmentController.viewCETDetails);
+    app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, AdminCetMangmentController.updateCET);
+
+    //Cet User
+
+    app.post(`${prefixUrl}/create-cet-user`, verifyTokenMiddleware, AdminCetMangmentController.assignCET);
+    app.post(`${prefixUrl}/cet/user/view`, verifyTokenMiddleware, AdminCetMangmentController.cetUser);
+    app.post(`${prefixUrl}/cet/user/details`, verifyTokenMiddleware, AdminCetMangmentController.cetUserDetails);
+    app.post(`${prefixUrl}/cet/user/update`, verifyTokenMiddleware, AdminCetMangmentController.cetUserUpdate);
+    app.post(`${prefixUrl}/update/cet/user/status`, verifyTokenMiddleware, AdminCetMangmentController.updateCetUserStatus);
 };

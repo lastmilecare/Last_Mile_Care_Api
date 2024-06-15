@@ -28,11 +28,12 @@ async function adminAuth(email, password) {
 
 
     });
-    if (result.status == false) {
-      return { status: "account_inactive" };
-    }
+
 
     if (result) {
+      if (result.status == false) {
+        return { status: "account_inactive" };
+      }
       const findRole = await Role.findOne({
         where: { id: result.role_id },
         attributes: ['slug', 'role_title'],
@@ -69,12 +70,54 @@ async function centerAuth(email, password) {
 
 
     });
-    if (result.status == false) {
-      return { status: "account_inactive" };
-    }
+
 
 
     if (result) {
+      if (result.status == false) {
+        return { status: "account_inactive" };
+      }
+      const findRole = await Role.findOne({
+        where: { id: result.role_id },
+        attributes: ['slug', 'role_title'],
+
+      });
+      const mergedData = { ...result.toJSON(), ...findRole.toJSON() };
+      console.log("mergedData", mergedData);
+      return mergedData;
+    }
+
+    else {
+      return { status: "no_user_found" };
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
+async function cetAuth(email, password) {
+  try {
+    const result = await User.findOne({
+      where: { email: email, isAdmin: false },
+      include: [
+        {
+          model: Permission,
+          as: 'permission',
+          include: [
+            { model: Permissionmetadata, as: 'Permissionmetadata', }
+          ]
+        }
+      ],
+
+
+    });
+
+
+
+    if (result) {
+      if (result.status == false) {
+        return { status: "account_inactive" };
+      }
       const findRole = await Role.findOne({
         where: { id: result.role_id },
         attributes: ['slug', 'role_title'],
@@ -218,7 +261,8 @@ module.exports = {
   changeStatue,
   findPermission,
   insertPermission,
-  adminAuth
+  adminAuth,
+  cetAuth
 };
 
 

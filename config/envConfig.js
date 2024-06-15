@@ -3,6 +3,8 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 const API_PREFIX_ADMIN = process.env.API_PREFIX_ADMIN || '/api/v1/admin';
 const API_PREFIX_CENTER = process.env.API_PREFIX_CENTER || '/api/v1/center';
+const API_PREFIX_CET = process.env.API_PREFIX_CET || '/api/v1/cet';
+const API_PREFIX_DOCTOR = process.env.API_PREFIX_DOCTOR || '/api/v1/doctor';
 // Database
 const databaseName = process.env.DATABASE_NAME || 'lastmileDb';
 const userName = process.env.USER_NAME || 'postgres';
@@ -32,7 +34,10 @@ const WP_TWILIO_PHONE_NUMBER_TEMP = process.env.WP_TWILIO_PHONE_NUMBER_TEMP
 
 const prefix = {
   admin: API_PREFIX_ADMIN,
-  center: API_PREFIX_CENTER
+  center: API_PREFIX_CENTER,
+  cet: API_PREFIX_CET,
+  doctor: API_PREFIX_DOCTOR
+
 };
 
 

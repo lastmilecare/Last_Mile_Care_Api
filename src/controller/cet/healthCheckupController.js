@@ -280,6 +280,7 @@ exports.driverHealthReportDownload = async (req, res) => {
         })
         const centerUserId = helthData.createdBy;
         const packageList = helthData.package_list;
+
         const userData = await User.findOne({
             where: { id: centerUserId },
             attributes: [
@@ -296,6 +297,7 @@ exports.driverHealthReportDownload = async (req, res) => {
 
         const getCenterUser = await Centeruser.findOne({ where: { center_id: centerUserId }, raw: true, nest: true });
         const getCenterUserData = await Center.findOne({ where: { id: getCenterUser.center_id }, raw: true, nest: true });
+        console.log("packageList", packageList);
         const getPackageData = await Packagemanagment.findAll({
             where: {
                 id: {
@@ -319,8 +321,6 @@ exports.driverHealthReportDownload = async (req, res) => {
 
         const drivers = await driverhealthcheckup.findOne({
             where: { id: id },
-
-
             include: [
                 {
                     model: Doctor,
@@ -382,7 +382,6 @@ exports.driverHealthReportDownload = async (req, res) => {
         const selectedTest = drivers.selected_test;
         let additionalData = {};
         let metaData = {};
-        const dataArray = []
 
         for (const key in selectedTest) {
             if (modelMapping.hasOwnProperty(key)) {
@@ -392,6 +391,7 @@ exports.driverHealthReportDownload = async (req, res) => {
                 });
             }
         }
+
         for (const key in selectedTest) {
             if (modelMapping.hasOwnProperty(key)) {
                 if (typeof selectedTest[key] === 'object') {
