@@ -298,7 +298,6 @@ exports.driverHealthReportDownload = async (req, res) => {
 
         const getCenterUser = await Centeruser.findOne({ where: { user_id: helthData.user_id }, raw: true, nest: true });
         const getCenterUserData = await Center.findOne({ where: { id: getCenterUser.center_id }, raw: true, nest: true });
-        console.log("packageList", packageList);
         const getPackageData = await Packagemanagment.findAll({
             where: {
                 id: {

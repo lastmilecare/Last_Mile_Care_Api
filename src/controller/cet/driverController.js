@@ -62,10 +62,10 @@ exports.createDriver = async (req, res) => {
         sendError(res, 400, "name Required", 'name Required');
         return
     }
-    if (!driverId) {
-        sendError(res, 400, "driverId Required", 'driverId Required');
-        return
-    }
+    // if (!driverId) {
+    //     sendError(res, 400, "driverId Required", 'driverId Required');
+    //     return
+    // }
     const getLastCenterId = await DRIVERMASTER.findOne({
         order: [['id', 'DESC']], // Correctly specify the order by clause
     });
@@ -82,7 +82,7 @@ exports.createDriver = async (req, res) => {
             external_id: external_id,
             name,
             healthCardNumber,
-            driverId,
+            driverId: driverId || null,
             abhaNumber,
             dateOfBirthOrAge,
             gender,

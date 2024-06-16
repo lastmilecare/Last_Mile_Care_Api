@@ -203,6 +203,37 @@ exports.updateCET = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+exports.updateCETStatus = async (req, res) => {
+    const { id, status } = req.body; // Get the CET ID from the URL params
+    if (!id) {
+        sendError(res, 400, "ID Required", 'ID Required');
+        return;
+    }
+
+    if (typeof req.body.status !== 'boolean') {
+        sendError(res, 400, "bad request , status required", 'status required');
+        return
+    }
+    try {
+
+        const user = await CETMANAGEMENT.findOne({ where: { id: req.body.id } });
+
+        if (!user) {
+            sendError(res, 404, "CETMANAGEMENT id not found", 'CETMANAGEMENT id not found');
+            return
+        }
+        const result = await CETMANAGEMENT.update({ status: req.body.status }, {
+            where: {
+                id: req.body.id,
+            },
+        })
+        sendSuccess(res, 200, result, 'Status Update Successfully');
+        return
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Invalid input');
+    }
+}
 
 //cet user 
 exports.assignCET = async (req, res) => {
