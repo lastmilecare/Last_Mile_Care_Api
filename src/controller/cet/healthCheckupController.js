@@ -48,6 +48,7 @@ exports.createHealthData = async (req, res) => {
         const cId = await getCenterId(req.userId);
 
         const insert = await driverhealthcheckup.create({
+            user_id: req.userId,
             createdBy: cId.center_id,
             uniqueId: uniqueId,
             external_id: uniqueId,
@@ -295,7 +296,7 @@ exports.driverHealthReportDownload = async (req, res) => {
             nest: true,
         });
 
-        const getCenterUser = await Centeruser.findOne({ where: { center_id: centerUserId }, raw: true, nest: true });
+        const getCenterUser = await Centeruser.findOne({ where: { user_id: helthData.user_id }, raw: true, nest: true });
         const getCenterUserData = await Center.findOne({ where: { id: getCenterUser.center_id }, raw: true, nest: true });
         console.log("packageList", packageList);
         const getPackageData = await Packagemanagment.findAll({

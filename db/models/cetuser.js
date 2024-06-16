@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+
+      Cetuser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+      Cetuser.belongsTo(models.CETMANAGEMENT, { foreignKey: 'cet_id', as: 'cetManagement' });  // Changed alias to 'cetManagement'
     }
   }
   Cetuser.init({

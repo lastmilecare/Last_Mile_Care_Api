@@ -10,7 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+
+
+      CETMANAGEMENT.hasMany(models.Cetuser, { foreignKey: 'cet_id', as: 'Cetusers' });  // Changed alias to 'Cetusers'
+      CETMANAGEMENT.belongsToMany(models.User, { through: models.Cetuser, foreignKey: 'cet_id', otherKey: 'user_id', as: 'Users' });  // Changed alias to 'Users'
+
+
     }
   }
   CETMANAGEMENT.init({

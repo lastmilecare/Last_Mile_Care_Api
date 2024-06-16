@@ -40,8 +40,6 @@ exports.createCET = async (req, res) => {
         short_code,
         cet_type,
         center_id
-
-
     } = req.body;
 
 
@@ -246,22 +244,101 @@ exports.assignCET = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+
 exports.cetUser = async (req, res) => {
     try {
+
+        const cetUser = await Cetuser.findAll({
+            include: [
+                {
+                    model: User,
+                    as: 'user', // This alias matches the one defined in Cetuser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'cetManagement' // This alias matches the one defined in Cetuser.belongsTo(models.CETMANAGEMENT, { foreignKey: 'cet_id', as: 'cetManagement' });
+                }
+            ],
+            order: [['id', 'DESC']],
+        });
+
+        sendSuccess(res, 200, cetUser, 'Cet  User List Fetch Successfully');
+        return
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
     }
 }
+
+
 exports.cetUserDetails = async (req, res) => {
+    const id = req.body.id
     try {
+        const result = await CETMANAGEMENT.findOne({
+            where: { id: id },
+            include: [
+                {
+                    model: User,
+                    as: 'Users', // Alias used in the include statement
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                }
+            ]
+        });
+
+
+        sendSuccess(res, 200, result, 'Cet Fetch Successfully');
+        return
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
     }
 }
+
+
+
 exports.cetUserUpdate = async (req, res) => {
     try {
+        const { id, username, name, permission_id, phone, email, password, cet_id } = req.body;
+        let cetUser;
+        // Find the user record to update
+        let user = await User.findByPk(id);
+        if (!user) {
+            return sendError(res, 404, 'User not found', 'User not found');
+        }
+        const getData = await userService.checkRole(permission_id);
+
+        if (!getData) {
+            sendError(res, 404, "Invalid permission id", 'Invalid permission id');
+            return
+        }
+
+        // Update user data with new values
+        user.username = username;
+        user.name = name;
+        user.role_id = getData.role_id;
+        user.permission_id = permission_id;
+        user.phone = phone;
+        user.email = email;
+        user.password = bcrypt.hashSync(password, 8); // You might want to handle password hashing here
+        await user.save();
+
+        // If center_id is provided, update associated center
+        if (cet_id) {
+            cetUser = await Cetuser.findOne({ where: { user_id: id } });
+            if (!cetUser) {
+                // Create new centeruser if not exists
+                cetUser = await Cetuser.create({ user_id: id, cet_id: cet_id });
+            } else {
+                // Update existing centeruser
+                cetUser.cet_id = cet_id;
+                await cetUser.save();
+            }
+        }
+
+        // Send success response with updated user data
+        sendSuccess(res, 200, { user, cetUser }, 'User data updated successfully');
+        return
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
@@ -269,6 +346,27 @@ exports.cetUserUpdate = async (req, res) => {
 }
 exports.updateCetUserStatus = async (req, res) => {
     try {
+        if (!req.body.id) {
+            sendError(res, 400, "bad request", 'id required');
+            return
+        }
+
+        if (typeof req.body.status !== 'boolean') {
+            sendError(res, 400, "bad request , status required", 'status required');
+            return
+        }
+        const user = await User.findOne({ where: { id: req.body.id } });
+
+        if (!user) {
+            sendError(res, 404, "User id not found", 'User id not found');
+            return
+        }
+        const result = await User.update({ status: req.body.status }, {
+            where: {
+                id: req.body.id,
+            },
+        })
+        sendSuccess(res, 200, result, 'Status Update Successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');

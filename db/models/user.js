@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Role, { foreignKey: 'role_id', as: 'role' });
       User.belongsTo(models.Permission, { foreignKey: 'permission_id', as: 'permission' });
 
+      //
+      User.hasMany(models.Cetuser, { foreignKey: 'user_id', as: 'Cetusers' });  // Changed alias to 'Cetusers'
+      User.belongsToMany(models.CETMANAGEMENT, { through: models.Cetuser, foreignKey: 'user_id', otherKey: 'cet_id', as: 'CETManagements' });  // Changed alias to 'CETManagements'
+
     }
   }
   User.init({

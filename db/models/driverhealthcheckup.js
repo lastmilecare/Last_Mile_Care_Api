@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   driverhealthcheckup.init({
     is_submited: DataTypes.BOOLEAN,
     createdBy: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
     doctor_id: DataTypes.INTEGER,
     uniqueId: DataTypes.STRING,
     external_id: DataTypes.STRING,
