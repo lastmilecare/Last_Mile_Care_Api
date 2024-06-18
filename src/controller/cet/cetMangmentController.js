@@ -7,10 +7,12 @@ const {
     DRIVERMASTER,
     driverhealthcheckup
 } = require("../../../db/models");
+
+const { createObjectCsvWriter } = require('csv-writer');
+const path = require('path');
+const fs = require('fs');
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { getCenterId, getCetId } = require('../../helper/globalHelper')
-
-
 exports.createCET = async (req, res) => {
 
     const {
@@ -205,7 +207,6 @@ exports.updateCET = async (req, res) => {
 
 exports.healthCheckupHistory = async (req, res) => {
     try {
-        console.log(req.userId);
 
         const cId = await getCetId(req.userId);
         if (cId) {
@@ -226,8 +227,6 @@ exports.healthCheckupHistory = async (req, res) => {
             sendError(res, 400, "Not found", 'Not found');
             return
         }
-        // const result = await CETMANAGEMENT.findAll({ where: { center_id: cId.cet_id }, raw: true, nest: true, order: [['id', 'DESC']] });
-        // sendSuccess(res, 200, result, 'CET List Fetch Successful');
 
     } catch (error) {
         console.log(error);
@@ -235,3 +234,86 @@ exports.healthCheckupHistory = async (req, res) => {
 
     }
 }
+exports.healthCheckupHistoryDownload = async (req, res) => {
+    try {
+        const cId = await getCetId(req.userId);
+        if (cId) {
+            const drivers = await driverhealthcheckup.findAll({
+                where: { transpoter: cId.cet_id },
+                include: [{
+                    model: DRIVERMASTER,
+                    as: 'driver',
+                }],
+                order: [['id', 'DESC']]
+            });
+
+            if (drivers.length === 0) {
+                return sendError(res, 404, 'No data found', 'No data found');
+            }
+
+            const csvWriter = createObjectCsvWriter({
+                path: path.join(__dirname, 'healthCheckupHistory.csv'),
+                header: [
+                    { id: 'id', title: 'ID' },
+                    { id: 'uniqueId', title: 'Unique ID' },
+                    { id: 'accept_term_condition', title: 'Accept Term Condition' },
+                    { id: 'driver_id', title: 'Driver ID' },
+                    { id: 'transpoter', title: 'Transporter' },
+                    { id: 'driver_type', title: 'Driver Type' },
+                    { id: 'vehicle_no', title: 'Vehicle No' },
+                    { id: 'signature', title: 'Signature' },
+                    { id: 'date_time', title: 'Date Time' },
+                    { id: 'package_list', title: 'Package List' },
+                    { id: 'verify_option', title: 'Verify Option' },
+                    { id: 'selected_test', title: 'Selected Test' },
+                    { id: 'createdAt', title: 'Created At' },
+                    { id: 'driver_name', title: 'Driver Name' },
+                    { id: 'driver_abhaNumber', title: 'Driver ABHA Number' },
+                    { id: 'driver_gender', title: 'Driver Gender' },
+                    { id: 'driver_photographOfDriver', title: 'Driver Photograph' },
+                    { id: 'driver_localAddress', title: 'Driver Local Address' },
+                    { id: 'driver_healthCardNumber', title: 'Driver Health Card Number' },
+                ]
+            });
+
+            const records = drivers.map(driver => ({
+                id: driver.id,
+                uniqueId: driver.uniqueId,
+                accept_term_condition: driver.accept_term_condition,
+                driver_id: driver.driver_id,
+                transpoter: driver.transpoter,
+                driver_type: driver.driver_type,
+                vehicle_no: driver.vehicle_no,
+                signature: driver.signature,
+                date_time: driver.date_time,
+                package_list: driver.package_list,
+                verify_option: driver.verify_option,
+                selected_test: driver.selected_test,
+                createdAt: driver.createdAt,
+                driver_name: driver.driver.name,
+                driver_abhaNumber: driver.driver.abhaNumber,
+                driver_gender: driver.driver.gender,
+                driver_photographOfDriver: driver.driver.photographOfDriver,
+                driver_localAddress: driver.driver.localAddress,
+                driver_healthCardNumber: driver.driver.healthCardNumber,
+            }));
+
+            await csvWriter.writeRecords(records);
+
+            const filePath = path.join(__dirname, 'healthCheckupHistory.csv');
+            res.download(filePath, 'healthCheckupHistory.csv', (err) => {
+                if (err) {
+                    console.log(err);
+                    sendError(res, 500, "internal server error", 'Error downloading the file');
+                } else {
+                    fs.unlinkSync(filePath); // Delete the file after download
+                }
+            });
+        } else {
+            sendError(res, 400, "Not found", 'Not found');
+        }
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, "internal server error", 'Internal server error');
+    }
+};

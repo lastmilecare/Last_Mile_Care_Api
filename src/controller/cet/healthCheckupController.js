@@ -95,7 +95,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             doctor_id: req.body.doctor_id,
             bmi_unit: req.body.bmi_unit || null,
             haemoglobin_unit: req.body.haemoglobin_unit || null,
-            package_list: req.body.package_list || null,
+            package_list: req.body.package_list,
             spo2_unit: req.body.spo2_unit || null,
             temperature_unit: req.body.temperature_unit || null,
             date_time: req.body.date_time,
