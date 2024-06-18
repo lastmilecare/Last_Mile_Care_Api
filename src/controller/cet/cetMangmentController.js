@@ -3,10 +3,12 @@ const {
     User,
     CETMANAGEMENT,
     Center,
-    Centeruser
+    Centeruser,
+    DRIVERMASTER,
+    driverhealthcheckup
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
-const { getCenterId } = require('../../helper/globalHelper')
+const { getCenterId, getCetId } = require('../../helper/globalHelper')
 
 
 exports.createCET = async (req, res) => {
@@ -198,5 +200,38 @@ exports.updateCET = async (req, res) => {
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
+    }
+}
+
+exports.healthCheckupHistory = async (req, res) => {
+    try {
+        console.log(req.userId);
+
+        const cId = await getCetId(req.userId);
+        if (cId) {
+            const drivers = await driverhealthcheckup.findAll({
+                where: { transpoter: cId.cet_id },
+                include: [{
+                    model: DRIVERMASTER,
+                    as: 'driver',
+
+                }],
+
+                order: [['id', 'DESC']]
+            });
+            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
+
+        }
+        else {
+            sendError(res, 400, "Not found", 'Not found');
+            return
+        }
+        // const result = await CETMANAGEMENT.findAll({ where: { center_id: cId.cet_id }, raw: true, nest: true, order: [['id', 'DESC']] });
+        // sendSuccess(res, 200, result, 'CET List Fetch Successful');
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, "internal server error");
+
     }
 }

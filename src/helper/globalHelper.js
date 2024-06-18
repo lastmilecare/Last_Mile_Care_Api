@@ -3,7 +3,8 @@ const {
     User,
     userlog,
     Center,
-    Centeruser, Cetuser } = require("../../db/models");
+    Cetuser,
+    Centeruser, } = require("../../db/models");
 const bcrypt = require("bcryptjs");
 
 exports.createUserLogs = async (data) => {
@@ -35,6 +36,16 @@ exports.createUserLogs = async (data) => {
 exports.getCenterId = async (id) => {
     try {
         return await Centeruser.findOne({ where: { user_id: id }, raw: true, nest: true })
+
+    } catch (error) {
+
+
+        throw error;
+    }
+};
+exports.getCetId = async (id) => {
+    try {
+        return await Cetuser.findOne({ where: { user_id: id }, raw: true, nest: true })
 
     } catch (error) {
 
