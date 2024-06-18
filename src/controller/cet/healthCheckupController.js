@@ -394,8 +394,7 @@ exports.driverHealthReportDownload = async (req, res) => {
                 blood_group_unit: Bloodgroup,
                 random_blood_sugar_unit: random_blood_sugar
             };
-            console.log(modelMapping, drivers.selected_test);
-            return
+
             const selectedTest = drivers.selected_test;
             let additionalData = {};
             let metaData = {};
