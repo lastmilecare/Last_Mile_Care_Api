@@ -84,7 +84,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, AdminCetMangmentController.viewCET);
     app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, AdminCetMangmentController.viewCETDetails);
     app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, AdminCetMangmentController.updateCET);
-    app.post(`${prefixUrl}/CET/status/update`, verifyTokenMiddleware, uploadImagesToS3, AdminCetMangmentController.updateCET);
+    app.post(`${prefixUrl}/CET/status/update`, verifyTokenMiddleware, uploadImagesToS3, AdminCetMangmentController.updateCETStatus);
 
     //Cet User
 

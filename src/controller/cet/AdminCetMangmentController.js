@@ -306,18 +306,26 @@ exports.cetUser = async (req, res) => {
 exports.cetUserDetails = async (req, res) => {
     const id = req.body.id
     try {
-        const result = await CETMANAGEMENT.findOne({
+        // const result = await CETMANAGEMENT.findOne({
+        //     where: { id: id },
+        //     include: [
+        //         {
+        //             model: User,
+        //             as: 'Users', // Alias used in the include statement
+        //             attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+        //         }
+        //     ]
+        // });
+
+
+        const result = await User.findOne({
             where: { id: id },
             include: [
-                {
-                    model: User,
-                    as: 'Users', // Alias used in the include statement
-                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-                }
-            ]
+                { model: Cetuser, as: 'Cetusers' },
+                { model: CETMANAGEMENT, through: { attributes: [] }, as: 'CETManagements' }
+            ],
+            attributes: { exclude: ['password'] } // Exclude the password attribute
         });
-
-
         sendSuccess(res, 200, result, 'Cet Fetch Successfully');
         return
     } catch (error) {
