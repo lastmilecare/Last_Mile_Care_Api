@@ -316,18 +316,35 @@ exports.cetUserDetails = async (req, res) => {
         //         }
         //     ]
         // });
-
-
-        const result = await User.findOne({
-            where: { id: id },
+        const cetUser = await Cetuser.findOne({
+            where: { user_id: id },
             include: [
-                { model: Cetuser, as: 'Cetusers' },
-                { model: CETMANAGEMENT, through: { attributes: [] }, as: 'CETManagements' }
+                {
+                    model: User,
+                    as: 'user', // This alias matches the one defined in Cetuser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'cetManagement' // This alias matches the one defined in Cetuser.belongsTo(models.CETMANAGEMENT, { foreignKey: 'cet_id', as: 'cetManagement' });
+                }
             ],
-            attributes: { exclude: ['password'] } // Exclude the password attribute
+            order: [['id', 'DESC']],
         });
-        sendSuccess(res, 200, result, 'Cet Fetch Successfully');
+
+        sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
         return
+
+        // const result = await User.findOne({
+        //     where: { id: id },
+        //     include: [
+        //         { model: Cetuser, as: 'Cetusers' },
+        //         { model: CETMANAGEMENT, through: { attributes: [] }, as: 'CETManagements' }
+        //     ],
+        //     attributes: { exclude: ['password'] } // Exclude the password attribute
+        // });
+        // sendSuccess(res, 200, result, 'Cet Fetch Successfully');
+        // return
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
