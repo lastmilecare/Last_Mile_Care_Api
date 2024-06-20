@@ -351,7 +351,15 @@ exports.driverHealthReportDownload = async (req, res) => {
 
                     {
                         model: DRIVERMASTER,
-                        as: 'driver'
+                        as: 'driver',
+                        include: [
+
+                            {
+                                model: DRIVERMASTERPERSONAL,
+                                attributes: ['id', 'blood_group'],
+                                required: false  // Optional: set to true if the association must exist
+                            }
+                        ]
 
                     },
                     {
