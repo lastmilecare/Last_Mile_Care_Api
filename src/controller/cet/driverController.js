@@ -189,24 +189,10 @@ exports.createDriverPersonalData = async (req, res) => {
     } = req.body;
 
 
-    const requiredFields = [
-        'driver_phone',
-        'driver_id',
 
 
-    ];
 
 
-    const missingFields = requiredFields.filter(field => {
-        return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-    });
-
-    console.log("Missing Fields:", missingFields); // Log missing fields
-
-    if (missingFields.length > 0) {
-        const msg = missingFields.join(', ');
-        return res.status(400).json({ error: msg + " is required" });
-    }
 
     const data = {
         driver_phone,
@@ -363,16 +349,6 @@ exports.createDriverFamilyData = async (req, res) => {
 
     // Ensure required fields are present and of correct type
 
-    const missingFields = requiredFields.filter(field => {
-        return !req.body[field] || (typeof req.body[field] !== 'string') || req.body[field].trim() === '';
-    });
-
-    console.log("Missing Fields:", missingFields); // Log missing fields
-
-    if (missingFields.length > 0) {
-        const msg = missingFields.join(', ');
-        return res.status(400).json({ error: msg + " is required" });
-    }
 
     try {
         console.log(req.body);
@@ -386,7 +362,8 @@ exports.createDriverFamilyData = async (req, res) => {
             parent_hypertension,
             parent_hypotension,
             other_genetic_disease,
-            family_member_1_relation
+            family_member_1_relation,
+            family_member_2_relation
         });
         sendSuccess(res, 201, insert, 'DRIVERFAMILYHISTORY Center successfully');
     } catch (error) {
