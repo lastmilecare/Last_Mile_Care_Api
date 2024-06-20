@@ -139,7 +139,7 @@ exports.assignCenter = async (req, res) => {
       return
     }
     if (await checkPhoneExist(phoneNumber)) {
-      sendError(res, 400, "Email Already Exists", 'Email Already Exists');
+      sendError(res, 400, "phoneNumber Already Exists", 'phoneNumber Already Exists');
       return
     }
 
