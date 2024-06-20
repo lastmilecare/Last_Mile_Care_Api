@@ -492,16 +492,16 @@ exports.searchDriverByNumber = async (req, res) => {
                     { driverId: searchData }
                 ]
             },
-            include: [
-                {
-                    model: DRIVERFAMILYHISTORY,
-                    required: false  // Optional: set to true if the association must exist
-                },
-                {
-                    model: DRIVERMASTERPERSONAL,
-                    required: false  // Optional: set to true if the association must exist
-                }
-            ]
+            // include: [
+            //     {
+            //         model: DRIVERFAMILYHISTORY,
+            //         required: false  // Optional: set to true if the association must exist
+            //     },
+            //     {
+            //         model: DRIVERMASTERPERSONAL,
+            //         required: false  // Optional: set to true if the association must exist
+            //     }
+            // ]
         });
 
 
