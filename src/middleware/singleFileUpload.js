@@ -12,13 +12,12 @@ const signatureUpload = async (req, res, next) => {
     if (!req.body.file_url) {
         return res.status(400).send('file_url data   is missing.');
     }
-    const maxBase64Size = 8 * 1024 * 1024; // 2 MB for base64 encoded size
-
+    const maxBase64Size = 20 * 1024 * 1024;
     const fileData = req.body.file_url;
     const fileName = req.body.name;
     console.log(fileData.length);
     if (fileData.length > maxBase64Size) {
-        return res.status(400).send('Base64 string size exceeds 8 MB');
+        return res.status(400).send('Base64 string size exceeds 10 MB');
     }
 
     try {
