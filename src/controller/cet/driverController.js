@@ -56,8 +56,17 @@ exports.createDriver = async (req, res) => {
     } = req.body;
 
 
+    const checkNumber = await DRIVERMASTER.findOne({
+        where: { contactNumber: contactNumber },
+        attributes: ['contactNumber', 'id'],
+        raw: true,
+        nest: true
 
-
+    });
+    if (checkNumber) {
+        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
+        return
+    }
     if (!name) {
         sendError(res, 400, "name Required", 'name Required');
         return
@@ -470,17 +479,21 @@ exports.driverFamilyUpdate = async (req, res) => {
 //driver helth
 exports.searchDriverByNumber = async (req, res) => {
     const searchData = req.body.searchData;
-    console.log(searchData);
+    const cId = await getCenterId(req.userId);
+
     try {
         //driverId
         const searchQuery = await DRIVERMASTER.findOne({
             where: {
+                createdBy: cId.center_id,
+
                 [Op.or]: [
                     { contactNumber: searchData },
                     { driverId: searchData }
                 ]
             }
         });
+
 
         if (searchQuery) {
             sendSuccess(res, 200, searchQuery, 'Success');
