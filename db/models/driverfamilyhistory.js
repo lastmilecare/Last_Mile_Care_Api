@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DRIVERFAMILYHISTORY.belongsTo(models.DRIVERMASTER, { foreignKey: 'driver_id' });
+
     }
   }
   DRIVERFAMILYHISTORY.init({

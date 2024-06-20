@@ -2,8 +2,6 @@ const {
     sequelize,
     User,
     DRIVERMASTER,
-    DRIVERMASTERPERSONAL,
-    DRIVERFAMILYHISTORY,
     otp,
     Packagemanagment,
     Centerpackage,
@@ -24,7 +22,9 @@ const {
     Temperature,
     Alcholtest,
     Centeruser,
-    Center
+    Center,
+    DRIVERFAMILYHISTORY,
+    DRIVERMASTERPERSONAL
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op, where } = require('sequelize');
@@ -491,7 +491,17 @@ exports.searchDriverByNumber = async (req, res) => {
                     { contactNumber: searchData },
                     { driverId: searchData }
                 ]
-            }
+            },
+            include: [
+                {
+                    model: DRIVERFAMILYHISTORY,
+                    required: false  // Optional: set to true if the association must exist
+                },
+                {
+                    model: DRIVERMASTERPERSONAL,
+                    required: false  // Optional: set to true if the association must exist
+                }
+            ]
         });
 
 
