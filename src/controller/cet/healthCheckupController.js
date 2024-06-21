@@ -108,6 +108,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             selected_test: req.body.selected_test,
             is_submited: true,
             vehicle_no: req.body.vehicle_no,
+            confirm_report: req.body.confirm_report
         }
         await driverhealthcheckup.update(data, {
             where: {

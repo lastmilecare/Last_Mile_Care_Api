@@ -51,6 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     blood_pressure_unit: DataTypes.JSON,
     ecg_unit: DataTypes.JSON,
     doc: DataTypes.STRING,
+    confirm_report: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'driverhealthcheckup',
