@@ -7,7 +7,7 @@ const indexRoutes = require('./src/route/index-route.js');
 const fileUpload = require('express-fileupload');
 
 const app = express();
-
+app.use(cors());
 // Set consistent limits
 const jsonLimit = "1gb";
 const urlencodedLimit = "1gb";
@@ -19,7 +19,7 @@ app.use(express.json({ limit: jsonLimit }));
 app.use(express.urlencoded({ extended: true, limit: urlencodedLimit }));
 app.use(fileUpload({ limits: { fileSize: fileUploadLimit } }));
 app.use(cookieParser());
-app.use(cors());
+
 app.use((req, res, next) => {
   let ip = req.ip || req.connection.remoteAddress;
 

@@ -50,6 +50,8 @@ exports.createHealthData = async (req, res) => {
         const insert = await driverhealthcheckup.create({
             user_id: req.userId,
             createdBy: cId.center_id,
+            // center_id: cId.center_id,
+            // cet_id: null,
             uniqueId: uniqueId,
             external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
@@ -148,8 +150,15 @@ exports.viewHealthData = async (req, res) => {
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
+            },
+            {
+                model: CETMANAGEMENT,
+                as: 'CETMANAGEMENT',
 
-            }],
+            }
+
+
+            ],
 
             ...queryData,
             order: [['id', 'DESC']]
