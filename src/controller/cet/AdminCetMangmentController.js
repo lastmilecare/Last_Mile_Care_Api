@@ -428,3 +428,35 @@ exports.updateCetUserStatus = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+exports.downloadCsvCet = async (req, res) => {
+    const id = req.body.id
+    try {
+
+        const cetUser = await Cetuser.findAll({
+            // where: { user_id: id },
+            include: [
+                {
+                    model: User,
+                    as: 'user', // This alias matches the one defined in Cetuser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'cetManagement' // This alias matches the one defined in Cetuser.belongsTo(models.CETMANAGEMENT, { foreignKey: 'cet_id', as: 'cetManagement' });
+                }
+            ],
+            order: [['id', 'DESC']],
+        });
+
+        sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
+        return
+
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Invalid input');
+    }
+}
+
+
+

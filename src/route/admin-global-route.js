@@ -93,4 +93,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/cet/user/details`, verifyTokenMiddleware, AdminCetMangmentController.cetUserDetails);
     app.post(`${prefixUrl}/cet/user/update`, verifyTokenMiddleware, AdminCetMangmentController.cetUserUpdate);
     app.post(`${prefixUrl}/update/cet/user/status`, verifyTokenMiddleware, AdminCetMangmentController.updateCetUserStatus);
+
+    //cet csv download
+    app.post(`${prefixUrl}/cet/csv/download`, verifyTokenMiddleware, AdminCetMangmentController.downloadCsvCet);
+
+
 };
