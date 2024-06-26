@@ -99,6 +99,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             haemoglobin_unit: req.body.haemoglobin_unit || null,
             package_list: req.body.package_list,
             selected_package_name: req.body.selected_package_name,
+            selected_package_list: req.body.selected_package_list,
             spo2_unit: req.body.spo2_unit || null,
             temperature_unit: req.body.temperature_unit || null,
             date_time: req.body.date_time,
@@ -293,6 +294,7 @@ exports.driverDoctorList = async (req, res) => {
         sendError(res, 500, error, 'Internal error');
     }
 };
+//
 exports.driverHealthReportDownload = async (req, res) => {
     const { id } = req.body;
     if (!id) {

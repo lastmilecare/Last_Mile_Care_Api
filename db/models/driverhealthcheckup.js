@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     pulse_unit: DataTypes.STRING,
     package_list: DataTypes.ARRAY(DataTypes.STRING),
     selected_package_name: DataTypes.ARRAY(DataTypes.STRING),
+    selected_package_list: DataTypes.ARRAY(DataTypes.STRING),
     verify_option: DataTypes.STRING,
     bmi_unit: DataTypes.JSON,
     contactNumber: DataTypes.STRING,
