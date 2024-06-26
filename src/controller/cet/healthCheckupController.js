@@ -259,7 +259,7 @@ exports.driverHealthHistory = async (req, res) => {
 
     try {
         const drivers = await driverhealthcheckup.findAll({
-            where: { driver_id: id, confirm_report: "yes", is_submited: false },
+            where: { driver_id: id, confirm_report: "yes", is_submited: true },
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
