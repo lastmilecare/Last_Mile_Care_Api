@@ -98,6 +98,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             bmi_unit: req.body.bmi_unit || null,
             haemoglobin_unit: req.body.haemoglobin_unit || null,
             package_list: req.body.package_list,
+            selected_package_name: req.body.selected_package_name,
             spo2_unit: req.body.spo2_unit || null,
             temperature_unit: req.body.temperature_unit || null,
             date_time: req.body.date_time,
@@ -257,7 +258,7 @@ exports.driverHealthHistory = async (req, res) => {
 
     try {
         const drivers = await driverhealthcheckup.findAll({
-            where: { driver_id: id, is_submited: true },
+            where: { driver_id: id, confirm_report: "yes" },
             include: [{
                 model: DRIVERMASTER,
                 as: 'driver',
@@ -268,43 +269,7 @@ exports.driverHealthHistory = async (req, res) => {
             raw: true,
             nest: true
         });
-        const packageIds = [...new Set(drivers.flatMap(driver => driver.package_list))];
-        const packageNames = await Packagemanagment.findAll({
-            // attributes: ['id', 'name'], // Assuming 'name' is the attribute holding package names
-            where: {
-                id: {
-                    [Op.in]: packageIds
-                }
-            },
-            raw: true, nest: true
-        });
-        // console.log("packageNames", packageNames);
-        // console.log("drivers", drivers);
-        const result = drivers.map((data) => {
-            if (data.package_list)
-        })
-        // const packageMap = {};
-        // packageNames.forEach(pkg => {
-        //     packageMap[pkg.id] = pkg;
-        // });
 
-        // Update each driver object with package information
-        // drivers.forEach(async driver => {
-        //     // Map package ids to their corresponding names
-        //     const packages = await driver.package_list.map(packageId => ({
-        //         id: packageId,
-        //         package_name: packageMap[packageId]?.package_name || 'Unknown'  // Assuming 'package_name' is the attribute holding the package name
-        //     }));
-        //     console.log(packages)
-        //     drivers.packages = packages;
-        // });
-        // for (const driver of drivers) {
-        //     const packages = driver.package_list.map(packageId => ({
-        //         id: packageId,
-        //         package_name: packageMap[packageId] || 'Unknown' //
-        //     })
-        //     )
-        // }
         sendSuccess(res, 200, drivers, 'List of driver health history');
     } catch (error) {
         console.log(error)
