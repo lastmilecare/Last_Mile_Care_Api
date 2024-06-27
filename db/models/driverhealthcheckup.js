@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       driverhealthcheckup.belongsTo(models.DRIVERMASTER, { foreignKey: 'driver_id', as: 'driver' });
       driverhealthcheckup.belongsTo(models.Doctor, { foreignKey: 'doctor_id', as: 'doctor' });
       driverhealthcheckup.belongsTo(models.CETMANAGEMENT, { foreignKey: 'transpoter', as: 'CETMANAGEMENT' });
+      driverhealthcheckup.belongsTo(models.Center, { foreignKey: 'createdBy', as: 'center' });
+      driverhealthcheckup.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
 
 
 

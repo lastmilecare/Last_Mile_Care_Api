@@ -5,6 +5,7 @@ const {
     Center,
     Centeruser,
     Cetuser,
+    driverhealthcheckup
 
 } = require("../../../db/models");
 const { Op, where } = require('sequelize');
@@ -436,37 +437,44 @@ exports.downloadCsvCet = async (req, res) => {
     // createdAt
     // 2024-06-14 14:57:43.693+00
     let whereCondition = {};
+    let whereCondition2 = {};
 
     if (cet && cet !== 'all') {
-        whereCondition.id = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
+        whereCondition.transpoter = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
     }
     else {
-        delete whereCondition.id
+        delete whereCondition.transpoter
     }
     if (start_date && end_date) {
         const startDateFormatted = `${start_date} 00:00:00`;
         const endDateFormatted = `${end_date} 23:59:59`;
 
-        whereCondition.createdAt = {
+        whereCondition2.date_time = {
             [Op.between]: [startDateFormatted, endDateFormatted]
         };
     }
-    console.log(whereCondition)
 
     try {
 
-        const cetUser = await Cetuser.findAll({
-            // where: { user_id: id },
+        const cetUser = await driverhealthcheckup.findAll({
+            where: [whereCondition, whereCondition2],
+
             include: [
                 {
-                    model: User,
-                    as: 'user', // This alias matches the one defined in Cetuser.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
-                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                    model: Center,
+                    as: 'center',
+
                 },
                 {
+                    model: User,
+                    as: 'user',
+
+                },
+
+                {
                     model: CETMANAGEMENT,
-                    as: 'cetManagement',
-                    where: whereCondition
+                    as: 'CETMANAGEMENT',
+
                 }
             ],
             order: [['id', 'DESC']],
