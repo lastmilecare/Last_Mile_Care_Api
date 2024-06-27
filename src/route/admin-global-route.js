@@ -96,6 +96,7 @@ module.exports = function (app) {
 
     //cet csv download
     app.post(`${prefixUrl}/cet/csv/download`, verifyTokenMiddleware, AdminCetMangmentController.downloadCsvCet);
+    app.post(`${prefixUrl}/cet/csv/list`, verifyTokenMiddleware, AdminCetMangmentController.CsvCetList);
 
 
 };

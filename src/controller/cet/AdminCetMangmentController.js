@@ -5,7 +5,9 @@ const {
     Center,
     Centeruser,
     Cetuser,
-    driverhealthcheckup
+    driverhealthcheckup,
+    DRIVERMASTER,
+    Doctor
 
 } = require("../../../db/models");
 const { Op, where } = require('sequelize');
@@ -15,7 +17,7 @@ const { getCenterId, assignCetToUser } = require('../../helper/globalHelper')
 const userService = require('../../service/adminService/userService.js');
 const bcrypt = require("bcryptjs");
 const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../helper/authHelper");
-
+const ExcelJS = require('exceljs');
 
 exports.createCET = async (req, res) => {
 
@@ -432,6 +434,8 @@ exports.updateCetUserStatus = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+
+
 exports.downloadCsvCet = async (req, res) => {
     const { cet, start_date, end_date } = req.body
     // createdAt
@@ -460,6 +464,146 @@ exports.downloadCsvCet = async (req, res) => {
             where: [whereCondition, whereCondition2],
 
             include: [
+                {
+                    model: Doctor,
+                    as: 'doctor',
+                    include: [
+                        {
+                            model: User,
+                            as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                            attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                        }
+                    ]
+
+                },
+
+                {
+                    model: Center,
+                    as: 'center',
+
+                },
+                {
+                    model: DRIVERMASTER,
+                    as: 'driver',
+
+                },
+
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+
+                },
+
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+
+                }
+            ],
+            order: [['id', 'DESC']],
+            raw: true,
+            nest: true,
+        });
+
+
+
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('CetUsers');
+
+        // Define the headers
+        worksheet.columns = [
+            { header: 'CET Name', key: 'CETName', width: 20 },
+            { header: 'Center Name', key: 'CenterName', width: 20 },
+            { header: 'Center User Name', key: 'CenterUserName', width: 20 },
+            { header: 'Test Date', key: 'TestDate', width: 15 },
+            { header: 'Test Package Name', key: 'TestPackageName', width: 30 },
+            { header: 'Workforce Name', key: 'WorkforceName', width: 20 },
+            { header: 'Health Card Number', key: 'HealthCardNumber', width: 20 },
+            { header: 'Workforce Mobile No', key: 'WorkforceMobileNo', width: 15 }
+        ];
+
+        // Add rows from cetUser
+        cetUser.forEach(data => {
+            console.log("datadatadatadatadata", data)
+            worksheet.addRow({
+                CETName: data.CETMANAGEMENT.name,
+                CenterName: data.center.project_name,
+                CenterUserName: data.user.username,
+                TestDate: data.date_time,
+                TestPackageName: data.selected_package_name,
+                WorkforceName: data.driver.name,
+                HealthCardNumber: data.driver.healthCardNumber,
+                WorkforceMobileNo: data.driver.contactNumber
+            });
+        });
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=' + 'cet_users.xlsx');
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+
+
+
+
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Invalid input');
+    }
+}
+
+
+
+exports.CsvCetList = async (req, res) => {
+    const { cet, start_date, end_date } = req.body
+    // createdAt
+    // 2024-06-14 14:57:43.693+00
+    let whereCondition = {};
+    let whereCondition2 = {};
+
+    if (cet && cet !== 'all') {
+        whereCondition.transpoter = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
+    }
+    else {
+        delete whereCondition.transpoter
+    }
+    if (start_date && end_date) {
+        const startDateFormatted = `${start_date} 00:00:00`;
+        const endDateFormatted = `${end_date} 23:59:59`;
+
+        whereCondition2.date_time = {
+            [Op.between]: [startDateFormatted, endDateFormatted]
+        };
+    }
+
+    try {
+
+        const cetUser = await driverhealthcheckup.findAll({
+            where: [whereCondition, whereCondition2],
+
+            include: [
+                {
+                    model: Doctor,
+                    as: 'doctor',
+                    include: [
+                        {
+                            model: User,
+                            as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                            attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                        }
+                    ]
+
+                },
+                {
+                    model: DRIVERMASTER,
+                    as: 'driver',
+
+                },
                 {
                     model: Center,
                     as: 'center',
@@ -495,6 +639,5 @@ exports.downloadCsvCet = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
-
 
 
