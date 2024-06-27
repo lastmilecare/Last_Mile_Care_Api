@@ -468,6 +468,7 @@ exports.downloadCsvCet = async (req, res) => {
                 {
                     model: User,
                     as: 'user',
+                    attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
 
                 },
 
