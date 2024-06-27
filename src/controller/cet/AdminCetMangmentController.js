@@ -526,7 +526,17 @@ exports.downloadCsvCet = async (req, res) => {
 
         // Add rows from cetUser
         cetUser.forEach(data => {
-            console.log("datadatadatadatadata", data)
+            const dData = {
+                CETName: data.CETMANAGEMENT.name,
+                CenterName: data.center.project_name,
+                CenterUserName: data.user.username,
+                TestDate: data.date_time,
+                TestPackageName: data.selected_package_name,
+                WorkforceName: data.driver.name,
+                HealthCardNumber: data.driver.healthCardNumber,
+                WorkforceMobileNo: data.driver.contactNumber
+            }
+            console.log(";;;;;;;", dData)
             worksheet.addRow({
                 CETName: data.CETMANAGEMENT.name,
                 CenterName: data.center.project_name,
@@ -541,19 +551,13 @@ exports.downloadCsvCet = async (req, res) => {
 
         // Set response headers
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=' + 'cet_users.xlsx');
+        res.setHeader('Content-Disposition', 'attachment; filename=' + 'Cet.xlsx');
 
         await workbook.xlsx.write(res);
         res.end();
-
-
-
-
-
-
     } catch (error) {
         console.log(error);
-        sendError(res, 500, error, 'Invalid input');
+        sendError(res, 500, error, error);
     }
 }
 
