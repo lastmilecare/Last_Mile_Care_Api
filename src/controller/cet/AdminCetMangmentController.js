@@ -4,8 +4,11 @@ const {
     CETMANAGEMENT,
     Center,
     Centeruser,
-    Cetuser
+    Cetuser,
+
 } = require("../../../db/models");
+const { Op, where } = require('sequelize');
+
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { getCenterId, assignCetToUser } = require('../../helper/globalHelper')
 const userService = require('../../service/adminService/userService.js');
@@ -429,7 +432,27 @@ exports.updateCetUserStatus = async (req, res) => {
     }
 }
 exports.downloadCsvCet = async (req, res) => {
-    const id = req.body.id
+    const { cet, start_date, end_date } = req.body
+    // createdAt
+    // 2024-06-14 14:57:43.693+00
+    let whereCondition = {};
+
+    if (cet && cet !== 'all') {
+        whereCondition.id = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
+    }
+    else {
+        delete whereCondition.id
+    }
+    if (start_date && end_date) {
+        const startDateFormatted = `${start_date} 00:00:00`;
+        const endDateFormatted = `${end_date} 23:59:59`;
+
+        whereCondition.createdAt = {
+            [Op.between]: [startDateFormatted, endDateFormatted]
+        };
+    }
+    console.log(whereCondition)
+
     try {
 
         const cetUser = await Cetuser.findAll({
@@ -442,14 +465,20 @@ exports.downloadCsvCet = async (req, res) => {
                 },
                 {
                     model: CETMANAGEMENT,
-                    as: 'cetManagement' // This alias matches the one defined in Cetuser.belongsTo(models.CETMANAGEMENT, { foreignKey: 'cet_id', as: 'cetManagement' });
+                    as: 'cetManagement',
+                    where: whereCondition
                 }
             ],
             order: [['id', 'DESC']],
         });
-
-        sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
-        return
+        if (cetUser.length > 0) {
+            sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
+            return
+        }
+        else {
+            sendSuccess(res, 200, cetUser, 'No data available');
+            return
+        }
 
 
     } catch (error) {
