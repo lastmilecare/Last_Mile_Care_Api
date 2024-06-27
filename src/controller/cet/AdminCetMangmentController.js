@@ -530,19 +530,22 @@ exports.downloadCsvCet = async (req, res) => {
                 CETName: data.CETMANAGEMENT.name,
                 CenterName: data.center.project_name,
                 CenterUserName: data.user.username,
-                TestDate: data.date_time,
-                TestPackageName: data.selected_package_name,
+                TestDate: new Date(data.date_time).toISOString().split('T')[0],
+                TestPackageName: data.selected_package_name.flat(),
                 WorkforceName: data.driver.name,
                 HealthCardNumber: data.driver.healthCardNumber,
                 WorkforceMobileNo: data.driver.contactNumber
             }
-            console.log(";;;;;;;", dData)
+            const pName = data.selected_package_name || '';
+            console.log(";;;;;;;", dData, pName)
+
+            const finalPackageName = pName.join(',');
             worksheet.addRow({
                 CETName: data.CETMANAGEMENT.name,
                 CenterName: data.center.project_name,
                 CenterUserName: data.user.username,
-                TestDate: data.date_time,
-                TestPackageName: data.selected_package_name,
+                TestDate: new Date(data.date_time).toISOString().split('T')[0],
+                TestPackageName: finalPackageName,
                 WorkforceName: data.driver.name,
                 HealthCardNumber: data.driver.healthCardNumber,
                 WorkforceMobileNo: data.driver.contactNumber
