@@ -7,6 +7,7 @@ const {
     DRIVERMASTER,
     driverhealthcheckup
 } = require("../../../db/models");
+const { Op, where } = require('sequelize');
 
 const { createObjectCsvWriter } = require('csv-writer');
 const path = require('path');
@@ -205,35 +206,6 @@ exports.updateCET = async (req, res) => {
     }
 }
 
-exports.healthCheckupHistory = async (req, res) => {
-    try {
-
-        const cId = await getCetId(req.userId);
-        if (cId) {
-            const drivers = await driverhealthcheckup.findAll({
-                where: { transpoter: cId.cet_id },
-                include: [{
-                    model: DRIVERMASTER,
-                    as: 'driver',
-
-                }],
-
-                order: [['id', 'DESC']]
-            });
-            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
-
-        }
-        else {
-            sendError(res, 400, "Not found", 'Not found');
-            return
-        }
-
-    } catch (error) {
-        console.log(error);
-        sendError(res, 500, "internal server error");
-
-    }
-}
 exports.healthCheckupHistoryDownload = async (req, res) => {
     try {
         const cId = await getCetId(req.userId);
@@ -317,3 +289,52 @@ exports.healthCheckupHistoryDownload = async (req, res) => {
         sendError(res, 500, "internal server error", 'Internal server error');
     }
 };
+
+//
+exports.healthCheckupHistory = async (req, res) => {
+    try {
+
+        const cId = await getCetId(req.userId);
+        const { start_date, end_date } = req.body
+
+        let whereCondition2 = {};
+        if (start_date && end_date) {
+            const startDateFormatted = `${start_date} 00:00:00`;
+            const endDateFormatted = `${end_date} 23:59:59`;
+
+            whereCondition2.date_time = {
+                [Op.between]: [startDateFormatted, endDateFormatted]
+            };
+        }
+
+        let whereCondition = {
+            confirm_report: "yes",
+            is_submited: true,
+            transpoter: cId.cet_id
+        }
+
+        if (cId) {
+            const drivers = await driverhealthcheckup.findAll({
+                where: [whereCondition, whereCondition2],
+                include: [{
+                    model: DRIVERMASTER,
+                    as: 'driver',
+
+                }],
+
+                order: [['id', 'DESC']]
+            });
+            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
+
+        }
+        else {
+            sendError(res, 400, "Not found", 'Not found');
+            return
+        }
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, "internal server error");
+
+    }
+}

@@ -11,8 +11,65 @@ const {
     Haemoglobin,
     Cretenine,
     Alcholtest,
-    Hiv
+    Hiv,
+    Romberg
 } = require("../../../db/models");
+
+
+exports.updateRomberg = async (req, res) => {
+    const data = {
+        option_one: req.body.option_one,
+        option_two: req.body.option_two
+    }
+    console.log(data)
+    try {
+        const count = await Romberg.findOne({ raw: true, nest: true });
+
+        if (count) {
+            const RombergData = await Romberg.findOne({ where: { id: count.id } });
+
+            if (RombergData) {
+                // If the record exists, update it
+                await Romberg.update(data, {
+                    where: { id: RombergData.id }
+                });
+                sendSuccess(res, 201, RombergData, 'Update Romberg   successfully');
+                return
+            } else {
+                // If the record doesn't exist, create a new one
+                await RombergData.create(data);
+                sendSuccess(res, 201, RombergData, 'Update Romberg   successfully');
+                return
+            }
+        } else {
+            await Romberg.create(data);
+            sendSuccess(res, 201, count, 'Update Romberg   successfully');
+            return
+
+        }
+
+
+    } catch (error) {
+        console.log(error)
+        return sendError(res, 500, "internal server error");
+
+    }
+
+}
+
+exports.viewRomberg = async (req, res) => {
+
+    try {
+        const count = await Romberg.findOne({ raw: true, nest: true });
+        return sendSuccess(res, 201, count, '  Romberg successfully fetch');
+    } catch (error) {
+        return sendError(res, 500, "internal server error");
+
+    }
+
+}
+
+
 
 exports.updateMaster = async (req, res) => {
     try {
@@ -304,3 +361,5 @@ exports.viewHiv = async (req, res) => {
         sendError(res, 500, "internal server error");
     }
 }
+
+

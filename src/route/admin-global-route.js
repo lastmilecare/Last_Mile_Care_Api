@@ -77,6 +77,8 @@ module.exports = function (app) {
 
     app.post(`${prefixUrl}/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageDetails);
     app.post(`${prefixUrl}/update/centerPackageDetails`, verifyTokenMiddleware, packageController.centerPackageUpdate);
+    app.post(`${prefixUrl}/update/romberg`, verifyTokenMiddleware, adminMasterController.updateRomberg);
+    app.post(`${prefixUrl}/view/romberg`, verifyTokenMiddleware, adminMasterController.viewRomberg);
 
 
     //cet admin
