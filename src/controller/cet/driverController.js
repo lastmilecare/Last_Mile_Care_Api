@@ -22,6 +22,7 @@ const {
     Temperature,
     Alcholtest,
     Centeruser,
+    Romberg,
     Center,
     DRIVERFAMILYHISTORY,
     DRIVERMASTERPERSONAL
