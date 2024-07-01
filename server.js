@@ -19,7 +19,7 @@ app.use(express.json({ limit: jsonLimit }));
 app.use(express.urlencoded({ extended: true, limit: urlencodedLimit }));
 app.use(fileUpload({ limits: { fileSize: fileUploadLimit } }));
 app.use(cookieParser());
-
+///ip
 app.use((req, res, next) => {
   let ip = req.ip || req.connection.remoteAddress;
 
@@ -27,8 +27,7 @@ app.use((req, res, next) => {
   if (req.headers['x-forwarded-for']) {
     ip = req.headers['x-forwarded-for'].split(',')[0];
   }
-
-  console.log('User IP Address:', ip);
+  //fff  console.log('User IP Address:', ip);
   req.userIp = ip; // Attach the IP to the request object if needed elsewhere
 
   next();
