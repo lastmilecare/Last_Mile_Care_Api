@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 indexRoutes(app);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code V1 08-06-2024' });
+  res.json({ message: `Update - 1 ->>>>Server is running on port ${port}` });
 });
 
 app.listen(port, () => {
