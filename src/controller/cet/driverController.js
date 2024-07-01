@@ -652,6 +652,7 @@ exports.packageListUnit = async (req, res) => {
             'blood-pressure': Bloodpressure,
             'blood-group': Bloodgroup,
             'random-blood-sugar': random_blood_sugar,
+            Romberg: Romberg
         };
 
         // Loop through each item in package_list and query the corresponding model
