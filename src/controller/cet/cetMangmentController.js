@@ -1,11 +1,15 @@
+
 const {
     sequelize,
     User,
     CETMANAGEMENT,
     Center,
     Centeruser,
+    Cetuser,
+    driverhealthcheckup,
     DRIVERMASTER,
-    driverhealthcheckup
+    Doctor
+
 } = require("../../../db/models");
 const { Op, where } = require('sequelize');
 
@@ -316,11 +320,44 @@ exports.healthCheckupHistory = async (req, res) => {
         if (cId) {
             const drivers = await driverhealthcheckup.findAll({
                 where: [whereCondition, whereCondition2],
-                include: [{
-                    model: DRIVERMASTER,
-                    as: 'driver',
+                include: [
+                    {
+                        model: Doctor,
+                        as: 'doctor',
+                        include: [
+                            {
+                                model: User,
+                                as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                                attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                            }
+                        ]
 
-                }],
+                    },
+
+                    {
+                        model: Center,
+                        as: 'center',
+
+                    },
+                    {
+                        model: DRIVERMASTER,
+                        as: 'driver',
+
+                    },
+
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+
+                    },
+
+                    {
+                        model: CETMANAGEMENT,
+                        as: 'CETMANAGEMENT',
+
+                    }
+                ],
 
                 order: [['id', 'DESC']]
             });
