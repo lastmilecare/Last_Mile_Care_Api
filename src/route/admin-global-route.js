@@ -8,6 +8,7 @@ const signatureUpload = require('../middleware/singleFileUpload');
 const driverController = require('../controller/cet/driverController.js');
 const uploadImagesToS3 = require('../middleware/cetUpload.js');
 const AdminCetMangmentController = require('../controller/cet/AdminCetMangmentController');
+const AdminWorkforceController = require('../controller/admin/AdminWorkforceController');
 const uploadMiddleware = require('../middleware/fileUploadMiddleware.js');
 const upload = require('../middleware/multer.js');
 const centerFileUpload = require('../middleware/centerFile.js');
@@ -99,6 +100,10 @@ module.exports = function (app) {
     //cet csv download
     app.post(`${prefixUrl}/cet/csv/download`, verifyTokenMiddleware, AdminCetMangmentController.downloadCsvCet);
     app.post(`${prefixUrl}/cet/csv/list`, verifyTokenMiddleware, AdminCetMangmentController.CsvCetList);
+
+    // Workforcetype
+    app.post(`${prefixUrl}/create/Workforce/type`, verifyTokenMiddleware, AdminWorkforceController.create);
+    app.post(`${prefixUrl}/view/Workforce/type`, verifyTokenMiddleware, AdminWorkforceController.view);
 
 
 };

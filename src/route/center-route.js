@@ -34,6 +34,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/verify/otp`, verifyTokenMiddleware, driverController.verifyOtp);
 
     app.post(`${prefixUrl}/driver/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
+    app.post(`${prefixUrl}/driver/view/Workforce/type`, verifyTokenMiddleware, healthCheckupController.view);
 
     app.post(`${prefixUrl}/driver/create/health-checkup/step-1`, verifyTokenMiddleware, healthCheckupController.createHealthData);
     app.post(`${prefixUrl}/driver/create/health-checkup/step-2`, verifyTokenMiddleware, healthCheckupController.createHealthDataStep2);

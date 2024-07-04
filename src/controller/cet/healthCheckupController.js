@@ -27,13 +27,29 @@ const {
     random_blood_sugar,
     SPO2,
     Temperature,
-    Alcholtest
+    Alcholtest,
+    Workforcetype
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
 const { getCenterId } = require('../../helper/globalHelper')
 
-const { sendOTP } = require('../../helper/sendOtp');
+
+exports.view = async (req, res) => {
+    try {
+        const getData = await Workforcetype.findAll({
+            where: { isActive: true },
+            order: [['id', 'DESC']],
+            raw: true,
+            nest: true
+        });
+        sendSuccess(res, 200, getData, 'Success');
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, error);
+    }
+}
 
 exports.createHealthData = async (req, res) => {
 
@@ -74,6 +90,7 @@ exports.createHealthData = async (req, res) => {
         return
     }
 }
+//
 exports.createHealthDataStep2 = async (req, res) => {
     if (!req.body.last_insert_id) {
         sendError(res, 400, "last_insert_id is required", 'last_insert_id is required');
