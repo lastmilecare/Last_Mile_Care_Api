@@ -29,19 +29,6 @@ async function sendOTP(phoneNumber) {
         console.log("resData", resData);
         return resData;
 
-        // axios.get(`https://api.textlocal.in/send/?${data}`)
-        //     .then(response => {
-        //         // Process your response here
-        //         const resData = {
-        //             response: response.data,
-        //             otp: otp
-        //         }
-        //         console.log("resData", resData);
-        //         return resData
-        //     })
-        //     .catch(error => {
-        //         console.error('There was an error sending the message:', error);
-        //     });
     } catch (error) {
         console.error('Error sending OTP:', error);
         throw error; // Throw the error to be handled by the caller
