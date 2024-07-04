@@ -157,7 +157,12 @@ exports.bloodPressure = async (req, res) => {
         diastolic_within_deviation_value_min,
         diastolic_within_deviation_value_max,
         diastolic_units,
-        diastolic_out_of_range, } = req.body
+        diastolic_out_of_range,
+        systolic_within_deviation_value_min_below,
+        systolic_within_deviation_value_max_below,
+        diastolic_within_deviation_value_min_below,
+        diastolic_within_deviation_value_max_below,
+    } = req.body
     const data = {
         systolic_standard_value_min,
         systolic_standard_value_max,
@@ -172,8 +177,10 @@ exports.bloodPressure = async (req, res) => {
         diastolic_within_deviation_value_max,
         diastolic_units,
         diastolic_out_of_range,
-        within_deviation_value_min_below: req.body.within_deviation_value_min_below,
-        within_deviation_value_max_below: req.body.within_deviation_value_max_below,
+        systolic_within_deviation_value_min_below: systolic_within_deviation_value_min_below,
+        systolic_within_deviation_value_max_below: systolic_within_deviation_value_max_below,
+        diastolic_within_deviation_value_min_below: diastolic_within_deviation_value_min_below,
+        diastolic_within_deviation_value_max_below: diastolic_within_deviation_value_max_below,
         out_of_range_below: req.body.out_of_range_below,
     }
 
@@ -236,11 +243,11 @@ exports.bmiCheck = async (req, res) => {
         height_within_deviation_value_max,
         height_out_of_range,
         height_units,
-        within_deviation_value_min_below: req.body.within_deviation_value_min_below,
-        within_deviation_value_max_below: req.body.within_deviation_value_max_below,
-        out_of_range_below: req.body.out_of_range_below,
+        within_deviation_value_min_below: req.body.bmi_within_deviation_value_min_below,
+        within_deviation_value_max_below: req.body.bmi_within_deviation_value_max_below,
+        out_of_range_below: req.body.bmi_out_of_range_below,
     }
-
+    console.log(data)
     try {
         const count = await BMI.count();
         if (count > 0) {
