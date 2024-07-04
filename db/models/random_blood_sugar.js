@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     out_of_range: DataTypes.INTEGER,
     units: DataTypes.STRING,
     comments: DataTypes.STRING,
-    within_deviation_value_min_Below: DataTypes.STRING,
-    within_deviation_value_max_Below: DataTypes.STRING,
+    within_deviation_value_min_below: DataTypes.STRING,
+    within_deviation_value_max_below: DataTypes.STRING,
     out_of_range_below: DataTypes.STRING,
   }, {
     sequelize,

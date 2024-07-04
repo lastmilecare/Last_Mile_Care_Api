@@ -92,8 +92,8 @@ exports.updateTemperature = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updateMasterTempture(req, data);
@@ -116,8 +116,8 @@ exports.updateSPO2s = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updateMasterupdateSPO2s(req, data);
@@ -159,8 +159,8 @@ exports.updatePulse = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updatePulseService(req, data);
@@ -182,8 +182,8 @@ exports.updatePulmonaryfunctiontest = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updatePulmonaryTest(req, data);
@@ -203,8 +203,8 @@ exports.updateHaemoglobin = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updateHaemoglobinServive(req, data);
@@ -224,8 +224,8 @@ exports.updateCretenine = async (req, res) => {
             within_deviation_value_max: req.body.within_deviation_value_max,
             out_of_range: req.body.out_of_range,
             units: req.body.units,
-            within_deviation_value_min_Below: req.body.within_deviation_value_min_Below,
-            within_deviation_value_max_Below: req.body.within_deviation_value_max_Below,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
             out_of_range_below: req.body.out_of_range_below,
         }
         const insert = await updateCretenineService(req, data);

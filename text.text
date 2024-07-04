@@ -83,8 +83,9 @@ addPackage successfully -> "Add Package successfully"   lob
 Status not update lob
 
 
+workforce 
 
-
+npx sequelize-cli model:generate --name Workforcetype --attributes full_name:string,short_name:string 
 
 
 
@@ -111,8 +112,8 @@ Hb
 Cretenine
 
 
-  within_deviation_value_min_Below: DataTypes.STRING,
-  within_deviation_value_max_Below: DataTypes.STRING,
+  within_deviation_value_min_below: DataTypes.STRING,
+  within_deviation_value_max_below: DataTypes.STRING,
   out_of_range_below: DataTypes.STRING,
 
 
