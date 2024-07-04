@@ -30,8 +30,6 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/send/otp`, driverController.sendOtp);
     app.post(`${prefixUrl}/driver/send/otp/whatsapp`, driverController.whatsappOtp);
     ////
-
-
     app.post(`${prefixUrl}/driver/verify/otp`, verifyTokenMiddleware, driverController.verifyOtp);
 
     app.post(`${prefixUrl}/driver/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
