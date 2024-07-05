@@ -301,7 +301,8 @@ exports.viewRandomBloodSugar = async (req, res) => {
         const data = await random_blood_sugar.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
         sendSuccess(res, 200, data, 'Success');
     } catch (error) {
-        sendError(res, 500, "internal server error");
+        console.log(error);
+        sendError(res, 500, "internal server error", error);
     }
 }
 
