@@ -13,13 +13,12 @@ const jsonLimit = "1gb";
 const urlencodedLimit = "1gb";
 const fileUploadLimit = 100 * 1024 * 1024; // 100MB
 app.set('trust proxy', 1);
-
-
+//proxy
 app.use(express.json({ limit: jsonLimit }));
 app.use(express.urlencoded({ extended: true, limit: urlencodedLimit }));
 app.use(fileUpload({ limits: { fileSize: fileUploadLimit } }));
 app.use(cookieParser());
-
+///ip
 app.use((req, res, next) => {
   let ip = req.ip || req.connection.remoteAddress;
 
@@ -27,8 +26,7 @@ app.use((req, res, next) => {
   if (req.headers['x-forwarded-for']) {
     ip = req.headers['x-forwarded-for'].split(',')[0];
   }
-
-  console.log('User IP Address:', ip);
+  //fff  console.log('User IP Address:', ip);
   req.userIp = ip; // Attach the IP to the request object if needed elsewhere
 
   next();
@@ -36,7 +34,7 @@ app.use((req, res, next) => {
 indexRoutes(app);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Updated Code V1 08-06-2024' });
+  res.json({ message: `Update - 1 ->>>>Server is running on port ${port}` });
 });
 
 app.listen(port, () => {
