@@ -137,6 +137,9 @@ exports.updateRandomBloodSugar = async (req, res) => {
             standard_value_max: req.body.standard_value_max,
             within_deviation_value_min: req.body.within_deviation_value_min,
             within_deviation_value_max: req.body.within_deviation_value_max,
+            within_deviation_value_min_below: req.body.within_deviation_value_min_below,
+            within_deviation_value_max_below: req.body.within_deviation_value_max_below,
+            out_of_range_below: req.body.out_of_range_below,
             out_of_range: req.body.out_of_range,
             comments: req.body.comments,
             units: req.body.units

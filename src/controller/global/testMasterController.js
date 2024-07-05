@@ -243,9 +243,9 @@ exports.bmiCheck = async (req, res) => {
         height_within_deviation_value_max,
         height_out_of_range,
         height_units,
-        within_deviation_value_min_below: req.body.bmi_within_deviation_value_min_below,
-        within_deviation_value_max_below: req.body.bmi_within_deviation_value_max_below,
-        out_of_range_below: req.body.bmi_out_of_range_below,
+        bmi_within_deviation_value_min_below: req.body.bmi_within_deviation_value_min_below,
+        bmi_within_deviation_value_max_below: req.body.bmi_within_deviation_value_max_below,
+        bmi_out_of_range_below: req.body.bmi_out_of_range_below,
     }
     console.log(data)
     try {

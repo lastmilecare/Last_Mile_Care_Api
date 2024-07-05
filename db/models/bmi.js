@@ -71,9 +71,15 @@ module.exports = (sequelize, DataTypes) => {
     height_units: {
       type: DataTypes.STRING
     },
-    within_deviation_value_min_below: DataTypes.STRING,
-    within_deviation_value_max_below: DataTypes.STRING,
-    out_of_range_below: DataTypes.STRING,
+    bmi_within_deviation_value_min_below: {
+      type: DataTypes.INTEGER
+    },
+    bmi_within_deviation_value_max_below: {
+      type: DataTypes.INTEGER
+    },
+    bmi_out_of_range_below: {
+      type: DataTypes.INTEGER
+    },
   }, {
     sequelize,
     modelName: 'BMI',
