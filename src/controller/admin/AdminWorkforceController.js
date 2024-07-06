@@ -64,17 +64,23 @@ exports.getById = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const { id, full_name, short_name } = req.body; // Assuming id is passed in req.body
+        const data = await Workforcetype.findOne({ where: { id: req.body.id } });
 
-        const result = await Workforcetype.findByIdAndUpdate(id, {
-            full_name, short_name
-        }, { new: true }); // { new: true } ensures we get the updated document back
-
-        if (!result) {
-            return sendError(res, 404, 'Workforcetype not found');
+        if (!data) {
+            sendError(res, 404, "Workforcetype id not found", 'Workforcetype id not found');
+            return
         }
+        const result = await Workforcetype.update({ full_name, short_name }, {
+            where: {
+                id: req.body.id,
+            },
+        })
+
+
 
         sendSuccess(res, 200, result, 'Workforcetype updated successfully');
     } catch (error) {
+        console.log(error);
         sendError(res, 500, error.message);
     }
 }
@@ -83,11 +89,12 @@ exports.statusChange = async (req, res) => {
     try {
         const { id, isActive } = req.body; // Assuming id and isActive are passed in req.body
 
-        // Find the Workforcetype by ID and update isActive
-        const result = await Workforcetype.findByIdAndUpdate(id, {
-            isActive
-        }, { new: true });
 
+        const result = await Workforcetype.update({ isActive }, {
+            where: {
+                id: req.body.id,
+            },
+        })
         if (!result) {
             return sendError(res, 404, 'Workforcetype not found');
         }
