@@ -43,12 +43,18 @@ exports.view = async (req, res) => {
     }
 }
 exports.getById = async (req, res) => {
-    try {
-        const id = req.body.id
-        const getData = await Workforcetype.findOne({
-            where: { 'id': id },
+    const id = req.body.id; // Assuming id is passed in req.body
 
-        }); sendSuccess(res, 200, getData, 'Success');
+    try {
+        const getData = await Workforcetype.findOne({
+            where: { id: id }
+        });
+
+        if (!getData) {
+            return sendError(res, 404, 'Workforcetype not found');
+        }
+
+        sendSuccess(res, 200, getData, 'Workforcetype found successfully');
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
