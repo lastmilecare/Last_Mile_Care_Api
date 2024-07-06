@@ -26,13 +26,16 @@ module.exports = (sequelize, DataTypes) => {
     diastolic_within_deviation_value_min: DataTypes.INTEGER,
     diastolic_within_deviation_value_max: DataTypes.INTEGER,
     diastolic_units: DataTypes.STRING,
-    diastolic_out_of_range: DataTypes.INTEGER,
+    diastolic_out_of_range: DataTypes.STRING,
     within_deviation_value_min_below: DataTypes.STRING,
     within_deviation_value_max_below: DataTypes.STRING,
+
     systolic_within_deviation_value_min_below: DataTypes.STRING,
     systolic_within_deviation_value_max_below: DataTypes.STRING,
+
     diastolic_within_deviation_value_min_below: DataTypes.STRING,
     diastolic_within_deviation_value_max_below: DataTypes.STRING,
+
     out_of_range_below: DataTypes.STRING,
   }, {
     sequelize,
