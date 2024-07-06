@@ -104,6 +104,8 @@ module.exports = function (app) {
     // Workforcetype
     app.post(`${prefixUrl}/create/Workforce/type`, verifyTokenMiddleware, AdminWorkforceController.create);
     app.post(`${prefixUrl}/view/Workforce/type`, verifyTokenMiddleware, AdminWorkforceController.view);
-
+    app.post(`${prefixUrl}/update/Workforce/type`, verifyTokenMiddleware, AdminWorkforceController.update);
+    app.post(`${prefixUrl}/Workforce/type/status/change`, verifyTokenMiddleware, AdminWorkforceController.statusChange);
+    app.post(`${prefixUrl}/get/Workforce/type/byId`, verifyTokenMiddleware, AdminWorkforceController.getById);
 
 };

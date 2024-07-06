@@ -42,3 +42,53 @@ exports.view = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+exports.getById = async (req, res) => {
+    try {
+        const id = req.body.id
+        const getData = await Workforcetype.findOne({
+            where: { 'id': id },
+
+        }); sendSuccess(res, 200, getData, 'Success');
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, error, 'Invalid input');
+    }
+}
+
+exports.update = async (req, res) => {
+    try {
+        const { id, full_name, short_name } = req.body; // Assuming id is passed in req.body
+
+        const result = await Workforcetype.findByIdAndUpdate(id, {
+            full_name, short_name
+        }, { new: true }); // { new: true } ensures we get the updated document back
+
+        if (!result) {
+            return sendError(res, 404, 'Workforcetype not found');
+        }
+
+        sendSuccess(res, 200, result, 'Workforcetype updated successfully');
+    } catch (error) {
+        sendError(res, 500, error.message);
+    }
+}
+
+exports.statusChange = async (req, res) => {
+    try {
+        const { id, isActive } = req.body; // Assuming id and isActive are passed in req.body
+
+        // Find the Workforcetype by ID and update isActive
+        const result = await Workforcetype.findByIdAndUpdate(id, {
+            isActive
+        }, { new: true });
+
+        if (!result) {
+            return sendError(res, 404, 'Workforcetype not found');
+        }
+
+        sendSuccess(res, 200, result, 'Workforcetype status changed successfully');
+    } catch (error) {
+        sendError(res, 500, error.message);
+    }
+}
+
