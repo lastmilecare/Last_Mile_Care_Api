@@ -52,7 +52,8 @@ exports.createDriver = async (req, res) => {
         idProof,
         idProof_number, photographOfDriver,
         idProof_doc,
-        idProof_name
+        idProof_name,
+        blood_group
 
     } = req.body;
 
@@ -105,6 +106,7 @@ exports.createDriver = async (req, res) => {
             emergencyContactNumber,
             idProof,
             idProof_number,
+            blood_group,
             idProof_name: idProof_name ? idProof_name : null,
             idProof_doc: idProof_doc ? idProof_doc : null,
         };

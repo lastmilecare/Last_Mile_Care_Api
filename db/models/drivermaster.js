@@ -72,6 +72,9 @@ module.exports = (sequelize, DataTypes) => {
     idProof_doc: {
       type: DataTypes.STRING
     },
+    blood_group: {
+      type: DataTypes.STRING
+    },
 
   }, {
     sequelize,
