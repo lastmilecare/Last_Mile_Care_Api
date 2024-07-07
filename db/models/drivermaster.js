@@ -75,6 +75,7 @@ module.exports = (sequelize, DataTypes) => {
     blood_group: {
       type: DataTypes.STRING
     },
+    //
 
   }, {
     sequelize,
