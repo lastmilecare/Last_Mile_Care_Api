@@ -162,6 +162,8 @@ exports.bloodPressure = async (req, res) => {
         systolic_within_deviation_value_max_below,
         diastolic_within_deviation_value_min_below,
         diastolic_within_deviation_value_max_below,
+        diastolic_out_of_range_below,
+        systolic_out_of_range_below
     } = req.body
     const data = {
         systolic_standard_value_min,
@@ -181,7 +183,8 @@ exports.bloodPressure = async (req, res) => {
         systolic_within_deviation_value_max_below: systolic_within_deviation_value_max_below,
         diastolic_within_deviation_value_min_below: diastolic_within_deviation_value_min_below,
         diastolic_within_deviation_value_max_below: diastolic_within_deviation_value_max_below,
-        out_of_range_below: req.body.out_of_range_below,
+        diastolic_out_of_range_below: diastolic_out_of_range_below,
+        systolic_out_of_range_below: systolic_out_of_range_below
     }
 
     try {
@@ -211,7 +214,7 @@ exports.bmiCheck = async (req, res) => {
         bmi_within_deviation_value_max,
         bmi_out_of_range,
         bmi_units,
-        weighti_standard_value_min,
+        weight_standard_value_min,
         weight_standard_value_max,
         weight_within_deviation_value_min,
         weight_within_deviation_value_max,
@@ -231,7 +234,7 @@ exports.bmiCheck = async (req, res) => {
         bmi_within_deviation_value_max,
         bmi_out_of_range,
         bmi_units,
-        weight_standard_value_min: weighti_standard_value_min,
+        weight_standard_value_min: weight_standard_value_min,
         weight_standard_value_max,
         weight_within_deviation_value_min,
         weight_within_deviation_value_max,

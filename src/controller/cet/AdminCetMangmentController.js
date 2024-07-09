@@ -582,9 +582,9 @@ exports.CsvCetList = async (req, res) => {
     if (start_date && end_date) {
         const startDateFormatted = `${start_date} 00:00:00`;
         const endDateFormatted = `${end_date} 23:59:59`;
-
-        whereCondition2.date_time = {
-            [Op.between]: [startDateFormatted, endDateFormatted]
+        whereCondition.date_time = {
+            [Op.gte]: startDateFormatted,
+            [Op.lt]: endDateFormatted
         };
     }
 

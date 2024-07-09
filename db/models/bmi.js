@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     bmi_within_deviation_value_max: {
       type: DataTypes.INTEGER
     },
+
     bmi_out_of_range: {
       type: DataTypes.INTEGER
     },

@@ -36,7 +36,9 @@ module.exports = (sequelize, DataTypes) => {
     diastolic_within_deviation_value_min_below: DataTypes.STRING,
     diastolic_within_deviation_value_max_below: DataTypes.STRING,
 
-    out_of_range_below: DataTypes.STRING,
+    diastolic_out_of_range_below: DataTypes.STRING,
+    systolic_out_of_range_below: DataTypes.STRING,
+
   }, {
     sequelize,
     modelName: 'Bloodpressure',
