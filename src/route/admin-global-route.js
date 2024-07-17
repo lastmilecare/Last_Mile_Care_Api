@@ -46,7 +46,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/update/bmi`, verifyTokenMiddleware, testMasterController.bmiCheck);
     app.post(`${prefixUrl}/update/cholesterol`, verifyTokenMiddleware, testMasterController.cholesterolUpdate);
     app.post(`${prefixUrl}/update/eye`, verifyTokenMiddleware, testMasterController.updateEyeTest);
-    app.post(`${prefixUrl}/update/hearing`, verifyTokenMiddleware, centerFileUpload, testMasterController.hearingTest);
+    app.post(`${prefixUrl}/update/hearing`, verifyTokenMiddleware, testMasterController.hearingTest);
 
     app.post(`${prefixUrl}/view/temperature`, verifyTokenMiddleware, adminMasterController.viewTemperature);
     app.post(`${prefixUrl}/view/spo2`, verifyTokenMiddleware, adminMasterController.viewSPO2);
