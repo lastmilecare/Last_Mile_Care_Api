@@ -14,24 +14,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Eyetest.init({
-    spherical_right_within_deviation_value_min_below: DataTypes.INTEGER,
-    spherical_right_within_deviation_value_min: DataTypes.INTEGER,
-    spherical_right_out_of_range_below: DataTypes.INTEGER,
-    spherical_right_out_of_range: DataTypes.INTEGER,
-    cylindrical_right_within_deviation_value_min_below: DataTypes.INTEGER,
-    cylindrical_right_within_deviation_value_min: DataTypes.INTEGER,
-    cylindrical_right_out_of_range_below: DataTypes.INTEGER,
-    cylindrical_right_out_of_range: DataTypes.INTEGER,
-    spherical_left_within_deviation_value_min_below: DataTypes.INTEGER,
-    spherical_left_within_deviation_value_min: DataTypes.INTEGER,
-    spherical_left_out_of_range_below: DataTypes.INTEGER,
-    spherical_left_out_of_range: DataTypes.INTEGER,
-    cylindrical_left_within_deviation_value_min_below: DataTypes.INTEGER,
-    cylindrical_left_within_deviation_value_min: DataTypes.INTEGER,
-    cylindrical_left_out_of_range_below: DataTypes.INTEGER,
-    cylindrical_left_out_of_range: DataTypes.INTEGER,
-    colour_blindness_option_1: DataTypes.INTEGER,
-    colour_blindness_option_2: DataTypes.INTEGER
+    spherical_right_within_deviation_value_min_below: DataTypes.STRING,
+    spherical_right_within_deviation_value_min: DataTypes.STRING,
+    spherical_right_out_of_range_below: DataTypes.STRING,
+    spherical_right_out_of_range: DataTypes.STRING,
+    cylindrical_right_within_deviation_value_min_below: DataTypes.STRING,
+    cylindrical_right_within_deviation_value_min: DataTypes.STRING,
+    cylindrical_right_out_of_range_below: DataTypes.STRING,
+    cylindrical_right_out_of_range: DataTypes.STRING,
+    spherical_left_within_deviation_value_min_below: DataTypes.STRING,
+    spherical_left_within_deviation_value_min: DataTypes.STRING,
+    spherical_left_out_of_range_below: DataTypes.STRING,
+    spherical_left_out_of_range: DataTypes.STRING,
+    cylindrical_left_within_deviation_value_min_below: DataTypes.STRING,
+    cylindrical_left_within_deviation_value_min: DataTypes.STRING,
+    cylindrical_left_out_of_range_below: DataTypes.STRING,
+    cylindrical_left_out_of_range: DataTypes.STRING,
+    colour_blindness_option_1: DataTypes.STRING,
+    colour_blindness_option_2: DataTypes.STRING
 
 
 
