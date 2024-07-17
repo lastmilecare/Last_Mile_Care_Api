@@ -13,41 +13,17 @@ const {
 // 
 exports.hearingTest = async (req, res) => {
     const {
-        left_ear_standard_value_max,
-        left_ear_standard_value_min,
-        left_ear_within_deviation_value_min,
-        left_ear_within_deviation_value_max,
-        left_ear_out_of_range,
-        left_ear_units,
-        right_ear_standard_value_max,
-        right_ear_standard_value_min,
-        right_ear_within_deviation_value_min,
-        right_ear_within_deviation_value_max,
-        right_ear_out_of_range,
-        right_ear_units,
-        leftEarAttachment,
-        rightEarAttachment
+        option_1,
+        option_2,
+        option_3
     } = req.body;
 
 
 
-    const leftEarAttachmentUlr = leftEarAttachment ? leftEarAttachment : null;
-    const rightEarAttachmentUlr = rightEarAttachment ? rightEarAttachment : null;
     const data = {
-        left_ear_standard_value_max,
-        left_ear_standard_value_min,
-        left_ear_within_deviation_value_min,
-        left_ear_within_deviation_value_max,
-        left_ear_out_of_range,
-        left_ear_units,
-        right_ear_standard_value_max,
-        right_ear_standard_value_min,
-        right_ear_within_deviation_value_min,
-        right_ear_within_deviation_value_max,
-        right_ear_out_of_range,
-        right_ear_units,
-        left_ear_attach_certificate_of_incorporation: leftEarAttachmentUlr,
-        right_ear_attach_certificate_of_incorporation: rightEarAttachmentUlr
+        option_1,
+        option_2,
+        option_3
     };
 
 
