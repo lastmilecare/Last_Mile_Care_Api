@@ -434,7 +434,8 @@ exports.driverHealthReportDownload = async (req, res) => {
                 hearing_unit: Hearingtest,
                 blood_pressure_unit: Bloodpressure,
                 blood_group_unit: Bloodgroup,
-                random_blood_sugar_unit: random_blood_sugar
+                random_blood_sugar_unit: random_blood_sugar,
+                Vision: Vision
             };
 
             const selectedTest = drivers.selected_test;
