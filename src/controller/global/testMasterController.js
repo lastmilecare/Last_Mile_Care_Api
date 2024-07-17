@@ -7,7 +7,8 @@ const {
     Bloodpressure,
     BMI,
     CHOLESTEROL,
-    Eyetest
+    Eyetest,
+    Vision
 } = require("../../../db/models");
 // 
 exports.hearingTest = async (req, res) => {
@@ -408,193 +409,47 @@ exports.viewCholesterol = async (req, res) => {
 exports.updateEyeTest = async (req, res) => {
     try {
         const {
-            left_eye_far_sight_standard_min_1,
-            left_eye_far_sight_standard_min_2,
-            left_eye_far_sight_standard_min_3,
-            left_eye_far_sight_standard_max_1,
-            left_eye_far_sight_standard_max_2,
-            left_eye_far_sight_standard_max_3,
-            left_eye_far_sight_deviation_min_1,
-            left_eye_far_sight_deviation_min_2,
-            left_eye_far_sight_deviation_min_3,
-            left_eye_far_sight_deviation_max_1,
-            left_eye_far_sight_deviation_max_2,
-            left_eye_far_sight_deviation_max_3,
-            right_eye_far_sight_standard_min_1,
-            right_eye_far_sight_standard_min_2,
-            right_eye_far_sight_standard_min_3,
-            right_eye_far_sight_standard_max_1,
-            right_eye_far_sight_standard_max_2,
-            right_eye_far_sight_standard_max_3,
-            right_eye_far_sight_deviation_min_1,
-            right_eye_far_sight_deviation_min_2,
-            right_eye_far_sight_deviation_min_3,
-            right_eye_far_sight_deviation_max_1,
-            right_eye_far_sight_deviation_max_2,
-            right_eye_far_sight_deviation_max_3,
-            left_eye_near_sight_standard_min_1,
-            left_eye_near_sight_standard_min_2,
-            left_eye_near_sight_standard_min_3,
-            left_eye_near_sight_standard_max_1,
-            left_eye_near_sight_standard_max_2,
-            left_eye_near_sight_standard_max_3,
-            left_eye_near_sight_deviation_min_1,
-            left_eye_near_sight_deviation_min_2,
-            left_eye_near_sight_deviation_min_3,
-            left_eye_near_sight_deviation_max_1,
-            left_eye_near_sight_deviation_max_2,
-            left_eye_near_sight_deviation_max_3,
-            right_eye_near_sight_standard_min_1,
-            right_eye_near_sight_standard_min_2,
-            right_eye_near_sight_standard_min_3,
-            right_eye_near_sight_standard_max_1,
-            right_eye_near_sight_standard_max_2,
-            right_eye_near_sight_standard_max_3,
-            right_eye_near_sight_deviation_min_1,
-            right_eye_near_sight_deviation_min_2,
-            right_eye_near_sight_deviation_min_3,
-            right_eye_near_sight_deviation_max_1,
-            right_eye_near_sight_deviation_max_2,
-            right_eye_near_sight_deviation_max_3,
-            left_eye_vision_far_standard_min,
-            left_eye_vision_far_standard_max,
-            left_eye_vision_far_deviation_min,
-            left_eye_vision_far_deviation_max,
-            right_eye_vision_far_standard_min,
-            right_eye_vision_far_standard_max,
-            right_eye_vision_far_deviation_min,
-            right_eye_vision_far_deviation_max,
-            left_eye_vision_near_standard_min,
-            left_eye_vision_near_standard_max,
-            left_eye_vision_near_deviation_min,
-            left_eye_vision_near_deviation_max,
-            right_eye_vision_near_standard_min,
-            right_eye_vision_near_standard_max,
-            right_eye_vision_near_deviation_min,
-            right_eye_vision_near_deviation_max,
-            color_blindness_option_1,
-            color_blindness_option_2,
-            units_eye_test,
-            left_eye_vision_far_option_1,
-            left_eye_vision_far_option_2,
-            left_eye_vision_far_option_3,
-            left_eye_vision_far_option_4,
-            left_eye_vision_far_option_5,
-            left_eye_vision_far_option_6,
-            right_eye_vision_far_option_1,
-            right_eye_vision_far_option_2,
-            right_eye_vision_far_option_3,
-            right_eye_vision_far_option_4,
-            right_eye_vision_far_option_5,
-            right_eye_vision_far_option_6,
-            left_eye_vision_near_option_1,
-            left_eye_vision_near_option_2,
-            left_eye_vision_near_option_3,
-            left_eye_vision_near_option_4,
-            left_eye_vision_near_option_5,
-            left_eye_vision_near_option_6,
-            right_eye_vision_near_option_1,
-            right_eye_vision_near_option_2,
-            right_eye_vision_near_option_3,
-            right_eye_vision_near_option_4,
-            right_eye_vision_near_option_5,
-            right_eye_vision_near_option_6,
+            spherical_right_within_deviation_value_min_below,
+            spherical_right_within_deviation_value_min,
+            spherical_right_out_of_range_below,
+            spherical_right_out_of_range,
+            cylindrical_right_within_deviation_value_min_below,
+            cylindrical_right_within_deviation_value_min,
+            cylindrical_right_out_of_range_below,
+            cylindrical_right_out_of_range,
+            spherical_left_within_deviation_value_min_below,
+            spherical_left_within_deviation_value_min,
+            spherical_left_out_of_range_below,
+            spherical_left_out_of_range,
+            cylindrical_left_within_deviation_value_min_below,
+            cylindrical_left_within_deviation_value_min,
+            cylindrical_left_out_of_range_below,
+            cylindrical_left_out_of_range,
+            colour_blindness_option_1,
+            colour_blindness_option_2,
         } = req.body;
 
 
 
         const data = {
-            left_eye_far_sight_standard_min_1,
-            left_eye_far_sight_standard_min_2,
-            left_eye_far_sight_standard_min_3,
-            left_eye_far_sight_standard_max_1,
-            left_eye_far_sight_standard_max_2,
-            left_eye_far_sight_standard_max_3,
-            left_eye_far_sight_deviation_min_1,
-            left_eye_far_sight_deviation_min_2,
-            left_eye_far_sight_deviation_min_3,
-            left_eye_far_sight_deviation_max_1,
-            left_eye_far_sight_deviation_max_2,
-            left_eye_far_sight_deviation_max_3,
-            right_eye_far_sight_standard_min_1,
-            right_eye_far_sight_standard_min_2,
-            right_eye_far_sight_standard_min_3,
-            right_eye_far_sight_standard_max_1,
-            right_eye_far_sight_standard_max_2,
-            right_eye_far_sight_standard_max_3,
-            right_eye_far_sight_deviation_min_1,
-            right_eye_far_sight_deviation_min_2,
-            right_eye_far_sight_deviation_min_3,
-            right_eye_far_sight_deviation_max_1,
-            right_eye_far_sight_deviation_max_2,
-            right_eye_far_sight_deviation_max_3,
-            left_eye_near_sight_standard_min_1,
-            left_eye_near_sight_standard_min_2,
-            left_eye_near_sight_standard_min_3,
-            left_eye_near_sight_standard_max_1,
-            left_eye_near_sight_standard_max_2,
-            left_eye_near_sight_standard_max_3,
-            left_eye_near_sight_deviation_min_1,
-            left_eye_near_sight_deviation_min_2,
-            left_eye_near_sight_deviation_min_3,
-            left_eye_near_sight_deviation_max_1,
-            left_eye_near_sight_deviation_max_2,
-            left_eye_near_sight_deviation_max_3,
-            right_eye_near_sight_standard_min_1,
-            right_eye_near_sight_standard_min_2,
-            right_eye_near_sight_standard_min_3,
-            right_eye_near_sight_standard_max_1,
-            right_eye_near_sight_standard_max_2,
-            right_eye_near_sight_standard_max_3,
-            right_eye_near_sight_deviation_min_1,
-            right_eye_near_sight_deviation_min_2,
-            right_eye_near_sight_deviation_min_3,
-            right_eye_near_sight_deviation_max_1,
-            right_eye_near_sight_deviation_max_2,
-            right_eye_near_sight_deviation_max_3,
-            left_eye_vision_far_standard_min,
-            left_eye_vision_far_standard_max,
-            left_eye_vision_far_deviation_min,
-            left_eye_vision_far_deviation_max,
-            right_eye_vision_far_standard_min,
-            right_eye_vision_far_standard_max,
-            right_eye_vision_far_deviation_min,
-            right_eye_vision_far_deviation_max,
-            left_eye_vision_near_standard_min,
-            left_eye_vision_near_standard_max,
-            left_eye_vision_near_deviation_min,
-            left_eye_vision_near_deviation_max,
-            right_eye_vision_near_standard_min,
-            right_eye_vision_near_standard_max,
-            right_eye_vision_near_deviation_min,
-            right_eye_vision_near_deviation_max,
-            color_blindness_option_1,
-            color_blindness_option_2,
-            units_eye_test,
-            left_eye_vision_far_option_1,
-            left_eye_vision_far_option_2,
-            left_eye_vision_far_option_3,
-            left_eye_vision_far_option_4,
-            left_eye_vision_far_option_5,
-            left_eye_vision_far_option_6,
-            right_eye_vision_far_option_1,
-            right_eye_vision_far_option_2,
-            right_eye_vision_far_option_3,
-            right_eye_vision_far_option_4,
-            right_eye_vision_far_option_5,
-            right_eye_vision_far_option_6,
-            left_eye_vision_near_option_1,
-            left_eye_vision_near_option_2,
-            left_eye_vision_near_option_3,
-            left_eye_vision_near_option_4,
-            left_eye_vision_near_option_5,
-            left_eye_vision_near_option_6,
-            right_eye_vision_near_option_1,
-            right_eye_vision_near_option_2,
-            right_eye_vision_near_option_3,
-            right_eye_vision_near_option_4,
-            right_eye_vision_near_option_5,
-            right_eye_vision_near_option_6,
+            spherical_right_within_deviation_value_min_below,
+            spherical_right_within_deviation_value_min,
+            spherical_right_out_of_range_below,
+            spherical_right_out_of_range,
+            cylindrical_right_within_deviation_value_min_below,
+            cylindrical_right_within_deviation_value_min,
+            cylindrical_right_out_of_range_below,
+            cylindrical_right_out_of_range,
+            spherical_left_within_deviation_value_min_below,
+            spherical_left_within_deviation_value_min,
+            spherical_left_out_of_range_below,
+            spherical_left_out_of_range,
+            cylindrical_left_within_deviation_value_min_below,
+            cylindrical_left_within_deviation_value_min,
+            cylindrical_left_out_of_range_below,
+            cylindrical_left_out_of_range,
+            colour_blindness_option_1,
+            colour_blindness_option_2,
         };
 
 
@@ -622,4 +477,60 @@ exports.updateEyeTest = async (req, res) => {
         sendError(res, 500, "internal server error");
     }
 }
+exports.VisionTestUpdate = async (req, res) => {
+    try {
+        const {
+            option_1,
+            option_2,
+            option_3,
+            option_4,
+            option_5,
+            option_6,
+        } = req.body;
 
+
+
+        const data = {
+            option_1,
+            option_2,
+            option_3,
+            option_4,
+            option_5,
+            option_6,
+        };
+
+
+
+        let insert;
+
+        try {
+            const count = await Vision.count();
+            if (count > 0) {
+                const existinVision = await Vision.findOne();
+                if (existinVision) {
+                    insert = await existinVision.update(data);
+                } else {
+                    throw new Error('Unexpected: Record not found when it should exist.');
+                }
+            } else {
+                insert = await Vision.create(data);
+            }
+
+            sendSuccess(res, 201, insert, 'Vision update successfully');
+        } catch (error) {
+            sendError(res, 500, error, 'Invalid input');
+        }
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+    }
+}
+
+exports.VisionTestView = async (req, res) => {
+
+    try {
+        const data = await Vision.findOne({ order: [['id', 'DESC']], raw: true, nest: true });
+        sendSuccess(res, 200, data, 'Success');
+    } catch (error) {
+        sendError(res, 500, "internal server error");
+    }
+}

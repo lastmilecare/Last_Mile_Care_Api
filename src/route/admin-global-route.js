@@ -58,6 +58,11 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/alchol`, verifyTokenMiddleware, adminMasterController.viewAlcholtest);
     app.post(`${prefixUrl}/view/hiv`, verifyTokenMiddleware, adminMasterController.viewHiv);
 
+    app.post(`${prefixUrl}/update/vision`, verifyTokenMiddleware, testMasterController.VisionTestUpdate);
+    app.post(`${prefixUrl}/view/vision`, verifyTokenMiddleware, testMasterController.VisionTestView);
+
+
+
     app.post(`${prefixUrl}/view/hearing`, verifyTokenMiddleware, testMasterController.viewHearingtest);
     app.post(`${prefixUrl}/view/blood-group`, verifyTokenMiddleware, testMasterController.viewBloodgroup);
     app.post(`${prefixUrl}/view/ecg`, verifyTokenMiddleware, testMasterController.viewECG);
