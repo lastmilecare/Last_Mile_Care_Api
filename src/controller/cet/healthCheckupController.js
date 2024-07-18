@@ -454,10 +454,16 @@ exports.driverHealthReportDownload = async (req, res) => {
 
             for (const key in selectedTest) {
                 if (modelMapping.hasOwnProperty(key)) {
+                    // if (typeof selectedTest[key] === 'object') {
+                    //     metaData[key] = { extraData: additionalData[key], ...selectedTest[key] };
+                    // } else {
+                    //     metaData[key] = { extraData: additionalData[key], [key]: selectedTest[key] };
+                    // }
+
                     if (typeof selectedTest[key] === 'object') {
-                        metaData[key] = { extraData: additionalData[key], ...selectedTest[key] };
+                        metaData[key] = { extraData: null, ...selectedTest[key] };
                     } else {
-                        metaData[key] = { extraData: additionalData[key], [key]: selectedTest[key] };
+                        metaData[key] = { extraData: null, [key]: selectedTest[key] };
                     }
                 } else {
                     metaData[key] = selectedTest[key];
@@ -466,7 +472,7 @@ exports.driverHealthReportDownload = async (req, res) => {
 
             const resData = {
                 drivers,
-                // metaData,
+                metaData,
                 centerMetaData,
                 packageMetaData
             }
