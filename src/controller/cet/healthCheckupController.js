@@ -28,7 +28,8 @@ const {
     SPO2,
     Temperature,
     Alcholtest,
-    Workforcetype
+    Workforcetype,
+    Vision
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op } = require('sequelize');
@@ -465,7 +466,7 @@ exports.driverHealthReportDownload = async (req, res) => {
 
             const resData = {
                 drivers,
-                metaData,
+                // metaData,
                 centerMetaData,
                 packageMetaData
             }
