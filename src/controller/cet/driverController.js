@@ -25,7 +25,8 @@ const {
     Romberg,
     Center,
     DRIVERFAMILYHISTORY,
-    DRIVERMASTERPERSONAL
+    DRIVERMASTERPERSONAL,
+    Vision
 } = require("../../../db/models");
 const { sendSuccess, sendError } = require('../../util/responseHandler');
 const { Op, where } = require('sequelize');
@@ -655,7 +656,8 @@ exports.packageListUnit = async (req, res) => {
             'blood-pressure': Bloodpressure,
             'blood-group': Bloodgroup,
             'random-blood-sugar': random_blood_sugar,
-            romberg: Romberg
+            romberg: Romberg,
+            vision: Vision
         };
 
         // Loop through each item in package_list and query the corresponding model
