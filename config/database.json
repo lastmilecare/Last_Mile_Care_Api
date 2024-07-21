@@ -16,7 +16,7 @@
   "production": {
     "username": "postgres",
     "password": "103Lastmilecare",
-    "database": "lastmileDb",
+    "database": "devDb",
     "host": "database-1.c1i0cmiimplb.us-east-1.rds.amazonaws.com",
     "dialect": "postgres"
   }
