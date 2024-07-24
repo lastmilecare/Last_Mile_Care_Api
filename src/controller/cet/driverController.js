@@ -173,6 +173,40 @@ exports.updateDriver = async (req, res) => {
         return;
     }
 
+    const checkNumber1 = await DRIVERMASTER.findOne({
+        where: { contactNumber: contactNumber },
+        id: {
+            [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
+        },
+        attributes: ['contactNumber', 'id'],
+        raw: true,
+        nest: true
+    });
+
+    if (checkNumber1) {
+        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
+        return
+    }
+
+    const checkNumber = await DRIVERMASTER.findOne({
+        where: {
+            contactNumber: {
+                [Op.like]: `%${contactNumber}%`
+            },
+            id: {
+                [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
+            }
+        },
+        attributes: ['contactNumber', 'id'],
+        raw: true,
+        nest: true
+    });
+
+    if (checkNumber) {
+        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
+        return
+    }
+
     try {
         const [updatedRowCount] = await DRIVERMASTER.update(req.body, {
             where: { id: req.body.id },
