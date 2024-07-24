@@ -174,9 +174,11 @@ exports.updateDriver = async (req, res) => {
     }
 
     const checkNumber1 = await DRIVERMASTER.findOne({
-        where: { contactNumber: contactNumber },
-        id: {
-            [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
+        where: {
+            contactNumber: contactNumber,
+            id: {
+                [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
+            }
         },
         attributes: ['contactNumber', 'id'],
         raw: true,
@@ -187,15 +189,14 @@ exports.updateDriver = async (req, res) => {
         sendError(res, 400, "Phone number already exists", 'Phone number already exists');
         return
     }
-
     const checkNumber = await DRIVERMASTER.findOne({
         where: {
-            contactNumber: {
-                [Op.like]: `%${contactNumber}%`
-            },
-            id: {
-                [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
-            }
+            [Op.and]: [
+                sequelize.where(sequelize.cast(sequelize.col('contactNumber'), 'TEXT'), {
+                    [Op.like]: `%${contactNumber}%`
+                }),
+                { id: { [Op.ne]: req.body.id } }
+            ]
         },
         attributes: ['contactNumber', 'id'],
         raw: true,
