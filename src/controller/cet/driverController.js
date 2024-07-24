@@ -172,7 +172,7 @@ exports.updateDriver = async (req, res) => {
         sendError(res, 400, "ID Required", 'ID Required');
         return;
     }
-
+    const contactNumber = req.body.contactNumber;
     const checkNumber1 = await DRIVERMASTER.findOne({
         where: {
             contactNumber: contactNumber,
