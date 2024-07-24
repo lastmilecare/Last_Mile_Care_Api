@@ -59,13 +59,23 @@ exports.createDriver = async (req, res) => {
     } = req.body;
 
 
+    // const checkNumber = await DRIVERMASTER.findOne({
+    //     where: { contactNumber: contactNumber },
+    //     attributes: ['contactNumber', 'id'],
+    //     raw: true,
+    //     nest: true
+    // });
     const checkNumber = await DRIVERMASTER.findOne({
-        where: { contactNumber: contactNumber },
+        where: {
+            contactNumber: {
+                [Op.like]: `%${contactNumber}%`
+            }
+        },
         attributes: ['contactNumber', 'id'],
         raw: true,
         nest: true
-
     });
+
     if (checkNumber) {
         sendError(res, 400, "Phone number already exists", 'Phone number already exists');
         return
