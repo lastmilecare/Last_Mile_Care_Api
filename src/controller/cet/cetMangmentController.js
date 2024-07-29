@@ -300,7 +300,6 @@ exports.healthCheckupHistory = async (req, res) => {
 
         const cId = await getCetId(req.userId);
         const { start_date, end_date } = req.body
-
         let whereCondition2 = {};
         if (start_date && end_date) {
             const startDateFormatted = `${start_date} 00:00:00`;
@@ -345,6 +344,7 @@ exports.healthCheckupHistory = async (req, res) => {
 
                     },
 
+
                     {
                         model: User,
                         as: 'user',
@@ -358,11 +358,10 @@ exports.healthCheckupHistory = async (req, res) => {
 
                     }
                 ],
-
                 order: [['id', 'DESC']]
             });
             sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
-
+            return
         }
         else {
             sendError(res, 400, "Not found", 'Not found');

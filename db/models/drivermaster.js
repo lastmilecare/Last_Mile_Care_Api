@@ -52,7 +52,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     contactNumber: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      // unique: true, // Ensure the contactNumber is unique
+      // allowNull: true
     },
     emergencyContactName: {
       type: DataTypes.STRING

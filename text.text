@@ -137,3 +137,8 @@ Cretenine
 
  pm2 restart all
  chmod 400 LMC-DEV.pem
+
+
+ for dev
+
+ ssh -i "frontend.pem" ubuntu@ec2-13-201-120-140.ap-south-1.compute.amazonaws.com
