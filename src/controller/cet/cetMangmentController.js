@@ -8,7 +8,7 @@ const {
     Cetuser,
     driverhealthcheckup,
     DRIVERMASTER,
-    Doctor
+    Doctor,
 
 } = require("../../../db/models");
 const { Op, where } = require('sequelize');
@@ -295,12 +295,95 @@ exports.healthCheckupHistoryDownload = async (req, res) => {
 };
 
 //
+// exports.healthCheckupHistory = async (req, res) => {
+//     try {
+
+//         const cId = await getCetId(req.userId);
+//         const { start_date, end_date } = req.body
+//         let whereCondition2 = {};
+//         if (start_date && end_date) {
+//             const startDateFormatted = `${start_date} 00:00:00`;
+//             const endDateFormatted = `${end_date} 23:59:59`;
+
+//             whereCondition2.date_time = {
+//                 [Op.between]: [startDateFormatted, endDateFormatted]
+//             };
+//         }
+
+//         let whereCondition = {
+//             confirm_report: "yes",
+//             is_submited: true,
+//             transpoter: cId.cet_id
+//         }
+
+//         if (cId) {
+//             const drivers = await driverhealthcheckup.findAll({
+//                 where: [whereCondition, whereCondition2],
+//                 include: [
+//                     {
+//                         model: Doctor,
+//                         as: 'doctor',
+//                         include: [
+//                             {
+//                                 model: User,
+//                                 as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+//                                 attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+//                             }
+//                         ]
+
+//                     },
+
+//                     {
+//                         model: Center,
+//                         as: 'center',
+
+
+
+//                     },
+//                     {
+//                         model: DRIVERMASTER,
+//                         as: 'driver',
+
+//                     },
+
+
+//                     {
+//                         model: User,
+//                         as: 'user',
+//                         attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+
+//                     },
+
+//                     {
+//                         model: CETMANAGEMENT,
+//                         as: 'CETMANAGEMENT',
+
+//                     }
+
+//                 ],
+//                 order: [['id', 'DESC']]
+//             });
+//             sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
+//             return
+//         }
+//         else {
+//             sendError(res, 400, "Not found", 'Not found');
+//             return
+//         }
+
+//     } catch (error) {
+//         console.log(error);
+//         sendError(res, 500, "internal server error");
+
+//     }
+// }
+
 exports.healthCheckupHistory = async (req, res) => {
     try {
-
         const cId = await getCetId(req.userId);
-        const { start_date, end_date } = req.body
+        const { start_date, end_date } = req.body;
         let whereCondition2 = {};
+
         if (start_date && end_date) {
             const startDateFormatted = `${start_date} 00:00:00`;
             const endDateFormatted = `${end_date} 23:59:59`;
@@ -314,11 +397,11 @@ exports.healthCheckupHistory = async (req, res) => {
             confirm_report: "yes",
             is_submited: true,
             transpoter: cId.cet_id
-        }
+        };
 
         if (cId) {
             const drivers = await driverhealthcheckup.findAll({
-                where: [whereCondition, whereCondition2],
+                where: whereCondition,
                 include: [
                     {
                         model: Doctor,
@@ -326,54 +409,57 @@ exports.healthCheckupHistory = async (req, res) => {
                         include: [
                             {
                                 model: User,
-                                as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                                as: 'User',
                                 attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
                             }
                         ]
-
                     },
-
                     {
                         model: Center,
                         as: 'center',
-
+                        include: [
+                            {
+                                model: Centeruser,
+                                as: 'centerusers', // This alias must match the one defined in the Center model
+                                include: [
+                                    {
+                                        model: User,
+                                        as: 'user', // This alias must match the one defined in Centeruser model
+                                        attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         model: DRIVERMASTER,
-                        as: 'driver',
-
+                        as: 'driver'
                     },
-
-
                     {
                         model: User,
                         as: 'user',
                         attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-
                     },
-
                     {
                         model: CETMANAGEMENT,
-                        as: 'CETMANAGEMENT',
-
+                        as: 'CETMANAGEMENT'
                     }
                 ],
                 order: [['id', 'DESC']]
             });
-            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
-            return
-        }
-        else {
-            sendError(res, 400, "Not found", 'Not found');
-            return
-        }
 
+            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
+            return;
+        } else {
+            sendError(res, 400, "Not found", 'Not found');
+            return;
+        }
     } catch (error) {
         console.log(error);
-        sendError(res, 500, "internal server error");
-
+        sendError(res, 500, "Internal server error");
     }
-}
+};
+
 
 exports.healthCheckupHistoryById = async (req, res) => {
     try {

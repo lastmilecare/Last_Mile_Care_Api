@@ -7,6 +7,11 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       Center.belongsToMany(models.User, { through: models.Centeruser, foreignKey: 'center_id', as: 'users' });
+      Center.hasMany(models.Centeruser, {
+        foreignKey: 'center_id',
+        as: 'centerusers' // Ensure this alias is used in your queries
+      });
+
 
     }
   }
