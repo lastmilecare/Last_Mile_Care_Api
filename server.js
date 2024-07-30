@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { port } = require('./config/envConfig');
 const indexRoutes = require('./src/route/index-route.js');
 const fileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,9 @@ const urlencodedLimit = "1gb";
 const fileUploadLimit = 100 * 1024 * 1024; // 100MB
 app.set('trust proxy', 1);
 //proxy
+app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit as needed
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+
 app.use(express.json({ limit: jsonLimit }));
 app.use(express.urlencoded({ extended: true, limit: urlencodedLimit }));
 app.use(fileUpload({ limits: { fileSize: fileUploadLimit } }));

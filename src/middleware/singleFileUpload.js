@@ -10,9 +10,9 @@ const s3Config = new AWS.S3();
 
 const signatureUpload = async (req, res, next) => {
     if (!req.body.file_url) {
-        return res.status(400).send('file_url data   is missing.');
+        return res.status(400).send('file_url data  is missing.');
     }
-    const maxBase64Size = 20 * 1024 * 1024;
+    const maxBase64Size = 50 * 1024 * 1024;
     const fileData = req.body.file_url;
     const fileName = req.body.name;
     console.log(fileData.length);

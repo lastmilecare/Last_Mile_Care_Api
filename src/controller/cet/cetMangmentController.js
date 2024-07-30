@@ -374,3 +374,67 @@ exports.healthCheckupHistory = async (req, res) => {
 
     }
 }
+
+exports.healthCheckupHistoryById = async (req, res) => {
+    try {
+
+        const cId = req.body.id
+
+        if (cId) {
+            const drivers = await driverhealthcheckup.findAll({
+                where: { id: cId },
+                include: [
+                    {
+                        model: Doctor,
+                        as: 'doctor',
+                        include: [
+                            {
+                                model: User,
+                                as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                                attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+                            }
+                        ]
+
+                    },
+
+                    {
+                        model: Center,
+                        as: 'center',
+
+                    },
+                    {
+                        model: DRIVERMASTER,
+                        as: 'driver',
+
+                    },
+
+
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+
+                    },
+
+                    {
+                        model: CETMANAGEMENT,
+                        as: 'CETMANAGEMENT',
+
+                    }
+                ],
+                order: [['id', 'DESC']]
+            });
+            sendSuccess(res, 200, drivers, 'CET List Fetch Successful');
+            return
+        }
+        else {
+            sendError(res, 400, "Not found", 'Not found');
+            return
+        }
+
+    } catch (error) {
+        console.log(error);
+        sendError(res, 500, "internal server error");
+
+    }
+}
