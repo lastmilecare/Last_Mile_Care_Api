@@ -9,14 +9,14 @@
   "development": {
     "username": "postgres",
     "password": "103Lastmilecare",
-    "database": "devDb",
+    "database": "lastmileDb",
     "host": "database-1.c1i0cmiimplb.us-east-1.rds.amazonaws.com",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "103Lastmilecare",
-    "database": "devDb",
+    "database": "lastmileDb",
     "host": "database-1.c1i0cmiimplb.us-east-1.rds.amazonaws.com",
     "dialect": "postgres"
   }
