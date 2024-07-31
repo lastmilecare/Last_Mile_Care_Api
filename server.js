@@ -14,8 +14,6 @@ const jsonLimit = "200mb";
 const urlencodedLimit = "200mb";
 const fileUploadLimit = 100 * 1024 * 1024; // 100MB
 app.set('trust proxy', 1);
-app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit as needed
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 //proxy
 app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit as needed
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));

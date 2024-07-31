@@ -6,8 +6,6 @@ const upload = require('../middleware/fileUploadMiddleware.js')
 const driverController = require('../controller/cet/driverController.js');
 const healthCheckupController = require('../controller/cet/healthCheckupController.js');
 const signatureUpload = require('../middleware/singleFileUpload');
-const checkDriverNumber = require('../middleware/checkDriverNumber.js');
-
 const prefixUrl = prefix.center;
 module.exports = function (app) {
     app.post(`${prefixUrl}/upload/file`, verifyTokenMiddleware, signatureUpload, driverController.uploadSignature);
@@ -16,7 +14,7 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/view/CET`, verifyTokenMiddleware, cetMangmentController.viewCET);
     app.post(`${prefixUrl}/CET/details`, verifyTokenMiddleware, cetMangmentController.viewCETDetails);
     app.post(`${prefixUrl}/CET/updateCET`, verifyTokenMiddleware, uploadImagesToS3, cetMangmentController.updateCET);
-    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, uploadImagesToS3, checkDriverNumber, driverController.createDriver);
+    app.post(`${prefixUrl}/driver/create`, verifyTokenMiddleware, uploadImagesToS3, driverController.createDriver);
     app.post(`${prefixUrl}/driver/list`, verifyTokenMiddleware, driverController.getDriverList);
     app.post(`${prefixUrl}/driver/details`, verifyTokenMiddleware, driverController.getDriverDetails);
     app.post(`${prefixUrl}/driver/update`, verifyTokenMiddleware, driverController.updateDriver);
