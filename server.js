@@ -10,8 +10,8 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 // Set consistent limits
-const jsonLimit = "1gb";
-const urlencodedLimit = "1gb";
+const jsonLimit = "200mb";
+const urlencodedLimit = "200mb";
 const fileUploadLimit = 100 * 1024 * 1024; // 100MB
 app.set('trust proxy', 1);
 app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit as needed
