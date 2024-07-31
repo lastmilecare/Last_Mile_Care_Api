@@ -59,34 +59,17 @@ exports.createDriver = async (req, res) => {
     } = req.body;
 
 
-    const checkNumber1 = await DRIVERMASTER.findOne({
+    const checkNumber = await DRIVERMASTER.findOne({
         where: { contactNumber: contactNumber },
         attributes: ['contactNumber', 'id'],
         raw: true,
         nest: true
+
     });
-
-    if (checkNumber1) {
-        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
-        return
-    }
-
-    const checkNumber = await DRIVERMASTER.findOne({
-        where: {
-            contactNumber: {
-                [Op.like]: `%${contactNumber}%`
-            }
-        },
-        attributes: ['contactNumber', 'id'],
-        raw: true,
-        nest: true
-    });
-
     if (checkNumber) {
         sendError(res, 400, "Phone number already exists", 'Phone number already exists');
         return
     }
-
     if (!name) {
         sendError(res, 400, "name Required", 'name Required');
         return
@@ -171,41 +154,6 @@ exports.updateDriver = async (req, res) => {
     if (!req.body.id) {
         sendError(res, 400, "ID Required", 'ID Required');
         return;
-    }
-    const contactNumber = req.body.contactNumber;
-    const checkNumber1 = await DRIVERMASTER.findOne({
-        where: {
-            contactNumber: contactNumber,
-            id: {
-                [Op.ne]: req.body.id  // Ensure id is not equal to req.body.id
-            }
-        },
-        attributes: ['contactNumber', 'id'],
-        raw: true,
-        nest: true
-    });
-
-    if (checkNumber1) {
-        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
-        return
-    }
-    const checkNumber = await DRIVERMASTER.findOne({
-        where: {
-            [Op.and]: [
-                sequelize.where(sequelize.cast(sequelize.col('contactNumber'), 'TEXT'), {
-                    [Op.like]: `%${contactNumber}%`
-                }),
-                { id: { [Op.ne]: req.body.id } }
-            ]
-        },
-        attributes: ['contactNumber', 'id'],
-        raw: true,
-        nest: true
-    });
-
-    if (checkNumber) {
-        sendError(res, 400, "Phone number already exists", 'Phone number already exists');
-        return
     }
 
     try {
