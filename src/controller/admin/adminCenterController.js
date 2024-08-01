@@ -319,7 +319,6 @@ exports.centerUserUpdate = async (req, res) => {
       const updatePass = bcrypt.hashSync(password, 8);
       user.password = updatePass;
     }
-
     await user.save();
 
     if (center_id) {
