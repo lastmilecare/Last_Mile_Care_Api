@@ -1,7 +1,6 @@
 .DS_Store
+config/
 node_modules/
 config/
 npm-debug.log
 .env
-config
-config/
