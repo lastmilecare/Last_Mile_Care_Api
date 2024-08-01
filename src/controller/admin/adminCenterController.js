@@ -315,18 +315,24 @@ exports.centerUserUpdate = async (req, res) => {
     user.permission_id = permission_id;
     user.phone = phone;
     user.email = email;
-    user.password = password; // You might want to handle password hashing here
+    if (password) {
+      const updatePass = bcrypt.hashSync(password, 8);
+      user.password = updatePass;
+    }
+
     await user.save();
 
-    // If center_id is provided, update associated center
     if (center_id) {
       centeruser = await Centeruser.findOne({ where: { user_id: id } });
       if (!centeruser) {
-        // Create new centeruser if not exists
         centeruser = await Centeruser.create({ user_id: id, center_id: center_id, signature: signature });
       } else {
-        // Update existing centeruser
         centeruser.center_id = center_id;
+        centeruser.signature = signature
+        if (signature) {
+          centeruser.signature = signature
+        }
+
         await centeruser.save();
       }
     }

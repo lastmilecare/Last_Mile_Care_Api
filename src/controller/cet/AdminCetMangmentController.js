@@ -374,7 +374,6 @@ exports.cetUserUpdate = async (req, res) => {
             sendError(res, 404, "Invalid permission id", 'Invalid permission id');
             return
         }
-
         // Update user data with new values
         user.username = username;
         user.name = name;
@@ -382,7 +381,10 @@ exports.cetUserUpdate = async (req, res) => {
         user.permission_id = permission_id;
         user.phone = phone;
         user.email = email;
-        user.password = bcrypt.hashSync(password, 8); // You might want to handle password hashing here
+        if (password) {
+            const updatePass = bcrypt.hashSync(password, 8);
+            user.password = updatePass;
+        }
         await user.save();
 
         // If center_id is provided, update associated center
@@ -406,6 +408,7 @@ exports.cetUserUpdate = async (req, res) => {
         sendError(res, 500, error, 'Invalid input');
     }
 }
+
 exports.updateCetUserStatus = async (req, res) => {
     try {
         if (!req.body.id) {
