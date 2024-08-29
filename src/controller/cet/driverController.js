@@ -33,6 +33,35 @@ const { Op, where } = require('sequelize');
 const { sendOTP } = require('../../helper/sendOtp');
 const { sendWhatsAppMessage, sendWhatsAppTemplateMessage } = require('../../helper/whatsApp');
 const { getCenterId } = require('../../helper/globalHelper')
+const {getCetId} = require('../../helper/globalHelper')
+
+// Helper function to get cet_id and cet_name
+const getCetInfoForDriver = async (userId) => {
+    try {
+        const cetUser = await Cetuser.findOne({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+                    attributes: ['id', 'name'] // cet_id and cet_name
+                }
+            ]
+        });
+
+        if (cetUser && cetUser.CETMANAGEMENT) {
+            return {
+                cet_id: cetUser.CETMANAGEMENT.id,
+                cet_name: cetUser.CETMANAGEMENT.name
+            };
+        }
+
+        return { cet_id: null, cet_name: null };
+    } catch (error) {
+        console.error('Error fetching CET info:', error);
+        return { cet_id: null, cet_name: null };
+    }
+};
 
 exports.createDriver = async (req, res) => {
 
@@ -43,7 +72,6 @@ exports.createDriver = async (req, res) => {
         abhaNumber,
         dateOfBirthOrAge,
         gender,
-
         localAddress,
         localAddressDistrict,
         localAddressState,
@@ -86,10 +114,13 @@ exports.createDriver = async (req, res) => {
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
     const external_id = `LMC0000${nextId}`;
     const cId = await getCenterId(req.userId);
-
+    const {cet_id, cet_name} = await getCetInfoForDriver(req.userId);
+    
     try {
 
         const data = {
+            cet_id,
+            cet_name,
             createdBy: cId.center_id,
             external_id: external_id,
             name,
@@ -123,7 +154,8 @@ exports.getDriverList = async (req, res) => {
     try {
         const cId = await getCenterId(req.userId);
 
-        const drivers = await DRIVERMASTER.findAll({ where: { createdBy: cId.center_id }, order: [['id', 'DESC']] });
+        // const drivers = await DRIVERMASTER.findAll({ where: { createdBy: cId.center_id }, order: [['id', 'DESC']] });
+        const drivers = await DRIVERMASTER.findAll({ order: [['id', 'DESC']] });
         sendSuccess(res, 200, drivers, 'List of drivers');
     } catch (error) {
         console.log(error);
@@ -151,28 +183,37 @@ exports.getDriverDetails = async (req, res) => {
 
 // Update API
 exports.updateDriver = async (req, res) => {
-    if (!req.body.id) {
-        sendError(res, 400, "ID Required", 'ID Required');
-        return;
+    const { id } = req.body;
+    if (!id) {
+        return sendError(res, 400, "ID Required", 'ID Required');
     }
 
     try {
-        const [updatedRowCount] = await DRIVERMASTER.update(req.body, {
-            where: { id: req.body.id },
+        // Get cet_id and cet_name based on user
+        const { cet_id, cet_name } = await getCetInfoForDriver(req.userId);
+
+        // Merge cet info into req.body if needed
+        const updatedData = {
+            ...req.body,
+            cet_id: cet_id, // Include cet_id
+            cet_name: cet_name // Include cet_name
+        };
+
+        const [updatedRowCount] = await DRIVERMASTER.update(updatedData, {
+            where: { id }
         });
 
         if (updatedRowCount === 0) {
-            sendError(res, 404, "Driver not found or not updated", 'Driver not found or not updated');
-            return;
+            return sendError(res, 404, "Driver not found or not updated", 'Driver not found or not updated');
         }
 
-        const updatedDriver = await DRIVERMASTER.findByPk(req.body.id);
-        sendSuccess(res, 200, updatedDriver, 'Driver updated successfully');
+        const updatedDriver = await DRIVERMASTER.findByPk(id);
+        sendSuccess(res, 200, updatedDriver, 'Driver updated successfully with CET details');
     } catch (error) {
-        console.log(error);
+        console.error('Error updating driver:', error);
         sendError(res, 500, error, 'Internal server error');
     }
-}
+};
 ////////////// Personal data
 
 exports.createDriverPersonalData = async (req, res) => {
