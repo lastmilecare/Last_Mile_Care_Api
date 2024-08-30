@@ -35,37 +35,11 @@ const { sendWhatsAppMessage, sendWhatsAppTemplateMessage } = require('../../help
 const { getCenterId } = require('../../helper/globalHelper')
 const {getCetId} = require('../../helper/globalHelper')
 
-// Helper function to get cet_id and cet_name
-const getCetInfoForDriver = async (userId) => {
-    try {
-        const cetUser = await Cetuser.findOne({
-            where: { user_id: userId },
-            include: [
-                {
-                    model: CETMANAGEMENT,
-                    as: 'CETMANAGEMENT',
-                    attributes: ['id', 'name'] // cet_id and cet_name
-                }
-            ]
-        });
-
-        if (cetUser && cetUser.CETMANAGEMENT) {
-            return {
-                cet_id: cetUser.CETMANAGEMENT.id,
-                cet_name: cetUser.CETMANAGEMENT.name
-            };
-        }
-
-        return { cet_id: null, cet_name: null };
-    } catch (error) {
-        console.error('Error fetching CET info:', error);
-        return { cet_id: null, cet_name: null };
-    }
-};
-
 exports.createDriver = async (req, res) => {
 
     const {
+        driver_cetID,
+        driver_cetName,
         name,
         healthCardNumber,
         driverId,
@@ -114,13 +88,12 @@ exports.createDriver = async (req, res) => {
     const nextId = getLastCenterId ? parseInt(getLastCenterId.id) + 1 : 1;
     const external_id = `LMC0000${nextId}`;
     const cId = await getCenterId(req.userId);
-    const {cet_id, cet_name} = await getCetInfoForDriver(req.userId);
     
     try {
 
         const data = {
-            cet_id,
-            cet_name,
+            driver_cetID,
+            driver_cetName,
             createdBy: cId.center_id,
             external_id: external_id,
             name,
@@ -189,14 +162,11 @@ exports.updateDriver = async (req, res) => {
     }
 
     try {
-        // Get cet_id and cet_name based on user
-        const { cet_id, cet_name } = await getCetInfoForDriver(req.userId);
-
         // Merge cet info into req.body if needed
         const updatedData = {
-            ...req.body,
-            cet_id: cet_id, // Include cet_id
-            cet_name: cet_name // Include cet_name
+            ...req.body, 
+            driver_cetID:driver_cetID,
+            driver_cetName:driver_cetName
         };
 
         const [updatedRowCount] = await DRIVERMASTER.update(updatedData, {
@@ -317,7 +287,8 @@ exports.driverPersonalDetails = async (req, res) => {
 
 exports.driverPersonalUpdate = async (req, res) => {
     const {
-
+        driver_cetID,
+        driver_cetName,
         driver_id,
         blood_group,
         diabetes,
@@ -344,6 +315,8 @@ exports.driverPersonalUpdate = async (req, res) => {
     const driver = await DRIVERMASTER.findOne({ where: { id: driver_id } });
 
     const data = {
+        driver_cetID:driver_cetID,
+        driver_cetName:driver_cetName,
         driver_id: parseInt(driver_id), // Convert to integer if needed
         blood_group,
         diabetes: diabetes, // Convert string to boolean

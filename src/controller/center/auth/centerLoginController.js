@@ -1,5 +1,5 @@
 
-const slugify = require('slugify');
+    const slugify = require('slugify');
 const { sendSuccess, sendError } = require('../../../util/responseHandler');
 const authService = require('../../../service/adminService/authService.js');
 const authHelper = require('../../../helper/authHelper.js');
