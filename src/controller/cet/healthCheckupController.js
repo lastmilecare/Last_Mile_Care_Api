@@ -114,9 +114,9 @@ exports.createHealthDataStep2 = async (req, res) => {
             doctor_id: req.body.doctor_id,
             bmi_unit: req.body.bmi_unit || null,
             haemoglobin_unit: req.body.haemoglobin_unit || null,
-            package_list: req.body.package_list,
+            package_list: req.body.package_list ,
             selected_package_name: req.body.selected_package_name,
-            selected_package_list: req.body.selected_package_list,
+            selected_package_list: req.body.selected_package_list,  // Ensure this is an array,
             spo2_unit: req.body.spo2_unit || null,
             temperature_unit: req.body.temperature_unit || null,
             date_time: req.body.date_time,
@@ -130,6 +130,13 @@ exports.createHealthDataStep2 = async (req, res) => {
             is_submited: true,
             vehicle_no: req.body.vehicle_no,
             confirm_report: req.body.confirm_report
+        }
+        const vehicleNumber = req.body.vehicle_no;
+        // Validation: first two characters are capital letters, and last four characters are digits
+        const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/; 
+        if (!vehicleNumberPattern.test(vehicleNumber)) {
+            sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
+            return;
         }
         await driverhealthcheckup.update(data, {
             where: {
