@@ -490,7 +490,6 @@ exports.downloadCsvCet = async (req, res) => {
                     as: 'driver',
 
                 },
-
                 {
                     model: User,
                     as: 'user',
@@ -503,10 +502,26 @@ exports.downloadCsvCet = async (req, res) => {
                     as: 'CETMANAGEMENT',
 
                 }
+                // {
+                //     model: driverhealthcheckup, // Include the driverhealthrecords table
+                //     as: 'healthRecord',
+                //     attributes: ['vehicle_no'] // Fetch the vehicle number from driverhealthrecords
+                // }
             ],
             order: [['id', 'DESC']],
             raw: true,
             nest: true,
+            attributes: [
+                'vehicle_no', // Include vehicle_no from driverhealthcheckup model
+                'date_time',
+                'selected_package_name',
+                [sequelize.col('CETMANAGEMENT.name'), 'CETName'],
+                [sequelize.col('center.project_name'), 'CenterName'],
+                [sequelize.col('user.username'), 'CenterUserName'],
+                [sequelize.col('driver.name'), 'WorkforceName'],
+                [sequelize.col('driver.healthCardNumber'), 'HealthCardNumber'],
+                [sequelize.col('driver.contactNumber'), 'WorkforceMobileNo'],
+            ]
         });
 
 
@@ -524,7 +539,9 @@ exports.downloadCsvCet = async (req, res) => {
             { header: 'Test Package Name', key: 'TestPackageName', width: 30 },
             { header: 'Workforce Name', key: 'WorkforceName', width: 20 },
             { header: 'Health Card Number', key: 'HealthCardNumber', width: 20 },
-            { header: 'Workforce Mobile No', key: 'WorkforceMobileNo', width: 15 }
+            { header: 'Workforce Mobile No', key: 'WorkforceMobileNo', width: 15 },
+            { header: 'VehicleNumber', key: 'VehicleNumber', width: 15 }
+
         ];
 
         // Add rows from cetUser
@@ -537,7 +554,8 @@ exports.downloadCsvCet = async (req, res) => {
                 TestPackageName: data.selected_package_name.flat(),
                 WorkforceName: data.driver.name,
                 HealthCardNumber: data.driver.healthCardNumber,
-                WorkforceMobileNo: data.driver.contactNumber
+                WorkforceMobileNo: data.driver.contactNumber,
+                VehicleNumber: data.vehicle_no
             }
             const pName = data.selected_package_name || '';
             console.log(";;;;;;;", dData, pName)
@@ -551,7 +569,8 @@ exports.downloadCsvCet = async (req, res) => {
                 TestPackageName: finalPackageName,
                 WorkforceName: data.driver.name,
                 HealthCardNumber: data.driver.healthCardNumber,
-                WorkforceMobileNo: data.driver.contactNumber
+                WorkforceMobileNo: data.driver.contactNumber,
+                VehicleNumber: data.vehicle_no
             });
         });
 

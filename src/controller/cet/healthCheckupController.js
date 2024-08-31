@@ -67,7 +67,6 @@ exports.createHealthData = async (req, res) => {
         const insert = await driverhealthcheckup.create({
             user_id: req.userId,
             createdBy: cId.center_id,
-            // center_id: cId.center_id,
             // cet_id: null,
             uniqueId: uniqueId,
             external_id: uniqueId,
@@ -174,7 +173,6 @@ exports.viewHealthData = async (req, res) => {
             {
                 model: CETMANAGEMENT,
                 as: 'CETMANAGEMENT',
-
             }
 
 
@@ -324,6 +322,7 @@ exports.driverHealthReportDownload = async (req, res) => {
 
         const helthData = await driverhealthcheckup.findOne({
             where: { id: id },
+            
             raw: true,
             nest: true
         })
