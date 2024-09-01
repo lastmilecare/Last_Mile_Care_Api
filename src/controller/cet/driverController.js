@@ -503,7 +503,7 @@ exports.searchDriverByNumber = async (req, res) => {
         //driverId
         const searchQuery = await DRIVERMASTER.findOne({
             where: {
-                createdBy: cId.center_id,
+               // createdBy: cId.center_id,
 
                 [Op.or]: [
                     { contactNumber: searchData },
