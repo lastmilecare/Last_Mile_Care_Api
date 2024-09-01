@@ -38,8 +38,8 @@ const {getCetId} = require('../../helper/globalHelper')
 exports.createDriver = async (req, res) => {
 
     const {
-        driver_cetID,
-        driver_cetName,
+        driver_cetid,
+        driver_cetname,
         name,
         healthCardNumber,
         driverId,
@@ -92,8 +92,8 @@ exports.createDriver = async (req, res) => {
     try {
 
         const data = {
-            driver_cetID,
-            driver_cetName,
+            driver_cetid,
+            driver_cetname,
             createdBy: cId.center_id,
             external_id: external_id,
             name,
@@ -165,8 +165,8 @@ exports.updateDriver = async (req, res) => {
         // Merge cet info into req.body if needed
         const updatedData = {
             ...req.body, 
-            driver_cetID:driver_cetID,
-            driver_cetName:driver_cetName
+            driver_cetid:driver_cetid,
+            driver_cetname:driver_cetname
         };
 
         const [updatedRowCount] = await DRIVERMASTER.update(updatedData, {
@@ -287,8 +287,8 @@ exports.driverPersonalDetails = async (req, res) => {
 
 exports.driverPersonalUpdate = async (req, res) => {
     const {
-        driver_cetID,
-        driver_cetName,
+        driver_cetid,
+        driver_cetname,
         driver_id,
         blood_group,
         diabetes,
@@ -315,8 +315,8 @@ exports.driverPersonalUpdate = async (req, res) => {
     const driver = await DRIVERMASTER.findOne({ where: { id: driver_id } });
 
     const data = {
-        driver_cetID:driver_cetID,
-        driver_cetName:driver_cetName,
+        driver_cetid:driver_cetid,
+        driver_cetname:driver_cetname,
         driver_id: parseInt(driver_id), // Convert to integer if needed
         blood_group,
         diabetes: diabetes, // Convert string to boolean
