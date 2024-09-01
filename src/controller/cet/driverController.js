@@ -165,8 +165,6 @@ exports.updateDriver = async (req, res) => {
         // Merge cet info into req.body if needed
         const updatedData = {
             ...req.body, 
-            driver_cetid:driver_cetid??null,
-            driver_cetname:driver_cetname??null
         };
 
         const [updatedRowCount] = await DRIVERMASTER.update(updatedData, {
@@ -287,8 +285,6 @@ exports.driverPersonalDetails = async (req, res) => {
 
 exports.driverPersonalUpdate = async (req, res) => {
     const {
-        driver_cetid,
-        driver_cetname,
         driver_id,
         blood_group,
         diabetes,
@@ -315,8 +311,6 @@ exports.driverPersonalUpdate = async (req, res) => {
     const driver = await DRIVERMASTER.findOne({ where: { id: driver_id } });
 
     const data = {
-        driver_cetid:driver_cetid??null,
-        driver_cetname:driver_cetname??null,
         driver_id: parseInt(driver_id), // Convert to integer if needed
         blood_group,
         diabetes: diabetes, // Convert string to boolean
