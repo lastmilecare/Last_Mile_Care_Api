@@ -15,8 +15,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DRIVERMASTER.init({
-    driver_cetid: DataTypes.INTEGER,
-    driver_cetname: DataTypes.STRING,
+    driver_cetid:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    } ,
+    driver_cetname: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+    },
     external_id: {
       type: DataTypes.STRING
     },
