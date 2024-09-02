@@ -45,6 +45,6 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/health-checkup/download`, verifyTokenMiddleware, healthCheckupController.driverHealthReportDownload);
     app.post(`${prefixUrl}/driver/health-checkup/history`, verifyTokenMiddleware, healthCheckupController.driverHealthHistory);
     app.post(`${prefixUrl}/driver/doctor/list`, verifyTokenMiddleware, healthCheckupController.driverDoctorList);
-
-
+    
+    app.post(`${prefixUrl}/driver/update/vehicleNumber`,  verifyTokenMiddleware, healthCheckupController.editVehicleNumber);
 };

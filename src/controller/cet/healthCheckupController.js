@@ -240,7 +240,6 @@ exports.detailsHealthData = async (req, res) => {
     }
 }
 
-
 exports.updateHealthDataById = async (req, res) => {
     const id = req.body.id; // Assuming the ID is passed as a route parameter
 
@@ -495,5 +494,32 @@ exports.driverHealthReportDownload = async (req, res) => {
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Internal server error');
+    }
+};
+
+
+exports.editVehicleNumber = async (req,res)=>{
+    const{test_id,new_vehicleNumber} = req.body;
+
+    const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/;
+
+    if (!vehicleNumberPattern.test(new_vehicleNumber)) {
+        sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
+        return;
+    }    
+    try{
+        const drivers = await driverhealthcheckup.findOne({
+            where:{id:test_id}
+        });
+        if(!drivers){
+            sendError(res,404,"DriverID Not found", "DriverID not found");
+            return;
+        }
+        drivers.vehicle_no= new_vehicleNumber;
+        await drivers.save();
+        sendSuccess(res, 200, drivers, 'Vehicle number updated successfully');
+    }catch (error){
+        console.error(error);
+        sendError(res,500,error,'internal service error');  
     }
 };
