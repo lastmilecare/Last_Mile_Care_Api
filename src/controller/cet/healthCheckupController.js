@@ -64,10 +64,17 @@ exports.createHealthData = async (req, res) => {
         const uniqueId = short_code + paddedLastInsertId;
         const cId = await getCenterId(req.userId);
 
+        const vehicleNumber = req.body.vehicle_no;
+        // Validation: first two characters are capital letters, and last four characters are digits
+        const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/; 
+        if (!vehicleNumberPattern.test(vehicleNumber)) {
+            sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
+            return;
+        }
+
         const insert = await driverhealthcheckup.create({
             user_id: req.userId,
             createdBy: cId.center_id,
-            // cet_id: null,
             uniqueId: uniqueId,
             external_id: uniqueId,
             contactNumber: req.body.contactNumber || null,
@@ -79,6 +86,7 @@ exports.createHealthData = async (req, res) => {
             accept_term_condition: true,
             signature: req.body.signature,
             doctor_id: req.body.doctor_id,
+            vehicle_no: req.body.vehicle_no,        
             is_submited: false,
         });
 
@@ -131,13 +139,7 @@ exports.createHealthDataStep2 = async (req, res) => {
             vehicle_no: req.body.vehicle_no,
             confirm_report: req.body.confirm_report
         }
-        const vehicleNumber = req.body.vehicle_no;
-        // Validation: first two characters are capital letters, and last four characters are digits
-        const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/; 
-        if (!vehicleNumberPattern.test(vehicleNumber)) {
-            sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
-            return;
-        }
+        
         await driverhealthcheckup.update(data, {
             where: {
                 id: id
@@ -250,7 +252,6 @@ exports.updateHealthDataById = async (req, res) => {
                 driver_details: req.body.driver_details,
                 transpoter: req.body.transpoter,
                 driver_type: req.body.driver_type,
-                vehicle_no: req.body.vehicle_no,
                 date_time: req.body.date_time,
                 spo2_unit: req.body.spo2_unit,
                 temperature_unit: req.body.temperature_unit,
