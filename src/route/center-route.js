@@ -26,7 +26,8 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/family/history/list`, verifyTokenMiddleware, driverController.driverFamilyList);
     app.post(`${prefixUrl}/driver/family/history/details`, verifyTokenMiddleware, driverController.driverFamilyDetails);
     app.post(`${prefixUrl}/driver/family/history/update`, verifyTokenMiddleware, driverController.driverFamilyUpdate);
-    app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumber);
+    // app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumber);
+    app.post(`${prefixUrl}/driver/search/bynumber`, verifyTokenMiddleware, driverController.searchDriverByNumberorID)
     app.post(`${prefixUrl}/driver/send/otp`, driverController.sendOtp);
     app.post(`${prefixUrl}/driver/send/otp/whatsapp`, driverController.whatsappOtp);
     ////
@@ -47,4 +48,6 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/driver/doctor/list`, verifyTokenMiddleware, healthCheckupController.driverDoctorList);
     
     app.post(`${prefixUrl}/driver/update/vehicleNumber`,  verifyTokenMiddleware, healthCheckupController.editVehicleNumber);
+    app.post(`${prefixUrl}/driver/update/updateHealthDataById`,  verifyTokenMiddleware, healthCheckupController.updateHealthDataById);
+
 };
