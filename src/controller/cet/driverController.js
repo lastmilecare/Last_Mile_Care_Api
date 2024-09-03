@@ -714,7 +714,7 @@ exports.searchDriverByNumberorID = async (req, res) => {
             where: {
                 [Op.or]: [
                     { contactNumber: searchData },
-                    { healthCardNumber: searchData }
+                    { external_id: searchData }
                 ]
             },
         });
