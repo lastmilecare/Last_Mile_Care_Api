@@ -513,6 +513,7 @@ exports.downloadCsvCet = async (req, res) => {
             nest: true,
             attributes: [
                 'vehicle_no', // Include vehicle_no from driverhealthcheckup model
+                'id',
                 'date_time',
                 'selected_package_name',
                 [sequelize.col('CETMANAGEMENT.name'), 'CETName'],
@@ -540,7 +541,8 @@ exports.downloadCsvCet = async (req, res) => {
             { header: 'Workforce Name', key: 'WorkforceName', width: 20 },
             { header: 'Health Card Number', key: 'HealthCardNumber', width: 20 },
             { header: 'Workforce Mobile No', key: 'WorkforceMobileNo', width: 15 },
-            { header: 'VehicleNumber', key: 'VehicleNumber', width: 15 }
+            { header: 'VehicleNumber', key: 'VehicleNumber', width: 15 },
+            {header: 'Test ID',key:'id',width:10} 
 
         ];
 
@@ -586,8 +588,6 @@ exports.downloadCsvCet = async (req, res) => {
     }
 }
 
-
-
 exports.CsvCetList = async (req, res) => {
     const { cet, start_date, end_date } = req.body
     // createdAt
@@ -614,7 +614,7 @@ exports.CsvCetList = async (req, res) => {
 
         const cetUser = await driverhealthcheckup.findAll({
             where: [whereCondition, whereCondition2],
-
+            attributes: ['vehicle_no','id'],
             include: [
                 {
                     model: Doctor,
@@ -669,4 +669,182 @@ exports.CsvCetList = async (req, res) => {
     }
 }
 
+// search driver using driver_id
+exports.searchDriverById = async (req, res) => {
+    const { driver_id } = req.body; // Get the driver_id from the request body
+
+    if (!driver_id) {
+        return sendError(res, 400, "Driver ID is required", 'Driver ID Required');
+    }
+
+    try {
+        // Search for the driver in the driverhealthcheckups table
+        const driverRecord = await driverhealthcheckup.findOne({
+            where: { driver_id: driver_id },
+            include: [
+                {
+                    model: DRIVERMASTER,
+                    as: 'driver',
+                    attributes: ['name', 'healthCardNumber', 'contactNumber'], // Fetch specific attributes from DRIVERMASTER
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+                    attributes: ['name'], // Fetch CET Name
+                },
+                {
+                    model: Center,
+                    as: 'center',
+                    attributes: ['project_name'], // Fetch Center Name
+                },
+                {
+                    model: Doctor,
+                    as: 'doctor',
+                    include: [
+                        {
+                            model: User,
+                            as: 'User',
+                            attributes: ['username', 'email'], // Fetch Doctor's associated user details
+                        }
+                    ],
+                }
+            ],
+            raw: true,
+            nest: true,
+        });
+
+        if (!driverRecord) {
+            return sendError(res, 404, "Driver not found", 'Driver Not Found');
+        }
+        // Send the found record as a success response
+        return sendSuccess(res, 200, driverRecord, 'Driver found successfully');
+    } catch (error) {
+        console.log("Error searching for driver:", error);
+        return sendError(res, 500, error.message, 'An error occurred while searching for the driver');
+    }
+}
+
+// search driver by healthcard number 
+exports.searchDriverHealthRecordByHealthCard = async (req, res) => {
+    const { healthCardNumber } = req.body; // Get the healthCardNumber from the request body
+
+    if (!healthCardNumber) {
+        return sendError(res, 400, "Health Card Number is required", 'Health Card Number Required');
+    }
+
+    try {
+        // Search for the driver health record in the driverhealthcheckup table based on healthCardNumber
+        const driverHealthRecord = await driverhealthcheckup.findOne({
+            include: [
+                {
+                    model: DRIVERMASTER,
+                    as: 'driver',
+                    where: { healthCardNumber: healthCardNumber }, // Filter by health card number
+                    attributes: ['name', 'healthCardNumber', 'contactNumber'], // Fetch specific attributes from DRIVERMASTER
+                },
+                {
+                    model: CETMANAGEMENT,
+                    as: 'CETMANAGEMENT',
+                    attributes: ['name'], // Fetch CET Name
+                },
+                {
+                    model: Center,
+                    as: 'center',
+                    attributes: ['project_name'], // Fetch Center Name
+                },
+                {
+                    model: Doctor,
+                    as: 'doctor',
+                    include: [
+                        {
+                            model: User,
+                            as: 'User',
+                            attributes: ['username', 'email'], // Fetch Doctor's associated user details
+                        }
+                    ],
+                }
+            ],
+            raw: true,
+            nest: true,
+        });
+
+        if (!driverHealthRecord) {
+            return sendError(res, 404, "Driver Health Record not found", 'Driver Health Record Not Found');
+        }
+
+        // Send the found record as a success response
+        return sendSuccess(res, 200, driverHealthRecord, 'Driver Health Record found successfully');
+    } catch (error) {
+        console.log("Error searching for driver health record:", error);
+        return sendError(res, 500, error.message, 'An error occurred while searching for the driver health record');
+    }
+};
+
+exports.searchDriver = async (req, res) => {
+    const { driver_id, healthCardNumber } = req.body;
+
+    if (driver_id) {
+        return exports.searchDriverById(req, res);
+    }
+
+    if (healthCardNumber) {
+        return exports.searchDriverHealthRecordByHealthCard(req, res);
+    }
+
+    return sendError(res, 400, "Either Driver ID or Health Card Number is required", 'Input Required');
+};
+
+// exports.editVehicleNumber = async (req,res)=>{
+//     const{test_id,new_vehicleNumber} = req.body;
+
+//     const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/;
+
+//     if (!vehicleNumberPattern.test(new_vehicleNumber)) {
+//         sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
+//         return;
+//     }    
+//     try{
+//         const drivers = await driverhealthcheckup.findOne({
+//             where:{id:test_id}
+//         });
+//         if(!drivers){
+//             sendError(res,404,"TestID Not found", "TestID not found");
+//             return;
+//         }
+//         drivers.vehicle_no= new_vehicleNumber;
+//         await drivers.save();
+//         sendSuccess(res, 200, drivers, 'Vehicle number updated successfully');
+//     }catch (error){
+//         console.error(error);
+//         sendError(res,500,error,'internal service error');  
+//     }
+// };
+exports.editVehicleNumber = async (req, res) => {
+    const { test_id, new_vehicleNumber } = req.body;
+  
+    const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/;
+  
+    if (!vehicleNumberPattern.test(new_vehicleNumber)) {
+      return res.status(400).json({ message: "Invalid vehicle number format" });
+    }
+  
+    try {
+      const driver = await driverhealthcheckup.findOne({
+        where: { id: test_id },
+      });
+  
+      if (!driver) {
+        return res.status(404).json({ message: "TestID Not found" });
+      }
+  
+      driver.vehicle_no = new_vehicleNumber;
+      await driver.save();
+  
+      return res.status(200).json({ message: "Vehicle number updated successfully", driver });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal service error" });
+    }
+  };
+  
 

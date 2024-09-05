@@ -489,45 +489,49 @@ exports.driverFamilyUpdate = async (req, res) => {
 }
 
 //driver helth
-exports.searchDriverByNumber = async (req, res) => {
-    const searchData = req.body.searchData;
-    const cId = await getCenterId(req.userId);
-
-    try {
-        //driverId
-        const searchQuery = await DRIVERMASTER.findOne({
-            where: {
-               // createdBy: cId.center_id,
-
-                [Op.or]: [
-                    { contactNumber: searchData },
-                    { driverId: searchData }
-                ]
-            },
-            // include: [
-            //     {
-            //         model: DRIVERFAMILYHISTORY,
-            //         required: false  // Optional: set to true if the association must exist
-            //     },
-            //     {
-            //         model: DRIVERMASTERPERSONAL,
-            //         required: false  // Optional: set to true if the association must exist
-            //     }
-            // ]
-        });
+// exports.searchDriverByNumber = async (req, res) => {
+//     const {searchData} = req.body;
+//     if(!searchData){
+//         return sendError(res,400,"Provide either phone number or Healthcard Number")
+//     }
 
 
-        if (searchQuery) {
-            sendSuccess(res, 200, searchQuery, 'Success');
+//     try {
+//         //driverId
+//         const searchQuery = await DRIVERMASTER.findOne({
+//             where: {
+//                // createdBy: cId.center_id,
 
-        } else {
-            sendError(res, 404, 'Driver not found', 'Driver not found');
-            return
-        }
-    } catch (error) {
-        sendError(res, 500, error, 'Internal server error');
-    }
-}
+//                 [Op.or]: [
+//                     { contactNumber: searchData },
+//                     { driverId: searchData }
+//                 ]
+//             },
+//             // include: [
+//             //     {
+//             //         model: DRIVERFAMILYHISTORY,
+//             //         required: false  // Optional: set to true if the association must exist
+//             //     },
+//             //     {
+//             //         model: DRIVERMASTERPERSONAL,
+//             //         required: false  // Optional: set to true if the association must exist
+//             //     }
+//             // ]
+//         });
+
+
+//         if (searchQuery) {
+//             sendSuccess(res, 200, searchQuery, 'Success');
+
+//         } else {
+//             sendError(res, 404, 'Driver not found', 'Driver not found');
+//             return
+//         }
+//     } catch (error) {
+//         sendError(res, 500, error, 'Internal server error');
+//     }
+// }
+
 
 exports.sendOtp = async (req, res) => {
     const phoneNumber = req.body.phoneNumber;
@@ -694,6 +698,35 @@ exports.uploadSignature = (req, res) => {
         sendSuccess(res, 200, fileData, 'Success');
     } catch (error) {
         sendError(res, 500, error, 'Internal server error');
+    }
+};
+
+exports.searchDriverByNumberorID = async (req, res) => {
+    const { searchData } = req.body;
+
+    if (!searchData) {
+        return sendError(res, 400, "Search data is required!", "Search data is required!");
+    }
+
+    try {
+        // Perform the search based on contactNumber or external_id (LMC ID)
+        const searchQuery = await DRIVERMASTER.findOne({
+            where: {
+                [Op.or]: [
+                    { contactNumber: searchData },
+                    { external_id: searchData }
+                ]
+            },
+        });
+
+        if (searchQuery) {
+            sendSuccess(res, 200, searchQuery, "Driver found successfully");
+        } else {
+            sendError(res, 404, "Driver not found", "Driver not found");
+        }
+    } catch (error) {
+        console.error("Error in searching driver:", error);
+        sendError(res, 500, error, "Internal server error");
     }
 };
 

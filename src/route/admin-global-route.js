@@ -113,4 +113,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/Workforce/type/status/change`, verifyTokenMiddleware, AdminWorkforceController.statusChange);
     app.post(`${prefixUrl}/get/Workforce/type/byId`, verifyTokenMiddleware, AdminWorkforceController.getById);
 
+
+    app.post(`${prefixUrl}/search/driverByID`,verifyTokenMiddleware,AdminCetMangmentController.searchDriverById);
+    app.post(`${prefixUrl}/search/driverByHCnumber`,verifyTokenMiddleware,AdminCetMangmentController.searchDriverHealthRecordByHealthCard);
+    app.post(`${prefixUrl}/searchDriver`,verifyTokenMiddleware,AdminCetMangmentController.searchDriver);
+    app.post(`${prefixUrl}/editVehicleNumber`,verifyTokenMiddleware,AdminCetMangmentController.editVehicleNumber); 
 };
