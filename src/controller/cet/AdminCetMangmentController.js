@@ -501,12 +501,12 @@ exports.downloadCsvCet = async (req, res) => {
                     model: CETMANAGEMENT,
                     as: 'CETMANAGEMENT',
 
-                }
-                // {
-                //     model: driverhealthcheckup, // Include the driverhealthrecords table
-                //     as: 'healthRecord',
-                //     attributes: ['vehicle_no'] // Fetch the vehicle number from driverhealthrecords
-                // }
+                },
+                {
+                    model: driverhealthcheckup, // Include the driverhealthrecords table
+                    as: 'healthRecord',
+                    attributes: ['vehicle_no'] // Fetch the vehicle number from driverhealthrecords
+                },
             ],
             order: [['id', 'DESC']],
             raw: true,
@@ -614,7 +614,7 @@ exports.CsvCetList = async (req, res) => {
 
         const cetUser = await driverhealthcheckup.findAll({
             where: [whereCondition, whereCondition2],
-            attributes: ['vehicle_no','id'],
+            // attributes: ['vehicle_no','id'],
             include: [
                 {
                     model: Doctor,
