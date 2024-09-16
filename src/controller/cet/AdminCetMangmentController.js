@@ -459,6 +459,25 @@ exports.downloadCsvCet = async (req, res) => {
         whereCondition2.date_time = {
             [Op.between]: [startDateFormatted, endDateFormatted]
         };
+    } else if (start_date && !end_date) {
+        // If only start_date is provided, use it with the current date as end_date
+        const startDateFormatted = `${start_date} 00:00:00`;
+        const now = new Date().toISOString(); // Current date and time in ISO format
+        whereCondition2.date_time = {
+            [Op.gte]: startDateFormatted,
+            [Op.lt]: now,
+            [Op.between]: [startDateFormatted,now],
+        };
+    }else {
+        // If no dates are provided, set the range to the last 24 hours
+        const now = new Date();
+        const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
+
+        whereCondition2.date_time = {
+            [Op.gte]: oneDayAgo,
+            [Op.lt]: now,
+            [Op.between]: [now,oneDayAgo] 
+        };
     }
 
     try {
@@ -607,6 +626,23 @@ exports.CsvCetList = async (req, res) => {
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
             [Op.lt]: endDateFormatted
+        };
+    }else if (start_date && !end_date) {
+        // If only start_date is provided, use it with the current date as end_date
+        const startDateFormatted = `${start_date} 00:00:00`;
+        const now = new Date().toISOString(); // Current date and time in ISO format
+        whereCondition.date_time = {
+            [Op.gte]: startDateFormatted,
+            [Op.lt]: now
+        };
+    }else {
+        // If no dates are provided, set the range to the last 24 hours
+        const now = new Date();
+        const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
+
+        whereCondition.date_time = {
+            [Op.gte]: oneDayAgo,
+            [Op.lt]: now
         };
     }
 
@@ -846,5 +882,83 @@ exports.editVehicleNumber = async (req, res) => {
       return res.status(500).json({ message: "Internal service error" });
     }
   };
-  
 
+
+  exports.getTestCountByCenter = async (req, res) => {
+    try {
+        // Extract the parameters from the request body
+        const { centerID, startDate, endDate } = req.body;
+
+        // Validate the input
+        if (!centerID || !startDate || !endDate) {
+            return sendError(res, 400, 'centerID, startDate, and endDate are required');
+        }
+
+        // Parse dates
+        const startUtc = new Date(startDate).toISOString();
+        const endUtc = new Date(endDate).toISOString();
+
+        // Query the driverhealthcheckup table to count tests within the time frame
+        const testCount = await driverhealthcheckup.count({
+            where: {
+                createdBy: centerID, // Assuming createdBy is the centerID
+                createdAt: {
+                    [Op.between]: [startUtc, endUtc]
+                }
+            }
+        });
+
+        // Return the count
+        sendSuccess(res, 200, { testCount }, 'Test count retrieved successfully');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+};
+
+
+exports.getTestCountPerCenter = async (req, res) => {
+    try {
+        // Extract the parameters from the request body
+        const { startDate, endDate } = req.body;
+
+        // Validate the input
+        if (!startDate || !endDate) {
+            return sendError(res, 400, 'startDate and endDate are required');
+        }
+
+        // Parse dates
+        const startUtc = new Date(startDate).toISOString();
+        const endUtc = new Date(endDate).toISOString();
+
+        // Query to get the count of tests per center
+        const testCountPerCenter = await driverhealthcheckup.findAll({
+            attributes: [
+                [sequelize.col('center.project_name'), 'center_name'], // Use the correct alias for center name
+                [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'] // Count the number of tests
+            ],
+            include: [
+                {
+                    model: Center,
+                    as: 'center', // Use the alias 'center' for the join
+                    attributes: [] // We only need the project_name, already selected above
+                }
+            ],
+            where: {
+                createdAt: {
+                    [Op.between]: [startUtc, endUtc] // Filter by the time frame
+                }
+            },
+            group: ['center.project_name'], // Group by center name
+            order: [[sequelize.col('test_count'), 'DESC']], // Optionally order by test count in descending order
+            raw: true
+        });
+
+        // Send the response
+        sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+};
+  

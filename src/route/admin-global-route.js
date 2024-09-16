@@ -118,4 +118,9 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/search/driverByHCnumber`,verifyTokenMiddleware,AdminCetMangmentController.searchDriverHealthRecordByHealthCard);
     app.post(`${prefixUrl}/searchDriver`,verifyTokenMiddleware,AdminCetMangmentController.searchDriver);
     app.post(`${prefixUrl}/editVehicleNumber`,verifyTokenMiddleware,AdminCetMangmentController.editVehicleNumber); 
+
+
+    app.post(`${prefixUrl}/testCount`,verifyTokenMiddleware,AdminCetMangmentController.getTestCountByCenter);
+
+    app.post(`${prefixUrl}/testCountPerCenter`,verifyTokenMiddleware,AdminCetMangmentController.getTestCountPerCenter);
 };
