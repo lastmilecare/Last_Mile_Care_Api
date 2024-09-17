@@ -123,4 +123,6 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/testCount`,verifyTokenMiddleware,AdminCetMangmentController.getTestCountByCenter);
 
     app.post(`${prefixUrl}/testCountPerCenter`,verifyTokenMiddleware,AdminCetMangmentController.getTestCountPerCenter);
+    app.post(`${prefixUrl}/editCET`,verifyTokenMiddleware,AdminCetMangmentController.editCET);
+    
 };

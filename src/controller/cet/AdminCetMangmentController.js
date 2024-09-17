@@ -884,6 +884,7 @@ exports.editVehicleNumber = async (req, res) => {
   };
 
 
+
   exports.getTestCountByCenter = async (req, res) => {
     try {
         // Extract the parameters from the request body
@@ -896,7 +897,7 @@ exports.editVehicleNumber = async (req, res) => {
 
         // Parse dates
         const startUtc = new Date(startDate).toISOString();
-        const endUtc = new Date(endDate).toISOString();
+        const endUtc = new Date(endDate).toISOString(); 
 
         // Query the driverhealthcheckup table to count tests within the time frame
         const testCount = await driverhealthcheckup.count({
@@ -917,48 +918,124 @@ exports.editVehicleNumber = async (req, res) => {
 };
 
 
+// exports.getTestCountPerCenter = async (req, res) => {
+//     try {
+//         // Extract the parameters from the request body
+//         const { startDate, endDate } = req.body;
+
+//         // Validate the input
+//         if (!startDate || !endDate) {
+//             return sendError(res, 400, 'startDate and endDate are required');
+//         }
+
+//         // Parse dates
+//         const startUtc = new Date(startDate).toISOString();
+//         const endUtc = new Date(endDate).toISOString();
+
+//         // Query to get the count of tests per center
+//         const testCountPerCenter = await driverhealthcheckup.findAll({
+//             attributes: [
+//                 [sequelize.col('center.project_name'), 'center_name'], // Use the correct alias for center name
+//                 [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'] // Count the number of tests
+//             ],
+//             include: [
+//                 {
+//                     model: Center,
+//                     as: 'center', // Use the alias 'center' for the join
+//                     attributes: [] // We only need the project_name, already selected above
+//                 }
+//             ],
+//             where: {
+//                 createdAt: {
+//                     [Op.between]: [startUtc, endUtc] // Filter by the time frame
+//                 }
+//             },
+//             group: ['center.project_name'], // Group by center name
+//             order: [[sequelize.col('test_count'), 'DESC']], // Optionally order by test count in descending order
+//             raw: true
+//         });
+
+//         // Send the response
+//         sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
+//     } catch (error) {
+//         console.error(error);
+//         sendError(res, 500, error, 'Internal server error');
+//     }
+// };
 exports.getTestCountPerCenter = async (req, res) => {
     try {
-        // Extract the parameters from the request body
-        const { startDate, endDate } = req.body;
-
-        // Validate the input
-        if (!startDate || !endDate) {
-            return sendError(res, 400, 'startDate and endDate are required');
-        }
-
-        // Parse dates
-        const startUtc = new Date(startDate).toISOString();
-        const endUtc = new Date(endDate).toISOString();
-
-        // Query to get the count of tests per center
-        const testCountPerCenter = await driverhealthcheckup.findAll({
-            attributes: [
-                [sequelize.col('center.project_name'), 'center_name'], // Use the correct alias for center name
-                [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'] // Count the number of tests
-            ],
-            include: [
-                {
-                    model: Center,
-                    as: 'center', // Use the alias 'center' for the join
-                    attributes: [] // We only need the project_name, already selected above
-                }
-            ],
-            where: {
-                createdAt: {
-                    [Op.between]: [startUtc, endUtc] // Filter by the time frame
-                }
-            },
-            group: ['center.project_name'], // Group by center name
-            order: [[sequelize.col('test_count'), 'DESC']], // Optionally order by test count in descending order
-            raw: true
-        });
-
-        // Send the response
-        sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, error, 'Internal server error');
-    }
-};
+      // Extract the parameters from the request body
+      const { startDate, endDate } = req.body;
   
+      // Validate the input
+      if (!startDate || !endDate) {
+        return sendError(res, 400, 'startDate and endDate are required');
+      }
+  
+      // Parse dates
+      const startUtc = new Date(startDate).toISOString();
+      const endUtc = new Date(endDate).toISOString();
+  
+      // Query to get the count of tests per center
+      const testCountPerCenter = await driverhealthcheckup.findAll({
+        attributes: [
+          [sequelize.col('center.project_name'), 'center_name'], // Alias for center name
+          [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'], // Count the tests
+        ],
+        include: [
+          {
+            model: Center,
+            as: 'center', // Alias for the center table
+            attributes: [], // Already selected project_name
+          },
+        ],
+        where: {
+          createdAt: {
+            [Op.between]: [startUtc, endUtc], // Filter by date range
+          },
+        },
+        group: ['center.project_name'], // Group by center name
+        order: [[sequelize.col('test_count'), 'DESC']], // Order by test count in descending order
+        raw: true,
+      });
+  
+      // Return the success response with the data
+      sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
+    } catch (error) {
+      console.error(error);
+      sendError(res, 500, error.message || 'Internal server error');
+    }
+  };
+  
+
+  exports.editCET = async(req,res)=>{
+    const{test_id,newTranspoterID} = req.body; 
+
+    if (!test_id || !newTranspoterID) {
+        return res.status(400).json({ message: "Test ID and new transporter ID are required" });
+    }
+
+    try{
+        const driver = await driverhealthcheckup.findOne({
+            where: {id:test_id}
+        });
+        if(!driver){
+            return res.status(404).json({message: "Test ID not found"});
+        }
+        const cetManagement = await CETMANAGEMENT.findOne({
+            where:{id:newTranspoterID}
+        });
+        if(!cetManagement){
+            return res.status(404).json({ message: "Transporter (CETMANAGEMENT) ID not found" })
+        }
+        driver.transpoter = newTranspoterID; 
+        await driver.save();
+
+        return res.status(200).json({message:"Transpoter updated successfully",driver});
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({message: "Internal service error"});
+    }
+  };
+
+
