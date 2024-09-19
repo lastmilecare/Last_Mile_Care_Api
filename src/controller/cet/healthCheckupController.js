@@ -173,13 +173,6 @@ exports.viewHealthData = async (req, res) => {
                 [Op.between]: [startUtc, endUtc]
             };
         }
-        else{
-            const now = new Date();
-            const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
-            queryData.where.createdAt ={
-                [Op.between]:[now,oneDayAgo]
-            };
-        }
 
         const drivers = await driverhealthcheckup.findAll({
             include: [{
