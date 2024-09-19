@@ -600,9 +600,14 @@ exports.CsvCetList = async (req, res) => {
     // Handle date filtering
     if (start_date && end_date) {
         // Convert to UTC without manual time subtraction
-        const startDateFormatted = moment.tz(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
-        const endDateFormatted = moment.tz(`${end_date} 23:59:59`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
-
+        // 12am -11:59pm
+        // const startDateFormatted = moment.tz(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        // const endDateFormatted = moment.tz(`${end_date} 23:59:59`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        
+        // 6am-5:59am 
+        const startDateFormatted = moment.tz(`${start_date} 06:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        const endDateFormatted = moment.tz(`${end_date} 05:59:59`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
             [Op.lte]: endDateFormatted // Use 'lte' to include the entire end date
