@@ -18,6 +18,7 @@ const userService = require('../../service/adminService/userService.js');
 const bcrypt = require("bcryptjs");
 const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../helper/authHelper");
 const ExcelJS = require('exceljs');
+const moment = require('moment');
 
 exports.createCET = async (req, res) => {
 
@@ -312,16 +313,6 @@ exports.cetUser = async (req, res) => {
 exports.cetUserDetails = async (req, res) => {
     const id = req.body.id
     try {
-        // const result = await CETMANAGEMENT.findOne({
-        //     where: { id: id },
-        //     include: [
-        //         {
-        //             model: User,
-        //             as: 'Users', // Alias used in the include statement
-        //             attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-        //         }
-        //     ]
-        // });
         const cetUser = await Cetuser.findOne({
             where: { user_id: id },
             include: [
@@ -341,16 +332,6 @@ exports.cetUserDetails = async (req, res) => {
         sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
         return
 
-        // const result = await User.findOne({
-        //     where: { id: id },
-        //     include: [
-        //         { model: Cetuser, as: 'Cetusers' },
-        //         { model: CETMANAGEMENT, through: { attributes: [] }, as: 'CETManagements' }
-        //     ],
-        //     attributes: { exclude: ['password'] } // Exclude the password attribute
-        // });
-        // sendSuccess(res, 200, result, 'Cet Fetch Successfully');
-        // return
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
@@ -607,38 +588,152 @@ exports.downloadCsvCet = async (req, res) => {
     }
 }
 
+// exports.CsvCetList = async (req, res) => {
+//     const { cet, start_date, end_date } = req.body
+//     // createdAt
+//     // 2024-06-14 14:57:43.693+00
+//     let whereCondition = {};
+//     let whereCondition2 = {};
+
+//     if (cet && cet !== 'all') {
+//         whereCondition.transpoter = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
+//     }
+//     else {
+//         delete whereCondition.transpoter
+//     }
+//     if (start_date && end_date) {
+//         const startDateFormatted = `${start_date} 00:00:00`;
+//         const endDateFormatted = `${end_date} 23:59:59`;
+//         whereCondition.date_time = {
+//             [Op.gte]: startDateFormatted,
+//             [Op.lt]: endDateFormatted
+//         };
+//     }else if (start_date && !end_date) {
+//         // If only start_date is provided, use it with the current date as end_date
+//         const startDateFormatted = `${start_date} 00:00:00`;
+//         const now = new Date().toISOString(); // Current date and time in ISO format
+//         whereCondition.date_time = {
+//             [Op.gte]: startDateFormatted,
+//             [Op.lt]: now
+//         };
+//     }else {
+//         // If no dates are provided, set the range to the last 24 hours
+//         const now = new Date();
+//         const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
+
+//         whereCondition.date_time = {
+//             [Op.gte]: oneDayAgo,
+//             [Op.lt]: now
+//         };
+//     }
+
+//     try {
+
+//         const cetUser = await driverhealthcheckup.findAll({
+//             where: [whereCondition, whereCondition2],
+//             // attributes: ['vehicle_no','id'],
+//             include: [
+//                 {
+//                     model: Doctor,
+//                     as: 'doctor',
+//                     include: [
+//                         {
+//                             model: User,
+//                             as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+//                             attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+//                         }
+//                     ]
+
+//                 },
+//                 {
+//                     model: DRIVERMASTER,
+//                     as: 'driver',
+
+//                 },
+//                 {
+//                     model: Center,
+//                     as: 'center',
+
+//                 },
+//                 {
+//                     model: User,
+//                     as: 'user',
+//                     attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
+
+//                 },
+
+//                 {
+//                     model: CETMANAGEMENT,
+//                     as: 'CETMANAGEMENT',
+
+//                 }
+//             ],
+//             order: [['id', 'DESC']],
+//         });
+//         if (cetUser.length > 0) {
+//             sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
+//             return
+//         }
+//         else {
+//             sendSuccess(res, 200, cetUser, 'No data available');
+//             return
+//         }
+
+
+//     } catch (error) {
+//         console.log(error);
+//         sendError(res, 500, error, 'Invalid input');
+//     }
+// }
+
+// const { Op } = require('sequelize'); // Assuming you're using Sequelize
+
 exports.CsvCetList = async (req, res) => {
-    const { cet, start_date, end_date } = req.body
-    // createdAt
-    // 2024-06-14 14:57:43.693+00
+    const { cet, start_date, end_date } = req.body;
     let whereCondition = {};
     let whereCondition2 = {};
 
+    // Handle 'cet' filter
     if (cet && cet !== 'all') {
-        whereCondition.transpoter = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
+        whereCondition.transpoter = cet; // Assuming 'transpoter' is the field in CETMANAGEMENT
     }
-    else {
-        delete whereCondition.transpoter
-    }
+
+    // Handle date filtering
     if (start_date && end_date) {
-        const startDateFormatted = `${start_date} 00:00:00`;
-        const endDateFormatted = `${end_date} 23:59:59`;
+        // Subtract 5 hours and 30 minutes from both dates
+        const startDateFormatted = moment(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss")
+          .subtract(5, 'hours')
+          .subtract(30, 'minutes')
+          .format("YYYY-MM-DD HH:mm:ss");
+
+        const endDateFormatted = moment(`${end_date} 23:59:59`, "YYYY-MM-DD HH:mm:ss")
+          .subtract(5, 'hours')
+          .subtract(30, 'minutes')
+          .format("YYYY-MM-DD HH:mm:ss");
+
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
             [Op.lt]: endDateFormatted
         };
-    }else if (start_date && !end_date) {
-        // If only start_date is provided, use it with the current date as end_date
-        const startDateFormatted = `${start_date} 00:00:00`;
-        const now = new Date().toISOString(); // Current date and time in ISO format
+
+    } else if (start_date && !end_date) {
+        // If only start_date is provided, subtract 5 hours and 30 minutes and use the current date as end_date
+        const startDateFormatted = moment(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss")
+          .subtract(5, 'hours')
+          .subtract(30, 'minutes')
+          .format("YYYY-MM-DD HH:mm:ss");
+
+        const now = moment().subtract(5, 'hours').subtract(30, 'minutes').toISOString(); // Subtract 5 hours 30 minutes from current time
+
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
             [Op.lt]: now
         };
-    }else {
+
+    } else {
         // If no dates are provided, set the range to the last 24 hours
-        const now = new Date();
-        const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
+        const now = moment().subtract(5, 'hours').subtract(30, 'minutes').toISOString();
+        const oneDayAgo = moment(now).subtract(24, 'hours').toISOString(); // 24 hours ago after time adjustment
 
         whereCondition.date_time = {
             [Op.gte]: oneDayAgo,
@@ -647,10 +742,8 @@ exports.CsvCetList = async (req, res) => {
     }
 
     try {
-
         const cetUser = await driverhealthcheckup.findAll({
             where: [whereCondition, whereCondition2],
-            // attributes: ['vehicle_no','id'],
             include: [
                 {
                     model: Doctor,
@@ -658,52 +751,44 @@ exports.CsvCetList = async (req, res) => {
                     include: [
                         {
                             model: User,
-                            as: 'User', // Assuming 'user' is the alias for User model in Doctor model
+                            as: 'User',
                             attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
                         }
                     ]
-
                 },
                 {
                     model: DRIVERMASTER,
                     as: 'driver',
-
                 },
                 {
                     model: Center,
                     as: 'center',
-
                 },
                 {
                     model: User,
                     as: 'user',
                     attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-
                 },
-
                 {
                     model: CETMANAGEMENT,
                     as: 'CETMANAGEMENT',
-
                 }
             ],
             order: [['id', 'DESC']],
         });
-        if (cetUser.length > 0) {
-            sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
-            return
-        }
-        else {
-            sendSuccess(res, 200, cetUser, 'No data available');
-            return
-        }
 
+        if (cetUser.length > 0) {
+            sendSuccess(res, 200, cetUser, 'Cet Fetch Successfully');
+        } else {
+            sendSuccess(res, 200, cetUser, 'No data available');
+        }
 
     } catch (error) {
         console.log(error);
         sendError(res, 500, error, 'Invalid input');
     }
-}
+};
+
 
 // search driver using driver_id
 exports.searchDriverById = async (req, res) => {
@@ -830,31 +915,6 @@ exports.searchDriver = async (req, res) => {
     return sendError(res, 400, "Either Driver ID or Health Card Number is required", 'Input Required');
 };
 
-// exports.editVehicleNumber = async (req,res)=>{
-//     const{test_id,new_vehicleNumber} = req.body;
-
-//     const vehicleNumberPattern = /^[A-Z]{2}.*\d{4}$/;
-
-//     if (!vehicleNumberPattern.test(new_vehicleNumber)) {
-//         sendError(res, 400, "Invalid vehicle number format", "Invalid vehicle number format");
-//         return;
-//     }    
-//     try{
-//         const drivers = await driverhealthcheckup.findOne({
-//             where:{id:test_id}
-//         });
-//         if(!drivers){
-//             sendError(res,404,"TestID Not found", "TestID not found");
-//             return;
-//         }
-//         drivers.vehicle_no= new_vehicleNumber;
-//         await drivers.save();
-//         sendSuccess(res, 200, drivers, 'Vehicle number updated successfully');
-//     }catch (error){
-//         console.error(error);
-//         sendError(res,500,error,'internal service error');  
-//     }
-// };
 exports.editVehicleNumber = async (req, res) => {
     const { test_id, new_vehicleNumber } = req.body;
   
@@ -884,6 +944,7 @@ exports.editVehicleNumber = async (req, res) => {
   };
 
 
+
   exports.getTestCountByCenter = async (req, res) => {
     try {
         // Extract the parameters from the request body
@@ -896,7 +957,7 @@ exports.editVehicleNumber = async (req, res) => {
 
         // Parse dates
         const startUtc = new Date(startDate).toISOString();
-        const endUtc = new Date(endDate).toISOString();
+        const endUtc = new Date(endDate).toISOString(); 
 
         // Query the driverhealthcheckup table to count tests within the time frame
         const testCount = await driverhealthcheckup.count({
@@ -916,49 +977,80 @@ exports.editVehicleNumber = async (req, res) => {
     }
 };
 
-
 exports.getTestCountPerCenter = async (req, res) => {
     try {
-        // Extract the parameters from the request body
-        const { startDate, endDate } = req.body;
-
-        // Validate the input
-        if (!startDate || !endDate) {
-            return sendError(res, 400, 'startDate and endDate are required');
-        }
-
-        // Parse dates
-        const startUtc = new Date(startDate).toISOString();
-        const endUtc = new Date(endDate).toISOString();
-
-        // Query to get the count of tests per center
-        const testCountPerCenter = await driverhealthcheckup.findAll({
-            attributes: [
-                [sequelize.col('center.project_name'), 'center_name'], // Use the correct alias for center name
-                [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'] // Count the number of tests
-            ],
-            include: [
-                {
-                    model: Center,
-                    as: 'center', // Use the alias 'center' for the join
-                    attributes: [] // We only need the project_name, already selected above
-                }
-            ],
-            where: {
-                createdAt: {
-                    [Op.between]: [startUtc, endUtc] // Filter by the time frame
-                }
-            },
-            group: ['center.project_name'], // Group by center name
-            order: [[sequelize.col('test_count'), 'DESC']], // Optionally order by test count in descending order
-            raw: true
-        });
-
-        // Send the response
-        sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, error, 'Internal server error');
-    }
-};
+      // Extract the parameters from the request body
+      const { startDate, endDate } = req.body;
   
+      // Validate the input
+      if (!startDate || !endDate) {
+        return sendError(res, 400, 'startDate and endDate are required');
+      }
+  
+      // Parse dates
+      const startUtc = new Date(startDate).toISOString();
+      const endUtc = new Date(endDate).toISOString();
+  
+      // Query to get the count of tests per center
+      const testCountPerCenter = await driverhealthcheckup.findAll({
+        attributes: [
+          [sequelize.col('center.project_name'), 'center_name'], // Alias for center name
+          [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'], // Count the tests
+        ],
+        include: [
+          {
+            model: Center,
+            as: 'center', // Alias for the center table
+            attributes: [], // Already selected project_name
+          },
+        ],
+        where: {
+          createdAt: {
+            [Op.between]: [startUtc, endUtc], // Filter by date range
+          },
+        },
+        group: ['center.project_name'], // Group by center name
+        order: [[sequelize.col('test_count'), 'DESC']], // Order by test count in descending order
+        raw: true,
+      });
+  
+      // Return the success response with the data
+      sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
+    } catch (error) {
+      console.error(error);
+      sendError(res, 500, error.message || 'Internal server error');
+    }
+  };
+  
+
+  exports.editCET = async(req,res)=>{
+    const{test_id,newTranspoterID} = req.body; 
+
+    if (!test_id || !newTranspoterID) {
+        return res.status(400).json({ message: "Test ID and new transporter ID are required" });
+    }
+
+    try{
+        const driver = await driverhealthcheckup.findOne({
+            where: {id:test_id}
+        });
+        if(!driver){
+            return res.status(404).json({message: "Test ID not found"});
+        }
+        const cetManagement = await CETMANAGEMENT.findOne({
+            where:{id:newTranspoterID}
+        });
+        if(!cetManagement){
+            return res.status(404).json({ message: "Transporter (CETMANAGEMENT) ID not found" })
+        }
+        driver.transpoter = newTranspoterID; 
+        await driver.save();
+
+        return res.status(200).json({message:"Transpoter updated successfully",driver});
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({message: "Internal service error"});
+    }
+  };
+
+
