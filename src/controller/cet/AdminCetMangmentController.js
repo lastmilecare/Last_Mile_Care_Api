@@ -18,7 +18,7 @@ const userService = require('../../service/adminService/userService.js');
 const bcrypt = require("bcryptjs");
 const { checkEmailExist, checkUserNameExist, checkPhoneExist } = require("../../helper/authHelper");
 const ExcelJS = require('exceljs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 exports.createCET = async (req, res) => {
 
@@ -588,110 +588,9 @@ exports.downloadCsvCet = async (req, res) => {
     }
 }
 
-// exports.CsvCetList = async (req, res) => {
-//     const { cet, start_date, end_date } = req.body
-//     // createdAt
-//     // 2024-06-14 14:57:43.693+00
-//     let whereCondition = {};
-//     let whereCondition2 = {};
-
-//     if (cet && cet !== 'all') {
-//         whereCondition.transpoter = cet; // Assuming cet_id is the field in CETMANAGEMENT you want to filter by
-//     }
-//     else {
-//         delete whereCondition.transpoter
-//     }
-//     if (start_date && end_date) {
-//         const startDateFormatted = `${start_date} 00:00:00`;
-//         const endDateFormatted = `${end_date} 23:59:59`;
-//         whereCondition.date_time = {
-//             [Op.gte]: startDateFormatted,
-//             [Op.lt]: endDateFormatted
-//         };
-//     }else if (start_date && !end_date) {
-//         // If only start_date is provided, use it with the current date as end_date
-//         const startDateFormatted = `${start_date} 00:00:00`;
-//         const now = new Date().toISOString(); // Current date and time in ISO format
-//         whereCondition.date_time = {
-//             [Op.gte]: startDateFormatted,
-//             [Op.lt]: now
-//         };
-//     }else {
-//         // If no dates are provided, set the range to the last 24 hours
-//         const now = new Date();
-//         const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); // 24 hours ago
-
-//         whereCondition.date_time = {
-//             [Op.gte]: oneDayAgo,
-//             [Op.lt]: now
-//         };
-//     }
-
-//     try {
-
-//         const cetUser = await driverhealthcheckup.findAll({
-//             where: [whereCondition, whereCondition2],
-//             // attributes: ['vehicle_no','id'],
-//             include: [
-//                 {
-//                     model: Doctor,
-//                     as: 'doctor',
-//                     include: [
-//                         {
-//                             model: User,
-//                             as: 'User', // Assuming 'user' is the alias for User model in Doctor model
-//                             attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-//                         }
-//                     ]
-
-//                 },
-//                 {
-//                     model: DRIVERMASTER,
-//                     as: 'driver',
-
-//                 },
-//                 {
-//                     model: Center,
-//                     as: 'center',
-
-//                 },
-//                 {
-//                     model: User,
-//                     as: 'user',
-//                     attributes: ['id', 'username', 'name', 'status', 'phone', 'external_id', 'email']
-
-//                 },
-
-//                 {
-//                     model: CETMANAGEMENT,
-//                     as: 'CETMANAGEMENT',
-
-//                 }
-//             ],
-//             order: [['id', 'DESC']],
-//         });
-//         if (cetUser.length > 0) {
-//             sendSuccess(res, 200, cetUser, 'Cet  Fetch Successfully');
-//             return
-//         }
-//         else {
-//             sendSuccess(res, 200, cetUser, 'No data available');
-//             return
-//         }
-
-
-//     } catch (error) {
-//         console.log(error);
-//         sendError(res, 500, error, 'Invalid input');
-//     }
-// }
-
-// const { Op } = require('sequelize'); // Assuming you're using Sequelize
-
 exports.CsvCetList = async (req, res) => {
     const { cet, start_date, end_date } = req.body;
     let whereCondition = {};
-    let whereCondition2 = {};
 
     // Handle 'cet' filter
     if (cet && cet !== 'all') {
@@ -700,50 +599,38 @@ exports.CsvCetList = async (req, res) => {
 
     // Handle date filtering
     if (start_date && end_date) {
-        // Subtract 5 hours and 30 minutes from both dates
-        const startDateFormatted = moment(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss")
-          .subtract(5, 'hours')
-          .subtract(30, 'minutes')
-          .format("YYYY-MM-DD HH:mm:ss");
-
-        const endDateFormatted = moment(`${end_date} 23:59:59`, "YYYY-MM-DD HH:mm:ss")
-          .subtract(5, 'hours')
-          .subtract(30, 'minutes')
-          .format("YYYY-MM-DD HH:mm:ss");
+        // Convert to UTC without manual time subtraction
+        const startDateFormatted = moment.tz(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        const endDateFormatted = moment.tz(`${end_date} 23:59:59`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
 
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
-            [Op.lt]: endDateFormatted
+            [Op.lte]: endDateFormatted // Use 'lte' to include the entire end date
         };
 
     } else if (start_date && !end_date) {
-        // If only start_date is provided, subtract 5 hours and 30 minutes and use the current date as end_date
-        const startDateFormatted = moment(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss")
-          .subtract(5, 'hours')
-          .subtract(30, 'minutes')
-          .format("YYYY-MM-DD HH:mm:ss");
-
-        const now = moment().subtract(5, 'hours').subtract(30, 'minutes').toISOString(); // Subtract 5 hours 30 minutes from current time
+        const startDateFormatted = moment.tz(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
+        const now = moment().utc().format(); // Current date in UTC
 
         whereCondition.date_time = {
             [Op.gte]: startDateFormatted,
-            [Op.lt]: now
+            [Op.lte]: now // Include the current time as the end date
         };
 
     } else {
         // If no dates are provided, set the range to the last 24 hours
-        const now = moment().subtract(5, 'hours').subtract(30, 'minutes').toISOString();
-        const oneDayAgo = moment(now).subtract(24, 'hours').toISOString(); // 24 hours ago after time adjustment
+        const now = moment().utc().format();
+        const oneDayAgo = moment(now).subtract(24, 'hours').utc().format(); // 24 hours ago in UTC
 
         whereCondition.date_time = {
             [Op.gte]: oneDayAgo,
-            [Op.lt]: now
+            [Op.lte]: now
         };
     }
 
     try {
         const cetUser = await driverhealthcheckup.findAll({
-            where: [whereCondition, whereCondition2],
+            where: whereCondition,
             include: [
                 {
                     model: Doctor,
