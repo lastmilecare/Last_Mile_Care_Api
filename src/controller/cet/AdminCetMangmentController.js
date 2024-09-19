@@ -883,11 +883,14 @@ exports.getTestCountPerCenter = async (req, res) => {
       const startUtc = new Date(startDate).toISOString();
       const endUtc = new Date(endDate).toISOString();
   
-      // Query to get the count of tests per center
+      // Query to get the count of tests per center, grouped by BASIC and ADVANCED packages
       const testCountPerCenter = await driverhealthcheckup.findAll({
         attributes: [
           [sequelize.col('center.project_name'), 'center_name'], // Alias for center name
-          [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'], // Count the tests
+          [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'total_test_count'], // Count the total tests
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN 'BASIC' = ANY(selected_package_name) THEN 1 ELSE 0 END`)), 'basic_test_count'], // Count BASIC tests
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN 'ADVANCED' = ANY(selected_package_name) THEN 1 ELSE 0 END`)), 'advanced_test_count'], // Count ADVANCED tests
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN 'COUNSELLING' = ANY(selected_package_name) THEN 1 ELSE 0 END`)), 'counselling_test_count'], // Count COUNSELLING tests
         ],
         include: [
           {
@@ -902,7 +905,7 @@ exports.getTestCountPerCenter = async (req, res) => {
           },
         },
         group: ['center.project_name'], // Group by center name
-        order: [[sequelize.col('test_count'), 'DESC']], // Order by test count in descending order
+        order: [[sequelize.col('total_test_count'), 'DESC']], // Order by total test count in descending order
         raw: true,
       });
   
@@ -913,6 +916,7 @@ exports.getTestCountPerCenter = async (req, res) => {
       sendError(res, 500, error.message || 'Internal server error');
     }
   };
+  
   
 
   exports.editCET = async(req,res)=>{
