@@ -524,3 +524,52 @@ exports.healthCheckupHistoryById = async (req, res) => {
 
     }
 }
+
+exports.getTestCountPerCenter = async (req, res) => {
+    try {
+        // console.log('req.userId:',req.userId);
+        // Extract the parameters from the request body
+        const { startDate, endDate } = req.body;
+        // const cId = await getCetId(req.userId);
+
+        // Validate the input
+        if (!startDate || !endDate) {
+            return sendError(res, 400, 'startDate and endDate are required');
+        }
+
+        // Parse dates
+        const startUtc = new Date(startDate).toISOString();
+        const endUtc = new Date(endDate).toISOString();
+
+        // Query to get the count of tests per center
+        const testCountPerCenter = await driverhealthcheckup.findAll({
+            attributes: [
+                [sequelize.col('center.project_name'), 'center_name'], // Use the correct alias for center name
+                [sequelize.fn('COUNT', sequelize.col('driverhealthcheckup.id')), 'test_count'] // Count the number of tests
+            ],
+            include: [
+                {
+                    model: Center,
+                    as: 'center', // Use the alias 'center' for the join
+                    attributes: [] // We only need the project_name, already selected above
+                }
+            ],
+            where: {
+                // transpoter: cId.cet_id ,
+                createdAt: {
+                    [Op.between]: [startUtc, endUtc] // Filter by the time frame
+                }
+            },
+            group: ['center.project_name'], // Group by center name
+            order: [[sequelize.col('test_count'), 'DESC']], // Optionally order by test count in descending order
+            raw: true
+        });
+
+        // Send the response
+        sendSuccess(res, 200, testCountPerCenter, 'Test count per center retrieved successfully');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, error, 'Internal server error');
+    }
+};
+  
