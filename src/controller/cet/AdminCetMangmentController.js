@@ -130,6 +130,15 @@ exports.viewCET = async (req, res) => {
 
     }
 }
+exports.viewCenter = async (req, res) => {
+  try {
+    const result = await centerService.findAllCenter(req);
+    sendSuccess(res, 200, result, 'View Center successfully');
+  } catch (error) {
+    sendError(res, 500, error, 'Invalid input');
+  }
+}
+
 exports.viewCETDetails = async (req, res) => {
     if (!req.body.id) {
         sendError(res, 400, "ID Required", 'ID Required');
@@ -875,17 +884,25 @@ exports.editVehicleNumber = async (req, res) => {
 exports.getTestCountPerCenter = async (req, res) => {
     try {
       // Extract the parameters from the request body
-      const { startDate, endDate } = req.body;
-  
+      const { cet, startDate, endDate } = req.body;
+
       // Validate the input
       if (!startDate || !endDate) {
         return sendError(res, 400, 'startDate and endDate are required');
       }
-  
+      let whereCondition={};
+      if(cet && cet!=='all'){
+        whereCondition.transpoter=cet;
+      }
+      
       // Parse dates
       const startUtc = new Date(startDate).toISOString();
       const endUtc = new Date(endDate).toISOString();
-  
+
+      whereCondition.createdAt = {
+        [Op.between]:[startUtc,endUtc]
+      };
+      
       // Query to get the count of tests per center, grouped by BASIC and ADVANCED packages
       const testCountPerCenter = await driverhealthcheckup.findAll({
         attributes: [
@@ -902,11 +919,7 @@ exports.getTestCountPerCenter = async (req, res) => {
             attributes: [], // Already selected project_name
           },
         ],
-        where: {
-          createdAt: {
-            [Op.between]: [startUtc, endUtc], // Filter by date range
-          },
-        },
+        where: whereCondition,
         group: ['center.project_name'], // Group by center name
         order: [[sequelize.col('total_test_count'), 'DESC']], // Order by total test count in descending order
         raw: true,
@@ -953,194 +966,17 @@ exports.getTestCountPerCenter = async (req, res) => {
   };
 
 
-  
-//   exports.cumulativeHealthAnalysis = async (req, res) => {
-    
-//     const { cet, start_date, end_date } = req.body; // Use 'cet' as the input parameter name
-//     let whereCondition = {};
-  
-//     // Step 1: Handle `cet` filter like `CsvCetList` API
-//     if (cet && cet !== 'all') {
-//       whereCondition.transpoter = cet; // Assuming 'transpoter' is the field in CETMANAGEMENT to filter by
-//     }
-  
-//     // Step 2: Handle date filtering based on `start_date` and `end_date`
-//     if (start_date && end_date) {
-//       // Both start and end dates are provided
-//       const startDateFormatted = moment.tz(`${start_date} 06:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
-//       const endDateFormatted = moment.tz(`${end_date} 05:59:59`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
-  
-//       whereCondition.date_time = {
-//         [Op.gte]: startDateFormatted,
-//         [Op.lte]: endDateFormatted
-//       };
-  
-//     } else if (start_date && !end_date) {
-//       // Only start date is provided, use the current date as the end date
-//       const startDateFormatted = moment.tz(`${start_date} 00:00:00`, "YYYY-MM-DD HH:mm:ss", 'Asia/Kolkata').utc().format();
-//       const now = moment().utc().format(); // Current date and time in UTC
-  
-//       whereCondition.date_time = {
-//         [Op.gte]: startDateFormatted,
-//         [Op.lte]: now
-//       };
-  
-//     } else if (!start_date && !end_date) {
-//       // If no dates are provided, retrieve all data without date filtering
-//       delete whereCondition.date_time;
-//     }
-  
-//     try {
-//       const haemoglobinThreshold = await Haemoglobin.findOne({ raw: true });
-//       const PFTThreshold = await Pulmonaryfunctiontest.findOne({raw:true});
-
-//       // Step 3: Fetch the records based on the constructed `whereCondition`
-//       const records = await driverhealthcheckup.findAll({
-//         where: whereCondition,
-//         include: [
-//           {
-//             model: CETMANAGEMENT,
-//             as: 'CETMANAGEMENT',
-//             attributes: ['name']
-//           },
-//           {
-//             model: DRIVERMASTER,
-//             as: 'driver',
-//             attributes: ['name', 'healthCardNumber']
-//           }
-//         ],
-//         raw: true,
-//         nest: true
-//       });
-  
-//       // Step 4: Initialize counters for each health parameter
-//       const healthAnalysis = {
-//         blood_oxygen: { green: 0, yellow: 0, red: 0 },
-//         haemoglobin: { green: 0, yellow: 0, red: 0 },
-//         blood_sugar: { green: 0, yellow: 0, red: 0 },
-//         blood_pressure: { green: 0, yellow: 0, red: 0 },
-//         pulmonary_function: { green: 0, yellow: 0, red: 0 },
-//         ecg: { green: 0, red: 0 },
-//         eye_test: { green: 0, red: 0 },
-//         hiv_test: { green: 0, red: 0 }
-//       };
-  
-//       // Step 5: Iterate through each record and categorize based on health parameters
-//       records.forEach(record => {
-//         const { selected_test } = record;
-  
-//         if (selected_test) {
-//           // Blood Oxygen Levels
-//           if (selected_test.spo2_unit) {
-//             const spo2Remark = selected_test.spo2_unit.remark; // Assuming `remark` is a string field in `spo2_unit`
-//             if (spo2Remark && spo2Remark.toLowerCase() === 'pass') {
-//               healthAnalysis.blood_oxygen.green++; // If remark is 'pass', increment green count
-//             } else {
-//               healthAnalysis.blood_oxygen.red++; // If remark is not 'pass', increment red count
-//             }
-//           }
-  
-//           // Haemoglobin Levels
-//           if (selected_test.haemoglobin_unit) {
-//             const hb = parseFloat(selected_test.haemoglobin_unit.value);
-//             if (hb >= haemoglobinThreshold.standard_value_min) {
-//               healthAnalysis.haemoglobin.green++;
-//             } else if (hb >= haemoglobinThreshold.within_deviation_value_min_below && hb < haemoglobinThreshold.standard_value_min) {
-//               healthAnalysis.haemoglobin.yellow++;
-//             } else {
-//               healthAnalysis.haemoglobin.red++;
-//             }
-//           }
-  
-//           // Random Blood Sugar Levels
-//           if (selected_test?.random_blood_sugar_unit?.value && Array.isArray(selected_test.random_blood_sugar_unit.standard_value)) {
-//             const rbs = parseFloat(selected_test.random_blood_sugar_unit.value);
-//             const [min, max] = selected_test.random_blood_sugar_unit.standard_value;
-          
-//             // Ensure the values are valid numbers before comparing
-//             if (!isNaN(rbs) && !isNaN(min) && !isNaN(max)) {
-//               if (rbs >= min && rbs <= max) {
-//                 healthAnalysis.blood_sugar.green++;
-//               } else if (rbs < min) {
-//                 healthAnalysis.blood_sugar.yellow++;
-//               } else {
-//                 healthAnalysis.blood_sugar.red++;
-//               }
-//             }
-//           }
-          
-//           // Blood Pressure (Systolic and Diastolic)
-//           if (selected_test.blood_pressure_unit && Array.isArray(selected_test.blood_pressure_unit.systolic_bp_unit.standard_value)&&Array.isArray(selected_test.blood_pressure_unit.diastolic_bp_unit.standard_value)) {
-//             const [sys_min,sys_max] = selected_test.blood_pressure_unit.systolic_bp_unit.standard_value;
-//             const [dia_min,dia_max] = selected_test.blood_pressure_unit.diastolic_bp_unit.standard_value;
-
-//             const diastolic = parseFloat(selected_test.blood_pressure_unit.diastolic_bp_unit.value); 
-//             const systolic = parseFloat(selected_test.blood_pressure_unit.systolic_bp_unit.value);
-
-//             if ((systolic >= sys_min && systolic <= sys_max)&&(diastolic>dia_min && diastolic<=dia_max)) healthAnalysis.blood_pressure.green++;
-//             else if ((systolic > sys_max)&&(diastolic>dia_max)) healthAnalysis.blood_pressure.red++;
-//             else healthAnalysis.blood_pressure.yellow++;
-//           }
-  
-//           // Pulmonary Function Test
-//           if (selected_test.pulmonary_function_test_unit) {
-//             const pft = parseFloat(selected_test.pulmonary_function_test_unit.value);
-//             const PFT_standard_value = PFTThreshold.standard_value_min;
-//             const PTM_standard_value_min = PFTThreshold.within_deviation_value_min_below;
-//             if (pft >= PFT_standard_value) healthAnalysis.pulmonary_function.green++;
-//             else if (pft >= PTM_standard_value_min ) healthAnalysis.pulmonary_function.yellow++;
-//             else healthAnalysis.pulmonary_function.red++;
-//           }
-  
-//           // ECG Test Results
-//           if (selected_test.ecg_unit) {
-//             const ecgStatus = selected_test.ecg_unit.status;
-//             if (ecgStatus === 'success') healthAnalysis.ecg.green++;
-//             else healthAnalysis.ecg.red++;
-//           }
-  
-//           // Eye Test Results
-//           if (selected_test.eye_unit) {
-//             const eyeStatus = selected_test.eye_unit.cylindrical_right_eye_unit.status;
-//             if (eyeStatus === 'success') healthAnalysis.eye_test.green++;
-//             else healthAnalysis.eye_test.red++;
-//           }
-  
-//           // HIV Test Results
-//           if (selected_test.hiv_unit) {
-//             const hivStatus = selected_test.hiv_unit.value;
-//             if (hivStatus === 'Negative') healthAnalysis.hiv_test.green++;
-//             else healthAnalysis.hiv_test.red++;
-//           }
-//         }
-//       });
-  
-//       // Step 6: Calculate percentages for each health category
-//       const totalRecords = records.length;
-//       Object.keys(healthAnalysis).forEach(key => {
-//         const total = Object.values(healthAnalysis[key]).reduce((acc, val) => acc + val, 0);
-//         healthAnalysis[key].green = total === 0 ? "0.00" : ((healthAnalysis[key].green / total) * 100).toFixed(2);
-//         healthAnalysis[key].yellow = total === 0 ? "0.00" : ((healthAnalysis[key].yellow / total) * 100).toFixed(2);
-//         healthAnalysis[key].red = total === 0 ? "0.00" : ((healthAnalysis[key].red / total) * 100).toFixed(2);
-//       });
-  
-//       // Step 7: Send the final report as a response
-//       return res.status(200).json({ status: true, data: healthAnalysis, message: 'Cumulative Health Analysis Report' });
-  
-//     } catch (error) {
-//       console.error(error);
-//       return res.status(500).json({ status: false, message: 'Internal Server Error' });
-//     }
-//   };
-
-
 exports.cumulativeHealthAnalysis = async (req, res) => {
-    let { cet, start_date, end_date } = req.body;
+    let { cet, start_date, end_date,center } = req.body;
     let whereCondition = {};
   
     // Handle `cet` filter — If no CET is selected or an empty string is passed, analyze data for all CETs
     if (cet && cet !== 'all') {
       whereCondition.transpoter = cet;
+    }
+
+    if(center){
+      whereCondition.createdBy= center;
     }
   
     // If start_date or end_date is an empty string, set them to undefined to avoid errors in date filtering
@@ -1371,9 +1207,6 @@ exports.cumulativeHealthAnalysis = async (req, res) => {
       return res.status(500).json({ status: false, message: 'Internal Server Error' });
     }
   };  
-  
-  
-  
   
   exports.getCETTestCounts = async (req, res) => {
     try {
