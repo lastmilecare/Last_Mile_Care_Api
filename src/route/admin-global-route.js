@@ -125,4 +125,8 @@ module.exports = function (app) {
     app.post(`${prefixUrl}/testCountPerCenter`,verifyTokenMiddleware,AdminCetMangmentController.getTestCountPerCenter);
     app.post(`${prefixUrl}/editCET`,verifyTokenMiddleware,AdminCetMangmentController.editCET);
     
+    app.post(`${prefixUrl}/cumulativeHealthAnalysis`,verifyTokenMiddleware,AdminCetMangmentController.cumulativeHealthAnalysis);
+    
+    app.post(`${prefixUrl}/getCETTestCounts`,verifyTokenMiddleware,AdminCetMangmentController.getCETTestCounts);
+    app.post(`${prefixUrl}/getCETDriverCounts`,verifyTokenMiddleware,AdminCetMangmentController.getCETDriverCounts);
 };
